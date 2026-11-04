@@ -15,4 +15,8 @@
 .table-group th{background:#edf4f0}
 .bar-line-compare{grid-template-columns:minmax(0,1fr) 9.5rem}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.top nav{flex-wrap:wrap}
+.language{display:inline-flex;gap:.4rem;align-items:center;border-inline-start:1px solid #ffffff40;padding-inline-start:.6rem;font-size:.76rem}
+.language [aria-current=true]{color:var(--mint);font-weight:750}
+.language a{text-decoration:underline;text-underline-offset:.15em}
 @media(max-width:430px){.top-inner{flex-wrap:wrap;gap:.45rem 1rem;padding-block:.65rem}}
