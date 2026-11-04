@@ -14,6 +14,7 @@ const local = $("local");
 const secao = $("secao");
 const geoHint = $("geo-hint");
 const year = 2026;
+const municipalList = "lista";
 const states = {AC:"Acre", AL:"Alagoas", AP:"Amapá", AM:"Amazonas", BA:"Bahia", CE:"Ceará",
   DF:"Distrito Federal", ES:"Espírito Santo", GO:"Goiás", MA:"Maranhão", MT:"Mato Grosso",
   MS:"Mato Grosso do Sul", MG:"Minas Gerais", PA:"Pará", PB:"Paraíba", PR:"Paraná",
@@ -107,7 +108,10 @@ function updateSections(selected = "") {
 
 function loadCities(selected = "") {
   const cities = Object.entries(catalog.uf[uf.value]).map(([code, name]) => [code, titleCase(name)]);
-  options(municipio, cities.sort(sortLabels), t("Todos os municípios", "All municipalities"), selected);
+  cities.sort(sortLabels);
+  const rio = uf.value === "RJ";
+  if (rio) cities.unshift([municipalList, t("Tabela dos 92 municípios", "Table of 92 municipalities")]);
+  options(municipio, cities, rio ? t("Total estadual", "Statewide total") : t("Todos os municípios", "All municipalities"), selected);
 }
 
 function loadGeography(location = "", section = "") {
@@ -116,7 +120,7 @@ function loadGeography(location = "", section = "") {
   options(local, [], t("Selecione um município", "Select a municipality"));
   options(secao, [], t("Selecione um município", "Select a municipality"));
   geoHint.textContent = t("Escolha até o nível que deseja consultar. Pare na UF para ver o estado inteiro.", "Choose the level you want to explore. Select only a state to see statewide results.");
-  if (!municipio.value) {
+  if (!municipio.value || municipio.value === municipalList) {
     geoTask = Promise.resolve();
     return geoTask;
   }
@@ -152,7 +156,9 @@ function updateMode() {
 }
 
 function selection() {
-  return {uf: uf.value, municipio: municipio.value, local: local.value, secao: secao.value,
+  const list = municipio.value === municipalList;
+  return {uf: uf.value, municipio: list ? "" : municipio.value, visao: list ? "municipios" : "",
+    local: local.value, secao: secao.value,
     mode: form.elements.mode.value, turno: $("turno").value,
     comparacao: $("comparacao").value, ano: $("ano").value};
 }
@@ -161,7 +167,7 @@ function urlFor(sel, page = location.href) {
   const link = new URL(page);
   link.search = "";
   link.hash = "";
-  for (const key of ["uf", "municipio", "local", "secao", "mode"]) {
+  for (const key of ["uf", "municipio", "local", "secao", "mode", "visao"]) {
     if (sel[key]) link.searchParams.set(key, sel[key]);
   }
   if (sel.mode === "analisar") link.searchParams.set("turno", sel.turno);
@@ -202,11 +208,19 @@ function decodeDetail(rows, order) {
   return {values, votes: incomplete ? null : Object.fromEntries(order.map((id, i) => [id, counts[i]]))};
 }
 
+async function loadMunicipalPack(ano, state) {
+  if (state === "RJ") return (await fetchData(`${ano}/presidente/RJ/municipios.json`)).registros;
+  return fetchData(`municipios-${ano}-${state}.json.gz`, true);
+}
+
+function municipalResult(pack, city, turn) {
+  const row = pack[city]?.[turn];
+  return row ? {values: row.slice(0, 6), votes: Object.fromEntries(row.slice(6))} : null;
+}
+
 async function loadResult(sel, [ano, turno]) {
   if (!sel.local && !sel.secao) {
-    const pack = await fetchData(`municipios-${ano}-${sel.uf}.json.gz`, true);
-    const row = pack[sel.municipio]?.[turno];
-    return row ? {values: row.slice(0, 6), votes: Object.fromEntries(row.slice(6))} : null;
+    return municipalResult(await loadMunicipalPack(ano, sel.uf), sel.municipio, turno);
   }
   const pack = await detailed(ano, sel.uf, sel.municipio);
   if (!pack) return null;
@@ -237,15 +251,15 @@ function candidateRows(periodList, results) {
       if (current?.votes) people.get(identity).votes[i] = current.votes[code] || 0;
     }
   });
-  return [...people.values()].map(({name, votes}) => ({
-    name, votes, rates: votes.map((value, i) => rate(value, results[i]?.values[3]))
+  return [...people.entries()].map(([identity, {name, votes}]) => ({
+    key: "c:" + identity, name, votes, rates: votes.map((value, i) => rate(value, results[i]?.values[3]))
   })).sort((a, b) => (b.votes[0] ?? -1) - (a.votes[0] ?? -1) ||
     (b.votes[1] ?? -1) - (a.votes[1] ?? -1) || ordered.compare(a.name, b.name));
 }
 
 function metricRows(results) {
   const rows = metrics.map(([name, idx, divisor]) => ({
-    name, votes: [0, 1].map((i) => results[i]?.values[idx] ?? null),
+    key: "m:" + idx, name, votes: [0, 1].map((i) => results[i]?.values[idx] ?? null),
     rates: [0, 1].map((i) => divisor == null ? null : rate(results[i]?.values[idx], results[i]?.values[divisor]))
   }));
   const other = [0, 1].map((i) => {
@@ -253,7 +267,7 @@ function metricRows(results) {
     return values && results[i].votes ? values[1] - values[3] - values[4] - values[5] : null;
   });
   if (other.some((value) => value)) rows.push({
-    name:t("Outras categorias da apuração", "Other count categories"), votes:other,
+    key: "m:other", name:t("Outras categorias da apuração", "Other count categories"), votes:other,
     rates:other.map((value, i) => rate(value, results[i]?.values[1]))
   });
   return rows;
@@ -308,7 +322,8 @@ function territory(sel) {
   const trail = [sel.uf, city && titleCase(city)].filter(Boolean);
   if (sel.local && !sel.secao) trail.push(t("Local de votação", "Polling place"));
   if (sel.secao) trail.push(t("Seção eleitoral", "Polling section"));
-  const name = sel.secao ? sectionLabel(sel.secao) : sel.local ? locationLabel(geography, sel.local) :
+  const name = sel.visao ? t("92 municípios do Rio de Janeiro", "92 municipalities of Rio de Janeiro") :
+    sel.secao ? sectionLabel(sel.secao) : sel.local ? locationLabel(geography, sel.local) :
     city ? titleCase(city) : states[sel.uf];
   return {name, trail: trail.join(" / ")};
 }
@@ -352,6 +367,75 @@ function show(sel, periodList, results) {
   $("status").textContent = found ? "" : t("Nenhum resultado disponível para a consulta.", "No results available for this query.");
 }
 
+function showMunicipalities(sel, periodList, packs) {
+  const resultsFor = (code) => periodList.map(([, turn], i) => municipalResult(packs[i], code, turn));
+  const state = resultsFor("");
+  const candidates = candidateRows(periodList, state);
+  const indicators = metricRows(state);
+  const labels = periodList.map(periodLabel);
+  const comparing = labels.length === 2;
+  const overview = Object.entries(catalog.uf[sel.uf]).map(([code, rawName]) => {
+    const name = titleCase(rawName);
+    const results = resultsFor(code);
+    const url = urlFor({...sel, visao: "", municipio: code});
+    url.hash = "resultado";
+    return {code, name, url, candidates: candidateRows(periodList, results), indicators: metricRows(results)};
+  }).sort((a, b) => ordered.compare(a.name, b.name));
+  const heading = t("Resultados por município", "Results by municipality");
+  const municipality = t("Município", "Municipality");
+  const change = comparing ? `<th scope="col">${t("Diferença", "Change")}</th>` : "";
+  $("output").innerHTML = `<section class="panel table-panel" aria-labelledby="municipal-heading">
+    <h3 id="municipal-heading">${heading}</h3>
+    <p class="hint">${t("Escolha um candidato ou indicador. Abra um município para ver o resultado completo. O CSV inclui todos os municípios, candidatos e indicadores.", "Choose a candidate or an indicator. Open a municipality to view its full results. The CSV includes all municipalities, candidates and indicators.")}</p>
+    <div class="municipal-controls fields">
+      <label>${t("Candidato ou indicador", "Candidate or indicator")}<select id="municipal-indicator"></select></label>
+      <label>${t("Ordenar por", "Sort by")}<select id="municipal-sort"></select></label>
+    </div>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="${heading}">
+      <table><thead><tr><th scope="col">${municipality}</th>
+        ${labels.map((label) => `<th scope="col">${label}<br>${t("Quantidade (%)", "Count (%)")}</th>`).join("")}
+        ${change}</tr></thead><tbody id="municipal-rows"></tbody></table>
+    </div>
+    <p class="hint">${t("Candidatos sobre votos válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.", "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round.")}</p>
+  </section>`;
+  const indicator = $("municipal-indicator");
+  const sort = $("municipal-sort");
+  options(indicator, [...candidates, ...indicators].map(({key, name}) => [key, name]));
+  options(sort, [
+    ["name", t("Município (A–Z)", "Municipality (A–Z)")],
+    ["count", t("Maior quantidade no período em foco", "Highest count in focus period")],
+    ["rate", t("Maior percentual no período em foco", "Highest percentage in focus period")],
+    ...(comparing ? [
+      ["count-change", t("Maior aumento em quantidade", "Largest increase in count")],
+      ["rate-change", t("Maior aumento em pontos percentuais", "Largest increase in percentage points")]
+    ] : [])
+  ]);
+  const sortValue = {
+    count: ({votes}) => votes[0],
+    rate: ({rates}) => rates[0],
+    "count-change": ({votes}) => delta(...votes),
+    "rate-change": ({rates}) => delta(...rates)
+  };
+  function renderRows() {
+    const rows = overview.map(({name, url, candidates, indicators}) => {
+      const row = [...candidates, ...indicators].find(({key}) => key === indicator.value);
+      return {name, url, votes: row?.votes || [], rates: row?.rates || []};
+    });
+    const value = sortValue[sort.value];
+    if (value) rows.sort((a, b) => (value(b) ?? -Infinity) - (value(a) ?? -Infinity));
+    $("municipal-rows").innerHTML = rows.map(({name, url, votes, rates}) => `<tr>
+      <th scope="row"><a href="${html(url.href)}">${html(name)}</a></th>
+      ${labels.map((_, i) => `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>`).join("")}
+      ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)), signed(delta(...rates), true))}</td>` : ""}</tr>`).join("");
+  }
+  indicator.addEventListener("change", renderRows);
+  sort.addEventListener("change", renderRows);
+  renderRows();
+  visibleReport = {sel, labels, overview};
+  $("actions").hidden = false;
+  $("status").textContent = "";
+}
+
 async function run(focus = false) {
   const revision = ++runRevision;
   await geoTask;
@@ -369,9 +453,15 @@ async function run(focus = false) {
   visibleReport = null;
   if (focus) $("resultado-titulo").focus();
   try {
-    const results = await Promise.all(periodList.map((period) => loadResult(sel, period)));
-    if (revision !== runRevision) return;
-    show(sel, periodList, results);
+    if (sel.visao) {
+      const packs = await Promise.all(periodList.map(([ano]) => loadMunicipalPack(ano, sel.uf)));
+      if (revision !== runRevision) return;
+      showMunicipalities(sel, periodList, packs);
+    } else {
+      const results = await Promise.all(periodList.map((period) => loadResult(sel, period)));
+      if (revision !== runRevision) return;
+      show(sel, periodList, results);
+    }
     const resultUrl = urlFor(sel);
     resultUrl.hash = location.hash;
     history.replaceState(null, "", resultUrl);
@@ -383,10 +473,12 @@ async function run(focus = false) {
 
 function csv() {
   if (!visibleReport) return;
-  const {sel, labels, indicators, candidates} = visibleReport;
+  const {sel, labels, overview} = visibleReport;
   const compare = labels.length === 2;
   const context = [sel.uf, sel.municipio, sel.local, sel.secao];
-  const header = [t("UF", "State"), t("Município TSE", "Municipality (TSE code)"), t("Local (zona:código)", "Polling place (zone:code)"), t("Seção (zona:número)", "Polling section (zone:number)"), t("Tipo", "Type"), t("Indicador", "Indicator"),
+  const header = [t("UF", "State"), t("Município TSE", "Municipality (TSE code)"),
+    ...(overview ? [t("Município", "Municipality")] : []),
+    t("Local (zona:código)", "Polling place (zone:code)"), t("Seção (zona:número)", "Polling section (zone:number)"), t("Tipo", "Type"), t("Indicador", "Indicator"),
     ...labels.flatMap((label) => [label + t(" quantidade", " count"), label + t(" taxa (%)", " rate (%)")]),
     ...(compare ? [t("Diferença", "Change"), t("Diferença (p.p.)", "Change (pp)")] : [])];
   const cell = (value) => '"' + String(value ?? "").replaceAll('"', '""') + '"';
@@ -396,16 +488,20 @@ function csv() {
     return english ? fixed : fixed.replace(".", ",");
   };
   const rows = [header];
-  for (const [kind, list] of [[t("Apuração", "Vote count"), indicators], [t("Candidato", "Candidate"), candidates]]) {
-    for (const {name, votes, rates} of list) rows.push([...context, kind, name,
-      ...labels.flatMap((_, i) => [votes[i], num(rates[i])]),
-      ...(compare ? [delta(...votes), num(delta(...rates))] : [])]);
+  for (const report of overview || [visibleReport]) {
+    const area = overview ? [sel.uf, report.code, report.name, "", ""] : context;
+    for (const [kind, list] of [[t("Apuração", "Vote count"), report.indicators], [t("Candidato", "Candidate"), report.candidates]]) {
+      for (const {name, votes, rates} of list) rows.push([...area, kind, name,
+        ...labels.flatMap((_, i) => [votes[i], num(rates[i])]),
+        ...(compare ? [delta(...votes), num(delta(...rates))] : [])]);
+    }
   }
   const file = new Blob(["\uFEFF", rows.map((row) => row.map(cell).join(t(";", ","))).join("\r\n")],
     {type:"text/csv;charset=utf-8"});
   const link = document.createElement("a");
   link.href = URL.createObjectURL(file);
-  link.download = `atlas-${context.filter(Boolean).join("-").replaceAll(":", "-")}.csv`;
+  const fileArea = overview ? `${sel.uf}-municipios-${periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
+  link.download = `atlas-${fileArea}.csv`;
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
@@ -431,7 +527,8 @@ async function start() {
     if ([...select.options].some(({value}) => value === params.get(id))) select.value = params.get(id);
   }
   if (params.get("mode") === "comparar") form.elements.mode.value = "comparar";
-  loadCities(params.get("municipio") || "");
+  const city = uf.value === "RJ" && params.get("visao") === "municipios" ? municipalList : params.get("municipio");
+  loadCities(city || "");
   updateMode();
   loadGeography(params.get("local") || "", params.get("secao") || "");
   uf.addEventListener("change", () => { loadCities(); loadGeography(); });
@@ -448,6 +545,11 @@ async function start() {
   document.querySelectorAll("[data-preset]").forEach((button) => button.addEventListener("click", () => {
     const [state, city] = button.dataset.preset.split(":");
     uf.value = state;
+    if (city === municipalList) {
+      form.elements.mode.value = "comparar";
+      $("comparacao").value = "turnos";
+      updateMode();
+    }
     loadCities(city);
     loadGeography();
     run(true);
