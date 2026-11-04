@@ -1,0 +1,163 @@
+{
+  "arquivos": [
+    {
+      "ano": 2026,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2026.zip",
+      "sha256": "214cd9759b5fffd88468c5bf4124be024741e23440623728ef8c18bdeed3fe94",
+      "bytes": 4183744
+    },
+    {
+      "ano": 2026,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2026.zip",
+      "sha256": "2296815937c16f8f688f6a8d4a516802cc311e24f9052b9d54c6754081dbe2d4",
+      "bytes": 470287389
+    },
+    {
+      "ano": 2026,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2026.zip",
+      "sha256": "8ef9ce3a85cde260471faf7a83a9b4f5ccf3993fdda942aacaa658574344789c",
+      "bytes": 234357769
+    },
+    {
+      "ano": 2026,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2026_BR.zip",
+      "sha256": "c928321f63f2d095706fca73d4607c048d2ada23bda6876455d6911aaf1bc9c1",
+      "bytes": 241891087
+    },
+    {
+      "ano": 2022,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2022.zip",
+      "sha256": "875e61f6f32640a9f28d4ac23f1c76b7d6333a93d0b0a161be0522a2f309d14c",
+      "bytes": 4435782
+    },
+    {
+      "ano": 2022,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2022.zip",
+      "sha256": "9a3258bcdf0bd6eeb7c01cc5b910d96a188af1a4d398f2b3acd3ddfb69ece4f6",
+      "bytes": 667597911
+    },
+    {
+      "ano": 2022,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2022.zip",
+      "sha256": "ad22c50b9e6d9dfb096a2170680a190f1734895ba89d8977b95fd63ca02c03da",
+      "bytes": 243822213
+    },
+    {
+      "ano": 2022,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2022_BR.zip",
+      "sha256": "9353993de5cf03778aef44e01d4925e7ee105f5262491d344a2f0dbc956b0139",
+      "bytes": 271292455
+    },
+    {
+      "ano": 2018,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2018.zip",
+      "sha256": "df68c258a2261dff37b379f65ea5f2e8de7b3d824bb2340d8f4830274a3fabb5",
+      "bytes": 4269741
+    },
+    {
+      "ano": 2018,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2018.zip",
+      "sha256": "f880848ef4ba340b15cb91ff0754aa370d34ca7b7e605d6607c0f2a75009adc8",
+      "bytes": 395389280
+    },
+    {
+      "ano": 2018,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2018.zip",
+      "sha256": "de35b08db427ee0c3089d88317e6166ea5dea33630f5b1dabdccf3304de48f70",
+      "bytes": 256133172
+    },
+    {
+      "ano": 2018,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2018_BR.zip",
+      "sha256": "dde2250058a7efa3b7ee336520556905456cb75d7debf99ea4badfc4d598a48c",
+      "bytes": 250985147
+    },
+    {
+      "ano": 2014,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2014.zip",
+      "sha256": "f9195f8988edabd5db03fdef31ad33b21ad0f02c75c8a8fa30c468ed5642460a",
+      "bytes": 3937094
+    },
+    {
+      "ano": 2014,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2014.zip",
+      "sha256": "f41bceb427820c068b2b14b87befa69d8c333638644eea0e8337534f9b349fd3",
+      "bytes": 494100168
+    },
+    {
+      "ano": 2014,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2014.zip",
+      "sha256": "a2af950c80d63a4af7e51522c327a1ce3bb0e360f1861f0080fba680f28442ec",
+      "bytes": 73594893
+    },
+    {
+      "ano": 2014,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2014_BR.zip",
+      "sha256": "69dc044a47ffb9f1b0f1a0109ba49c812bc58997caccb71be5ee96c9ec797f71",
+      "bytes": 29583546
+    },
+    {
+      "ano": 2014,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2014.zip",
+      "sha256": "4e4ee398526734c44acf39b09c26c76ee1dae34a0d69ab845eafe0bbbbf302bf",
+      "bytes": 76300968
+    },
+    {
+      "ano": 2010,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2010.zip",
+      "sha256": "5f0ea64db232ddf7b88c0cb568534477cf21d8d1c8c8d40790b33cffce03a034",
+      "bytes": 3354480
+    },
+    {
+      "ano": 2010,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2010.zip",
+      "sha256": "fc7052974632351a3dc81e8ec17312889687eae0b2d56508259f91deecadd563",
+      "bytes": 132565895
+    },
+    {
+      "ano": 2010,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_secao/detalhe_votacao_secao_2010.zip",
+      "sha256": "16dd2d039cde82bf74d13ad18af5cc3796229ae1811522a0951bcdb017d38aa0",
+      "bytes": 67345754
+    },
+    {
+      "ano": 2010,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2010_BR.zip",
+      "sha256": "d884147629221fa4bbedb657f83cf7a56a31d1775a51be5ce73e2b6d32617634",
+      "bytes": 23737900
+    },
+    {
+      "ano": 2010,
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2010.zip",
+      "sha256": "1f54c24d81950495fc6059521e00350e3549e1cda27a3058b58b4481002e7ca7",
+      "bytes": 70976425
+    }
+  ],
+  "controle": {
+    "2026": {
+      "secoes_turno": 995794,
+      "divergencias_nominais": 0,
+      "municipios_turno_com_diferenca_de_validos_por_fonte": 0
+    },
+    "2022": {
+      "secoes_turno": 942022,
+      "divergencias_nominais": 0,
+      "municipios_turno_com_diferenca_de_validos_por_fonte": 0
+    },
+    "2018": {
+      "secoes_turno": 907412,
+      "divergencias_nominais": 0,
+      "municipios_turno_com_diferenca_de_validos_por_fonte": 0
+    },
+    "2014": {
+      "secoes_turno": 855880,
+      "divergencias_nominais": 0,
+      "municipios_turno_com_diferenca_de_validos_por_fonte": 0
+    },
+    "2010": {
+      "secoes_turno": 798844,
+      "divergencias_nominais": 0,
+      "municipios_turno_com_diferenca_de_validos_por_fonte": 0
+    }
+  }
+}
