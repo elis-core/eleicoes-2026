@@ -34,12 +34,20 @@ const n = (x) => x == null ? "—" : int.format(x);
 const rate = (a, b) => b > 0 && a != null ? 100 * a / b : null;
 const pct = (x) => x == null ? "—" : decimal.format(x) + "%";
 const delta = (a, b) => a == null || b == null ? null : a - b;
-const signed = (x, points = false) => {
+const relativeChange = (focus, reference) => reference > 0 && focus != null ?
+  100 * (focus - reference) / reference : null;
+const signed = (x, unit = "") => {
   if (x == null) return "—";
-  const rounded = points ? Math.round(Math.abs(x) * 100) / 100 : Math.abs(x);
+  const rounded = unit ? Math.round(Math.abs(x) * 100) / 100 : Math.abs(x);
   return (rounded ? (x > 0 ? "+" : "−") : "") +
-    (points ? decimal.format(rounded) + t(" p.p.", " pp") : int.format(rounded));
+    (unit ? decimal.format(rounded) + unit : int.format(rounded));
 };
+const pointsUnit = t(" p.p.", " pp");
+const relativeLabel = t("Diferença %", "Change %");
+const relativeNote = t(
+  "Em Eleitorado e apuração, a Diferença % divide a mudança da taxa pela taxa de referência. A variação fica indisponível se a taxa de referência for zero ou estiver ausente.",
+  "For electorate and vote-count indicators, Change % divides the change in the rate by the reference rate. The change is unavailable when the reference rate is zero or missing."
+);
 const sortLabels = (a, b) => ordered.compare(a[1], b[1]);
 const metrics = [
   [t("Aptos", "Eligible voters"), 0, null], [t("Comparecimento", "Turnout"), 1, 0], [t("Abstenção", "Abstention"), 2, 0],
@@ -277,21 +285,26 @@ function countWithRate(count, formattedRate) {
   return `${count}${formattedRate === "—" ? "" : ` <span class="paired-rate">(${formattedRate})</span>`}`;
 }
 
-function table(name, rows, labels, type, indicators = []) {
+function table(name, rows, labels, type, indicators = [], relative = false) {
   const comparing = labels.length === 2;
+  const changeLabel = relative ? relativeLabel : t("Diferença", "Change");
+  const changeDetail = indicators.length ? t("Quantidade e variação da taxa", "Count and change in rate") :
+    relative ? t("Quantidade (variação %)", "Count (% change)") : t("Quantidade (p.p.)", "Count (pp)");
   const head = `<tr><th scope="col">${type}</th>${labels.map((label) =>
     comparing ? `<th scope="col">${label}<br>${t("Quantidade (%)", "Count (%)")}</th>` :
       `<th scope="col">${label}<br>${t("Quantidade", "Count")}</th><th scope="col">${label}<br>${t("Taxa", "Rate")}</th>`).join("")}
-    ${comparing ? `<th scope="col">${t("Diferença", "Change")}<br>${t("Quantidade (p.p.)", "Count (pp)")}</th>` : ""}</tr>`;
-  const renderRows = (items) => items.map(({name, votes, rates}) =>
+    ${comparing ? `<th scope="col">${changeLabel}<br>${changeDetail}</th>` : ""}</tr>`;
+  const renderRows = (items, relativeRates) => items.map(({name, votes, rates}) =>
     `<tr><th scope="row">${html(name)}</th>${labels.map((_, i) =>
       comparing ? `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>` :
         `<td>${n(votes[i])}</td><td>${pct(rates[i])}</td>`).join("")}
-    ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)), signed(delta(...rates), true))}</td>` : ""}</tr>`
+    ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)),
+      relativeRates ? signed(relativeChange(...rates), "%") : signed(delta(...rates), pointsUnit))}</td>` : ""}</tr>`
   ).join("");
   const totals = indicators.length ?
-    `<tbody><tr class="table-group"><th scope="rowgroup" colspan="4">${t("Eleitorado e apuração", "Electorate and vote count")}</th></tr>${renderRows(indicators)}</tbody>` : "";
-  return `<section class="panel table-panel"><h3>${name}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${name}"><table><thead>${head}</thead><tbody>${renderRows(rows)}</tbody>${totals}</table></div></section>`;
+    `<tbody><tr class="table-group"><th scope="rowgroup" colspan="3">${t("Eleitorado e apuração", "Electorate and vote count")}</th>
+      <th>${relativeLabel}</th></tr>${renderRows(indicators, true)}</tbody>` : "";
+  return `<section class="panel table-panel"><h3>${name}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${name}"><table><thead>${head}</thead><tbody>${renderRows(rows, relative)}</tbody>${totals}</table></div></section>`;
 }
 
 function chart(rows, labels) {
@@ -311,7 +324,7 @@ function cards(rows, labels) {
   const comparing = labels.length === 2;
   return `<div class="metrics">${[0, 1, 3].map((idx) => {
     const {name, votes, rates} = rows[idx];
-    const change = idx === 1 ? signed(delta(...rates), true) : signed(delta(...votes));
+    const change = idx === 1 ? signed(relativeChange(...rates), "%") : signed(delta(...votes));
     const reference = t(`${n(votes[1])} na referência · diferença ${change}`, `${n(votes[1])} in the reference period · change ${change}`);
     return `<div class="panel metric"><span>${name}</span><b>${n(votes[0])}</b><small>${comparing ? reference : (idx ? pct(rates[0]) : labels[0])}</small></div>`;
   }).join("")}</div>`;
@@ -352,7 +365,7 @@ function show(sel, periodList, results) {
   const notices = notes.map((note) => `<p class="notice">${html(note)}</p>`).join("");
   const bars = nominal ? chart(candidates, labels) : "";
   const resultsPanels = labels.length === 2 ?
-    table(t("Comparação de resultados", "Results comparison"), nominal ? candidates : indicators, labels, t("Indicador", "Indicator"), nominal ? indicators : []) + bars :
+    table(t("Comparação de resultados", "Results comparison"), nominal ? candidates : indicators, labels, t("Indicador", "Indicator"), nominal ? indicators : [], !nominal) + bars :
     bars + (nominal ? table(t("Votação nominal", "Votes by candidate"), candidates, labels, t("Candidatura", "Candidate")) : "") +
     table(t("Eleitorado e apuração", "Electorate and vote count"), indicators, labels, t("Indicador", "Indicator"));
   $("output").innerHTML = notices + (found ?
@@ -360,7 +373,7 @@ function show(sel, periodList, results) {
     `<p class="hint">${t(
       "Taxas de candidatos sobre válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.",
       "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round."
-    )}</p>` : "");
+    )}</p>${labels.length === 2 ? `<p class="hint">${relativeNote}</p>` : ""}` : "");
   if (results[0]?.address) $("subtitle").textContent += " · " + titleCase(results[0].address);
   visibleReport = found ? {sel, labels, indicators, candidates: nominal ? candidates : []} : null;
   $("actions").hidden = !found;
@@ -383,7 +396,7 @@ function showMunicipalities(sel, periodList, packs) {
   }).sort((a, b) => ordered.compare(a.name, b.name));
   const heading = t("Resultados por município", "Results by municipality");
   const municipality = t("Município", "Municipality");
-  const change = comparing ? `<th scope="col">${t("Diferença", "Change")}</th>` : "";
+  const change = comparing ? '<th scope="col" id="municipal-change"></th>' : "";
   $("output").innerHTML = `<section class="panel table-panel" aria-labelledby="municipal-heading">
     <h3 id="municipal-heading">${heading}</h3>
     <p class="hint">${t("Escolha um candidato ou indicador. Abra um município para ver o resultado completo. O CSV inclui todos os municípios, candidatos e indicadores.", "Choose a candidate or an indicator. Open a municipality to view its full results. The CSV includes all municipalities, candidates and indicators.")}</p>
@@ -397,6 +410,7 @@ function showMunicipalities(sel, periodList, packs) {
         ${change}</tr></thead><tbody id="municipal-rows"></tbody></table>
     </div>
     <p class="hint">${t("Candidatos sobre votos válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.", "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round.")}</p>
+    ${comparing ? `<p class="hint">${relativeNote}</p>` : ""}
   </section>`;
   const indicator = $("municipal-indicator");
   const sort = $("municipal-sort");
@@ -407,26 +421,29 @@ function showMunicipalities(sel, periodList, packs) {
     ["rate", t("Maior percentual no período em foco", "Highest percentage in focus period")],
     ...(comparing ? [
       ["count-change", t("Maior aumento em quantidade", "Largest increase in count")],
-      ["rate-change", t("Maior aumento em pontos percentuais", "Largest increase in percentage points")]
+      ["rate-change", t("Maior aumento na taxa", "Largest increase in rate")]
     ] : [])
   ]);
   const sortValue = {
     count: ({votes}) => votes[0],
     rate: ({rates}) => rates[0],
-    "count-change": ({votes}) => delta(...votes),
-    "rate-change": ({rates}) => delta(...rates)
+    "count-change": ({votes}) => delta(...votes)
   };
   function renderRows() {
+    const relative = indicator.value.startsWith("m:");
+    const rateChange = relative ? relativeChange : delta;
+    if (comparing) $("municipal-change").textContent = relative ? relativeLabel : t("Diferença (p.p.)", "Change (pp)");
     const rows = overview.map(({name, url, candidates, indicators}) => {
       const row = [...candidates, ...indicators].find(({key}) => key === indicator.value);
       return {name, url, votes: row?.votes || [], rates: row?.rates || []};
     });
-    const value = sortValue[sort.value];
+    const value = sort.value === "rate-change" ? ({rates}) => rateChange(...rates) : sortValue[sort.value];
     if (value) rows.sort((a, b) => (value(b) ?? -Infinity) - (value(a) ?? -Infinity));
     $("municipal-rows").innerHTML = rows.map(({name, url, votes, rates}) => `<tr>
       <th scope="row"><a href="${html(url.href)}">${html(name)}</a></th>
       ${labels.map((_, i) => `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>`).join("")}
-      ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)), signed(delta(...rates), true))}</td>` : ""}</tr>`).join("");
+      ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)),
+        signed(rateChange(...rates), relative ? "%" : pointsUnit))}</td>` : ""}</tr>`).join("");
   }
   indicator.addEventListener("change", renderRows);
   sort.addEventListener("change", renderRows);
@@ -480,14 +497,17 @@ function csv() {
     ...(overview ? [t("Município", "Municipality")] : []),
     t("Local (zona:código)", "Polling place (zone:code)"), t("Seção (zona:número)", "Polling section (zone:number)"), t("Tipo", "Type"), t("Indicador", "Indicator"),
     ...labels.flatMap((label) => [label + t(" quantidade", " count"), label + t(" taxa (%)", " rate (%)")]),
-    ...(compare ? [t("Diferença", "Change"), t("Diferença (p.p.)", "Change (pp)")] : [])];
+    ...(compare ? [t("Diferença", "Change"), t("Diferença (p.p.)", "Change (pp)"), relativeLabel] : [])];
   const rows = [header];
   for (const report of overview || [visibleReport]) {
     const area = overview ? [sel.uf, report.code, report.name, "", ""] : context;
-    for (const [kind, list] of [[t("Apuração", "Vote count"), report.indicators], [t("Candidato", "Candidate"), report.candidates]]) {
+    for (const [kind, list, relative] of [
+      [t("Apuração", "Vote count"), report.indicators, true], [t("Candidato", "Candidate"), report.candidates, false]
+    ]) {
       for (const {name, votes, rates} of list) rows.push([...area, kind, name,
         ...labels.flatMap((_, i) => [votes[i], csvNumber(rates[i])]),
-        ...(compare ? [delta(...votes), csvNumber(delta(...rates))] : [])]);
+        ...(compare ? [delta(...votes), relative ? "" : csvNumber(delta(...rates)),
+          relative ? csvNumber(relativeChange(...rates)) : ""] : [])]);
     }
   }
   const fileArea = overview ? `${sel.uf}-municipios-${periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
