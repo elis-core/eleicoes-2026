@@ -146,6 +146,15 @@ def gravar_compactado(caminho, objeto):
     caminho.write_bytes(base64.b64encode(gzip.compress(json_bytes(objeto), mtime=0)))
 
 
+def gravar_totais_por_cargo(destino, ano, cargo, uf, registros):
+    pasta = destino / str(ano) / cargo / uf
+    pasta.mkdir(parents=True, exist_ok=True)
+    # Cada turno contém os seis totais da apuração, seguidos dos pares candidato/votos.
+    # A chave municipal vazia identifica o total oficial da UF.
+    pacote = {"schema": 1, "ano": ano, "cargo": cargo, "uf": uf, "registros": registros}
+    (pasta / "municipios.json").write_bytes(json_bytes(pacote))
+
+
 def escrever_pacotes(pasta, prefixo, itens, limite=480_000):
     # Agrupa municípios vizinhos em pacotes pequenos, sem baixar o país inteiro.
     pacote, estimativa, numero, indice = {}, 0, 0, {}
@@ -199,6 +208,8 @@ def main():
                 if ano == ANOS[0]:
                     ufs[uf] = {m: nomes[uf, m] for m in registros if m}
                 gravar_compactado(args.destino / f"municipios-{ano}-{uf}.json.gz.b64", registros)
+                if uf == "RJ":
+                    gravar_totais_por_cargo(args.destino, ano, "presidente", uf, registros)
             del municipal
             por_uf = defaultdict(list)
             for (uf, mun), dado in sorted(detalhes.items()):

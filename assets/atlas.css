@@ -19,4 +19,5 @@
 .language{display:inline-flex;gap:.4rem;align-items:center;border-inline-start:1px solid #ffffff40;padding-inline-start:.6rem;font-size:.76rem}
 .language [aria-current=true]{color:var(--mint);font-weight:750}
 .language a{text-decoration:underline;text-underline-offset:.15em}
+.municipal-controls{grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));margin-block:.7rem}
 @media(max-width:430px){.top-inner{flex-wrap:wrap;gap:.45rem 1rem;padding-block:.65rem}}
