@@ -1,7 +1,13 @@
 "use strict";
 
+const locale = document.documentElement.lang;
+const english = locale.startsWith("en");
+const t = (pt, en) => english ? en : pt;
+const dataRoot = new URL("../dados/", document.currentScript.src);
 const $ = (id) => document.getElementById(id);
 const form = $("filters");
+const languageSwitch = $("language-switch");
+const alternatePage = languageSwitch.href;
 const uf = $("uf");
 const municipio = $("municipio");
 const local = $("local");
@@ -14,8 +20,8 @@ const states = {AC:"Acre", AL:"Alagoas", AP:"Amapá", AM:"Amazonas", BA:"Bahia",
   PE:"Pernambuco", PI:"Piauí", RJ:"Rio de Janeiro", RN:"Rio Grande do Norte",
   RS:"Rio Grande do Sul", RO:"Rondônia", RR:"Roraima", SC:"Santa Catarina",
   SP:"São Paulo", SE:"Sergipe", TO:"Tocantins"};
-const int = new Intl.NumberFormat("pt-BR");
-const decimal = new Intl.NumberFormat("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+const int = new Intl.NumberFormat(locale);
+const decimal = new Intl.NumberFormat(locale, {minimumFractionDigits:2, maximumFractionDigits:2});
 const ordered = new Intl.Collator("pt-BR", {numeric:true, sensitivity:"base"});
 const titleCase = (s) => s.toLocaleLowerCase("pt-BR").replace(
   /(^|[^\p{L}])([\p{L}]+)/gu, (match, prefix, word, offset) =>
@@ -31,12 +37,12 @@ const signed = (x, points = false) => {
   if (x == null) return "—";
   const rounded = points ? Math.round(Math.abs(x) * 100) / 100 : Math.abs(x);
   return (rounded ? (x > 0 ? "+" : "−") : "") +
-    (points ? decimal.format(rounded) + " p.p." : int.format(rounded));
+    (points ? decimal.format(rounded) + t(" p.p.", " pp") : int.format(rounded));
 };
 const sortLabels = (a, b) => ordered.compare(a[1], b[1]);
 const metrics = [
-  ["Aptos", 0, null], ["Comparecimento", 1, 0], ["Abstenção", 2, 0],
-  ["Votos válidos", 3, 1], ["Brancos", 4, 1], ["Nulos", 5, 1]
+  [t("Aptos", "Eligible voters"), 0, null], [t("Comparecimento", "Turnout"), 1, 0], [t("Abstenção", "Abstention"), 2, 0],
+  [t("Votos válidos", "Valid votes"), 3, 1], [t("Brancos", "Blank votes"), 4, 1], [t("Nulos", "Invalid votes"), 5, 1]
 ];
 const files = new Map();
 let catalog, geography, geoTask = Promise.resolve(), geoRevision = 0, runRevision = 0;
@@ -52,7 +58,7 @@ function options(select, entries, placeholder, selected = "") {
 function fetchData(path, compressed = false) {
   if (!files.has(path)) {
     const promise = (async () => {
-      const response = await fetch("dados/" + path + (compressed ? ".b64" : ""));
+      const response = await fetch(new URL(path + (compressed ? ".b64" : ""), dataRoot));
       if (!response.ok) throw new Error(`HTTP ${response.status} · ${path}`);
       if (!compressed) return response.json();
       const encoded = atob(await response.text());
@@ -76,13 +82,14 @@ async function detailed(ano, state, city) {
 
 function sectionLabel(key) {
   const [zone, number] = key.split(":");
-  return `Seção ${number} · zona ${zone}`;
+  return t(`Seção ${number} · zona ${zone}`, `Polling section ${number} · zone ${zone}`);
 }
 
 function locationLabel(data, key) {
   const [zone, number] = key.split(":");
   const label = data?.l[key]?.[0];
-  return `${label ? titleCase(label) : "Local " + number} · zona ${zone} · cód. ${number}`;
+  const name = label ? titleCase(label) : t("Local ", "Polling place ") + number;
+  return t(`${name} · zona ${zone} · cód. ${number}`, `${name} · zone ${zone} · code ${number}`);
 }
 
 function localKeys(key, records) {
@@ -95,27 +102,27 @@ function localKeys(key, records) {
 function updateSections(selected = "") {
   const records = Object.entries(geography?.s || {});
   const keys = (local.value ? localKeys(local.value, records) : records).map(([key]) => key);
-  options(secao, keys.sort(ordered.compare).map((key) => [key, sectionLabel(key)]), "Todas as seções", selected);
+  options(secao, keys.sort(ordered.compare).map((key) => [key, sectionLabel(key)]), t("Todas as seções", "All polling sections"), selected);
 }
 
 function loadCities(selected = "") {
   const cities = Object.entries(catalog.uf[uf.value]).map(([code, name]) => [code, titleCase(name)]);
-  options(municipio, cities.sort(sortLabels), "Todos os municípios", selected);
+  options(municipio, cities.sort(sortLabels), t("Todos os municípios", "All municipalities"), selected);
 }
 
 function loadGeography(location = "", section = "") {
   const revision = ++geoRevision;
   geography = null;
-  options(local, [], "Selecione um município");
-  options(secao, [], "Selecione um município");
-  geoHint.textContent = "Escolha até o nível que deseja consultar. Pare na UF para ver o estado inteiro.";
+  options(local, [], t("Selecione um município", "Select a municipality"));
+  options(secao, [], t("Selecione um município", "Select a municipality"));
+  geoHint.textContent = t("Escolha até o nível que deseja consultar. Pare na UF para ver o estado inteiro.", "Choose the level you want to explore. Select only a state to see statewide results.");
   if (!municipio.value) {
     geoTask = Promise.resolve();
     return geoTask;
   }
   const state = uf.value;
   const city = municipio.value;
-  geoHint.textContent = "Carregando locais e seções…";
+  geoHint.textContent = t("Carregando locais e seções…", "Loading polling places and sections…");
   geoTask = detailed(year, state, city).then((data) => {
     if (revision !== geoRevision) return;
     geography = data;
@@ -125,14 +132,14 @@ function loadGeography(location = "", section = "") {
       for (const row of rows) if (row?.[0] > 0) keys.add(`${zone}:${row[0]}`);
     }
     options(local, [...keys].map((key) => [key, locationLabel(data, key)]).sort(sortLabels),
-      "Todos os locais", location);
+      t("Todos os locais", "All polling places"), location);
     updateSections(section);
     geoHint.textContent = data
-      ? "Os locais e seções listados têm registro de apuração em 2026. Você também pode escolher uma seção diretamente."
-      : "A base de 2026 não tem registro por seção para este município.";
+      ? t("Os locais e seções listados têm registro de apuração em 2026. Você também pode escolher uma seção diretamente.", "The listed polling places and sections have 2026 results. You can also select a section directly.")
+      : t("A base de 2026 não tem registro por seção para este município.", "The 2026 data contain no section-level results for this municipality.");
   }).catch(() => {
     if (revision !== geoRevision) return;
-    geoHint.textContent = "Falha ao carregar locais e seções. Selecione o município novamente ou recarregue a página.";
+    geoHint.textContent = t("Falha ao carregar locais e seções. Selecione o município novamente ou recarregue a página.", "Could not load polling places and sections. Select the municipality again or reload the page.");
   });
   return geoTask;
 }
@@ -150,8 +157,8 @@ function selection() {
     comparacao: $("comparacao").value, ano: $("ano").value};
 }
 
-function urlFor(sel) {
-  const link = new URL(location.href);
+function urlFor(sel, page = location.href) {
+  const link = new URL(page);
   link.search = "";
   link.hash = "";
   for (const key of ["uf", "municipio", "local", "secao", "mode"]) {
@@ -165,6 +172,12 @@ function urlFor(sel) {
   return link;
 }
 
+function updateLanguageLink() {
+  const link = urlFor(selection(), alternatePage);
+  link.hash = location.hash;
+  languageSwitch.href = link.href;
+}
+
 function periods(sel) {
   if (sel.mode === "analisar") return [[year, +sel.turno]];
   if (sel.comparacao === "turnos") return [[year, 2], [year, 1]];
@@ -172,7 +185,8 @@ function periods(sel) {
   return [[year, turn], [+sel.ano, turn]];
 }
 
-const periodLabel = ([ano, turno]) => `${ano} · ${turno}º turno`;
+const periodLabel = ([ano, turno]) =>
+  t(`${ano} · ${turno}º turno`, `${ano} · ${turno === 1 ? "First" : "Second"} round`);
 
 function decodeDetail(rows, order) {
   if (!rows.length) return null;
@@ -239,7 +253,7 @@ function metricRows(results) {
     return values && results[i].votes ? values[1] - values[3] - values[4] - values[5] : null;
   });
   if (other.some((value) => value)) rows.push({
-    name:"Outras categorias da apuração", votes:other,
+    name:t("Outras categorias da apuração", "Other count categories"), votes:other,
     rates:other.map((value, i) => rate(value, results[i]?.values[1]))
   });
   return rows;
@@ -252,9 +266,9 @@ function countWithRate(count, formattedRate) {
 function table(name, rows, labels, type, indicators = []) {
   const comparing = labels.length === 2;
   const head = `<tr><th scope="col">${type}</th>${labels.map((label) =>
-    comparing ? `<th scope="col">${label}<br>Quantidade (%)</th>` :
-      `<th scope="col">${label}<br>Quantidade</th><th scope="col">${label}<br>Taxa</th>`).join("")}
-    ${comparing ? '<th scope="col">Diferença<br>Quantidade (p.p.)</th>' : ""}</tr>`;
+    comparing ? `<th scope="col">${label}<br>${t("Quantidade (%)", "Count (%)")}</th>` :
+      `<th scope="col">${label}<br>${t("Quantidade", "Count")}</th><th scope="col">${label}<br>${t("Taxa", "Rate")}</th>`).join("")}
+    ${comparing ? `<th scope="col">${t("Diferença", "Change")}<br>${t("Quantidade (p.p.)", "Count (pp)")}</th>` : ""}</tr>`;
   const renderRows = (items) => items.map(({name, votes, rates}) =>
     `<tr><th scope="row">${html(name)}</th>${labels.map((_, i) =>
       comparing ? `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>` :
@@ -262,7 +276,7 @@ function table(name, rows, labels, type, indicators = []) {
     ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)), signed(delta(...rates), true))}</td>` : ""}</tr>`
   ).join("");
   const totals = indicators.length ?
-    `<tbody><tr class="table-group"><th scope="rowgroup" colspan="4">Eleitorado e apuração</th></tr>${renderRows(indicators)}</tbody>` : "";
+    `<tbody><tr class="table-group"><th scope="rowgroup" colspan="4">${t("Eleitorado e apuração", "Electorate and vote count")}</th></tr>${renderRows(indicators)}</tbody>` : "";
   return `<section class="panel table-panel"><h3>${name}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${name}"><table><thead>${head}</thead><tbody>${renderRows(rows)}</tbody>${totals}</table></div></section>`;
 }
 
@@ -270,7 +284,7 @@ function chart(rows, labels) {
   const top = rows.filter((row) => row.rates.some((value) => value > 0)).slice(0, 6);
   if (!top.length) return "";
   const comparing = labels.length === 2;
-  return `<section class="panel chart"><div class="chart-head"><h3>Participação nos votos válidos</h3>
+  return `<section class="panel chart"><div class="chart-head"><h3>${t("Participação nos votos válidos", "Share of valid votes")}</h3>
     <div class="legend">${labels.map((label, i) => `<span><i class="${i ? "base" : "focus"}-key"></i>${label}</span>`).join("")}</div></div>
     ${top.map(({name, votes, rates}) => `<div class="chart-row"><strong>${html(name)}</strong><div>${labels.map((label, i) => {
       const value = comparing ? countWithRate(n(votes[i]), pct(rates[i])) : pct(rates[i]);
@@ -284,7 +298,7 @@ function cards(rows, labels) {
   return `<div class="metrics">${[0, 1, 3].map((idx) => {
     const {name, votes, rates} = rows[idx];
     const change = idx === 1 ? signed(delta(...rates), true) : signed(delta(...votes));
-    const reference = `${n(votes[1])} na referência · diferença ${change}`;
+    const reference = t(`${n(votes[1])} na referência · diferença ${change}`, `${n(votes[1])} in the reference period · change ${change}`);
     return `<div class="panel metric"><span>${name}</span><b>${n(votes[0])}</b><small>${comparing ? reference : (idx ? pct(rates[0]) : labels[0])}</small></div>`;
   }).join("")}</div>`;
 }
@@ -292,8 +306,8 @@ function cards(rows, labels) {
 function territory(sel) {
   const city = catalog.uf[sel.uf]?.[sel.municipio];
   const trail = [sel.uf, city && titleCase(city)].filter(Boolean);
-  if (sel.local && !sel.secao) trail.push("Local de votação");
-  if (sel.secao) trail.push("Seção eleitoral");
+  if (sel.local && !sel.secao) trail.push(t("Local de votação", "Polling place"));
+  if (sel.secao) trail.push(t("Seção eleitoral", "Polling section"));
   const name = sel.secao ? sectionLabel(sel.secao) : sel.local ? locationLabel(geography, sel.local) :
     city ? titleCase(city) : states[sel.uf];
   return {name, trail: trail.join(" / ")};
@@ -303,17 +317,17 @@ function show(sel, periodList, results) {
   const labels = periodList.map(periodLabel);
   const notes = [];
   results.forEach((result, i) => {
-    if (!result) notes.push(`Sem registro para este recorte em ${labels[i]}.`);
-    else if (!result.votes) notes.push(`Em ${labels[i]}, a soma nominal diverge do detalhe da apuração em pelo menos uma seção deste recorte. O painel exibe os totais de apuração e omite a distribuição por candidato para esse período.`);
+    if (!result) notes.push(t(`Sem registro para este recorte em ${labels[i]}.`, `No data for this area in ${labels[i]}.`));
+    else if (!result.votes) notes.push(t(`Em ${labels[i]}, a soma nominal diverge do detalhe da apuração em pelo menos uma seção deste recorte. O painel exibe os totais de apuração e omite a distribuição por candidato para esse período.`, `In ${labels[i]}, the sum of votes by candidate differs from the detailed count in at least one section in this area. Only vote-count totals are shown for that period.`));
   });
   if (results[0]?.sectionKeys && results[1]?.sectionKeys) {
     const [a, b] = results;
-    if (a.loc !== b.loc) notes.push("A seção aparece em locais de votação diferentes nos dois períodos.");
+    if (a.loc !== b.loc) notes.push(t("A seção aparece em locais de votação diferentes nos dois períodos.", "The section is listed under different polling places in the two periods."));
     if (a.locationName && b.locationName && a.locationName !== b.locationName) {
-      notes.push("O nome do local consta de forma diferente nos dois períodos. Confira a correspondência territorial antes de interpretar as diferenças.");
+      notes.push(t("O nome do local consta de forma diferente nos dois períodos. Confira a correspondência territorial antes de interpretar as diferenças.", "The polling place is listed under different names in the two periods. Check that the locations correspond before interpreting the differences."));
     }
     if (a.sectionKeys.length !== b.sectionKeys.length || a.sectionKeys.some((key) => !b.sectionKeys.includes(key))) {
-      notes.push(`O local reúne conjuntos diferentes de seções: ${a.sectionKeys.length} no período em foco e ${b.sectionKeys.length} na referência.`);
+      notes.push(t(`O local reúne conjuntos diferentes de seções: ${a.sectionKeys.length} no período em foco e ${b.sectionKeys.length} na referência.`, `This polling place covers different sets of sections: ${a.sectionKeys.length} in the focus period and ${b.sectionKeys.length} in the reference period.`));
     }
   }
   const candidates = candidateRows(periodList, results);
@@ -323,16 +337,19 @@ function show(sel, periodList, results) {
   const notices = notes.map((note) => `<p class="notice">${html(note)}</p>`).join("");
   const bars = nominal ? chart(candidates, labels) : "";
   const resultsPanels = labels.length === 2 ?
-    table("Comparação de resultados", nominal ? candidates : indicators, labels, "Indicador", nominal ? indicators : []) + bars :
-    bars + (nominal ? table("Votação nominal", candidates, labels, "Candidatura") : "") +
-    table("Eleitorado e apuração", indicators, labels, "Indicador");
+    table(t("Comparação de resultados", "Results comparison"), nominal ? candidates : indicators, labels, t("Indicador", "Indicator"), nominal ? indicators : []) + bars :
+    bars + (nominal ? table(t("Votação nominal", "Votes by candidate"), candidates, labels, t("Candidatura", "Candidate")) : "") +
+    table(t("Eleitorado e apuração", "Electorate and vote count"), indicators, labels, t("Indicador", "Indicator"));
   $("output").innerHTML = notices + (found ?
     cards(indicators, labels) + resultsPanels +
-    '<p class="hint">Taxas de candidatos sobre válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.</p>' : "");
+    `<p class="hint">${t(
+      "Taxas de candidatos sobre válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.",
+      "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round."
+    )}</p>` : "");
   if (results[0]?.address) $("subtitle").textContent += " · " + titleCase(results[0].address);
   visibleReport = found ? {sel, labels, indicators, candidates: nominal ? candidates : []} : null;
   $("actions").hidden = !found;
-  $("status").textContent = found ? "" : "Nenhum resultado disponível para a consulta.";
+  $("status").textContent = found ? "" : t("Nenhum resultado disponível para a consulta.", "No results available for this query.");
 }
 
 async function run(focus = false) {
@@ -345,8 +362,8 @@ async function run(focus = false) {
   const labels = periodList.map(periodLabel);
   $("breadcrumb").textContent = place.trail;
   $("resultado-titulo").textContent = place.name;
-  $("subtitle").textContent = labels.length === 2 ? `Foco: ${labels[0]} · Referência: ${labels[1]}` : labels[0];
-  $("status").textContent = "Carregando os resultados…";
+  $("subtitle").textContent = labels.length === 2 ? t(`Foco: ${labels[0]} · Referência: ${labels[1]}`, `Focus: ${labels[0]} · Reference: ${labels[1]}`) : labels[0];
+  $("status").textContent = t("Carregando os resultados…", "Loading results…");
   $("output").replaceChildren();
   $("actions").hidden = true;
   visibleReport = null;
@@ -355,9 +372,12 @@ async function run(focus = false) {
     const results = await Promise.all(periodList.map((period) => loadResult(sel, period)));
     if (revision !== runRevision) return;
     show(sel, periodList, results);
-    history.replaceState(null, "", urlFor(sel));
+    const resultUrl = urlFor(sel);
+    resultUrl.hash = location.hash;
+    history.replaceState(null, "", resultUrl);
+    updateLanguageLink();
   } catch {
-    if (revision === runRevision) $("status").textContent = "Falha ao carregar os resultados. Tente novamente.";
+    if (revision === runRevision) $("status").textContent = t("Falha ao carregar os resultados. Tente novamente.", "Could not load the results. Try again.");
   }
 }
 
@@ -366,18 +386,22 @@ function csv() {
   const {sel, labels, indicators, candidates} = visibleReport;
   const compare = labels.length === 2;
   const context = [sel.uf, sel.municipio, sel.local, sel.secao];
-  const header = ["UF", "Município TSE", "Local (zona:código)", "Seção (zona:número)", "Tipo", "Indicador",
-    ...labels.flatMap((label) => [label + " quantidade", label + " taxa (%)"]),
-    ...(compare ? ["Diferença", "Diferença (p.p.)"] : [])];
+  const header = [t("UF", "State"), t("Município TSE", "Municipality (TSE code)"), t("Local (zona:código)", "Polling place (zone:code)"), t("Seção (zona:número)", "Polling section (zone:number)"), t("Tipo", "Type"), t("Indicador", "Indicator"),
+    ...labels.flatMap((label) => [label + t(" quantidade", " count"), label + t(" taxa (%)", " rate (%)")]),
+    ...(compare ? [t("Diferença", "Change"), t("Diferença (p.p.)", "Change (pp)")] : [])];
   const cell = (value) => '"' + String(value ?? "").replaceAll('"', '""') + '"';
-  const num = (value) => value == null ? "" : value.toFixed(2).replace(".", ",");
+  const num = (value) => {
+    if (value == null) return "";
+    const fixed = value.toFixed(2);
+    return english ? fixed : fixed.replace(".", ",");
+  };
   const rows = [header];
-  for (const [kind, list] of [["Apuração", indicators], ["Candidato", candidates]]) {
+  for (const [kind, list] of [[t("Apuração", "Vote count"), indicators], [t("Candidato", "Candidate"), candidates]]) {
     for (const {name, votes, rates} of list) rows.push([...context, kind, name,
       ...labels.flatMap((_, i) => [votes[i], num(rates[i])]),
       ...(compare ? [delta(...votes), num(delta(...rates))] : [])]);
   }
-  const file = new Blob(["\uFEFF", rows.map((row) => row.map(cell).join(";")).join("\r\n")],
+  const file = new Blob(["\uFEFF", rows.map((row) => row.map(cell).join(t(";", ","))).join("\r\n")],
     {type:"text/csv;charset=utf-8"});
   const link = document.createElement("a");
   link.href = URL.createObjectURL(file);
@@ -388,12 +412,16 @@ function csv() {
 
 async function start() {
   const params = new URLSearchParams(location.search);
+  const initialAlternate = new URL(alternatePage);
+  initialAlternate.search = location.search;
+  initialAlternate.hash = location.hash;
+  languageSwitch.href = initialAlternate.href;
   form.querySelector('button[type="submit"]').disabled = true;
-  options(uf, [], "Carregando…");
+  options(uf, [], t("Carregando…", "Loading…"));
   try {
     catalog = await fetchData("catalogo.json");
   } catch {
-    $("status").textContent = "Não foi possível abrir o catálogo eleitoral. Recarregue a página para tentar novamente.";
+    $("status").textContent = t("Não foi possível abrir o catálogo eleitoral. Recarregue a página para tentar novamente.", "Could not load the election catalogue. Reload the page to try again.");
     return;
   }
   options(uf, Object.keys(catalog.uf).map((code) => [code, `${code} · ${states[code]}`]),
@@ -409,7 +437,13 @@ async function start() {
   uf.addEventListener("change", () => { loadCities(); loadGeography(); });
   municipio.addEventListener("change", () => loadGeography());
   local.addEventListener("change", () => updateSections());
-  form.addEventListener("change", updateMode);
+  form.addEventListener("change", async () => {
+    updateMode();
+    updateLanguageLink();
+    await geoTask;
+    updateLanguageLink();
+  });
+  window.addEventListener("hashchange", updateLanguageLink);
   form.addEventListener("submit", (event) => { event.preventDefault(); run(true); });
   document.querySelectorAll("[data-preset]").forEach((button) => button.addEventListener("click", () => {
     const [state, city] = button.dataset.preset.split(":");
@@ -424,12 +458,14 @@ async function start() {
     const link = urlFor(visibleReport.sel).href;
     try {
       await navigator.clipboard.writeText(link);
-      $("status").textContent = "Link da consulta copiado.";
+      $("status").textContent = t("Link da consulta copiado.", "Query link copied.");
     } catch {
-      window.prompt("Copie o link da consulta", link);
+      window.prompt(t("Copie o link da consulta", "Copy the query link"), link);
     }
   });
   form.querySelector('button[type="submit"]').disabled = false;
+  await geoTask;
+  updateLanguageLink();
   run();
 }
 
