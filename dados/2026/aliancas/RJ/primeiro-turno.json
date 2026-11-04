@@ -1,0 +1,41 @@
+{
+  "ano": 2026,
+  "uf": "RJ",
+  "turno": 1,
+  "presidencia": {
+    "22": {"nome": "Flávio Bolsonaro", "partido": "PL"},
+    "13": {"nome": "Lula", "partido": "PT"}
+  },
+  "fontes": {
+    "tse": {
+      "nome": "TSE · Resolução nº 23.776",
+      "data": "2026-08-25",
+      "url": "https://www.tse.jus.br/legislacao/compilada/res/2026/resolucao-no-23-776-de-25-de-agosto-de-2026"
+    },
+    "flavio": {
+      "nome": "Expresso Rio",
+      "data": "2026-09-23",
+      "url": "https://expressorio.com.br/flavio-bolsonaro-divulga-colinha-de-votos-no-rio-com-apoio-a-douglas-ruas-rogeria-jordy-portinho-e-anderson-moraes/"
+    },
+    "paes": {
+      "nome": "Agência Estado / UOL",
+      "data": "2026-03-06",
+      "url": "https://noticias.uol.com.br/ultimas-noticias/agencia-estado/2026/03/06/lula-diz-que-eduardo-paes-tem-seu-apoio-mas-que-e-preciso-construir-chapa-forte.htm"
+    },
+    "lula_senado": {
+      "nome": "Congresso em Foco",
+      "data": "2026-09-24",
+      "url": "https://www.congressoemfoco.com.br/noticia/122552/maioria-da-direita-no-senado-transforma-o-pais-num-inferno--diz-lula"
+    }
+  },
+  "vinculos": [
+    {"presidente": "22", "cargo": "governador", "candidato": "22", "apoio": "flavio", "formal": "mesmo_partido"},
+    {"presidente": "22", "cargo": "senador", "candidato": "222", "apoio": "flavio", "formal": "mesmo_partido"},
+    {"presidente": "22", "cargo": "senador", "candidato": "221", "apoio": "flavio", "formal": "mesmo_partido"},
+    {"presidente": "13", "cargo": "governador", "candidato": "55", "apoio": "paes"},
+    {"presidente": "13", "cargo": "governador", "candidato": "50", "formal": "federacao_coligada"},
+    {"presidente": "13", "cargo": "senador", "candidato": "131", "apoio": "lula_senado", "formal": "mesmo_partido"},
+    {"presidente": "13", "cargo": "senador", "candidato": "555", "apoio": "lula_senado"},
+    {"presidente": "13", "cargo": "senador", "candidato": "500", "formal": "federacao_coligada"}
+  ]
+}
