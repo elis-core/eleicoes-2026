@@ -20,4 +20,9 @@
 .language [aria-current=true]{color:var(--mint);font-weight:750}
 .language a{text-decoration:underline;text-underline-offset:.15em}
 .municipal-controls{grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));margin-block:.7rem}
+.alliance-controls{grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));margin-block:.7rem}
+.alliance-scroll{max-height:34rem}
+.alliance-scroll thead th{position:sticky;top:0;background:#edf4f0}
+.alliance-note{display:block;color:var(--muted);font-size:.75rem}
+.alliance-official{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
 @media(max-width:430px){.top-inner{flex-wrap:wrap;gap:.45rem 1rem;padding-block:.65rem}}

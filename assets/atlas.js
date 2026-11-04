@@ -481,27 +481,32 @@ function csv() {
     t("Local (zona:código)", "Polling place (zone:code)"), t("Seção (zona:número)", "Polling section (zone:number)"), t("Tipo", "Type"), t("Indicador", "Indicator"),
     ...labels.flatMap((label) => [label + t(" quantidade", " count"), label + t(" taxa (%)", " rate (%)")]),
     ...(compare ? [t("Diferença", "Change"), t("Diferença (p.p.)", "Change (pp)")] : [])];
-  const cell = (value) => '"' + String(value ?? "").replaceAll('"', '""') + '"';
-  const num = (value) => {
-    if (value == null) return "";
-    const fixed = value.toFixed(2);
-    return english ? fixed : fixed.replace(".", ",");
-  };
   const rows = [header];
   for (const report of overview || [visibleReport]) {
     const area = overview ? [sel.uf, report.code, report.name, "", ""] : context;
     for (const [kind, list] of [[t("Apuração", "Vote count"), report.indicators], [t("Candidato", "Candidate"), report.candidates]]) {
       for (const {name, votes, rates} of list) rows.push([...area, kind, name,
-        ...labels.flatMap((_, i) => [votes[i], num(rates[i])]),
-        ...(compare ? [delta(...votes), num(delta(...rates))] : [])]);
+        ...labels.flatMap((_, i) => [votes[i], csvNumber(rates[i])]),
+        ...(compare ? [delta(...votes), csvNumber(delta(...rates))] : [])]);
     }
   }
+  const fileArea = overview ? `${sel.uf}-municipios-${periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
+  downloadCsv(rows, `atlas-${fileArea}.csv`);
+}
+
+function csvNumber(value) {
+  if (value == null) return "";
+  const fixed = value.toFixed(2);
+  return english ? fixed : fixed.replace(".", ",");
+}
+
+function downloadCsv(rows, filename) {
+  const cell = (value) => '"' + String(value ?? "").replaceAll('"', '""') + '"';
   const file = new Blob(["\uFEFF", rows.map((row) => row.map(cell).join(t(";", ","))).join("\r\n")],
     {type:"text/csv;charset=utf-8"});
   const link = document.createElement("a");
   link.href = URL.createObjectURL(file);
-  const fileArea = overview ? `${sel.uf}-municipios-${periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
-  link.download = `atlas-${fileArea}.csv`;
+  link.download = filename;
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }

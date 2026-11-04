@@ -146,12 +146,12 @@ def gravar_compactado(caminho, objeto):
     caminho.write_bytes(base64.b64encode(gzip.compress(json_bytes(objeto), mtime=0)))
 
 
-def gravar_totais_por_cargo(destino, ano, cargo, uf, registros):
+def gravar_totais_por_cargo(destino, ano, cargo, uf, registros, **metadados):
     pasta = destino / str(ano) / cargo / uf
     pasta.mkdir(parents=True, exist_ok=True)
     # Cada turno contém os seis totais da apuração, seguidos dos pares candidato/votos.
     # A chave municipal vazia identifica o total oficial da UF.
-    pacote = {"schema": 1, "ano": ano, "cargo": cargo, "uf": uf, "registros": registros}
+    pacote = {"schema": 1, "ano": ano, "cargo": cargo, "uf": uf, **metadados, "registros": registros}
     (pasta / "municipios.json").write_bytes(json_bytes(pacote))
 
 
