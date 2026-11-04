@@ -136,7 +136,7 @@
         <td class="paired-count">${html(allyName(row.link))} · ${officeNames[row.link.cargo]}
           <br>${paired(row.sVotes, row.sRate, row.sValid)}
           <small class="alliance-note">${linkTypes(row.link)}</small></td>
-        <td class="paired-count">${countWithRate(signed(row.voteGap), signed(row.shareGap, true))}</td>
+        <td class="paired-count">${countWithRate(signed(row.voteGap), signed(row.shareGap, pointsUnit))}</td>
       </tr>`).join("");
       $("alianca-fontes").innerHTML = links.map((link) => `<li><strong>${html(allyName(link))}</strong> ·
         ${linkTypes(link)}<ul>
