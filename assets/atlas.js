@@ -35,7 +35,7 @@ const signed = (x, points = false) => {
 };
 const sortLabels = (a, b) => ordered.compare(a[1], b[1]);
 const metrics = [
-  ["Aptos", 0, null], ["Comparecimento", 1, 0], ["Abstenções", 2, 0],
+  ["Aptos", 0, null], ["Comparecimento", 1, 0], ["Abstenção", 2, 0],
   ["Votos válidos", 3, 1], ["Brancos", 4, 1], ["Nulos", 5, 1]
 ];
 const files = new Map();
@@ -245,26 +245,38 @@ function metricRows(results) {
   return rows;
 }
 
-function table(name, rows, labels, type) {
+function countWithRate(count, formattedRate) {
+  return `${count}${formattedRate === "—" ? "" : ` <span class="paired-rate">(${formattedRate})</span>`}`;
+}
+
+function table(name, rows, labels, type, indicators = []) {
   const comparing = labels.length === 2;
   const head = `<tr><th scope="col">${type}</th>${labels.map((label) =>
-    `<th scope="col">${label}<br>Quantidade</th><th scope="col">${label}<br>Taxa</th>`).join("")}
-    ${comparing ? '<th scope="col">Diferença</th><th scope="col">Diferença em p.p.</th>' : ""}</tr>`;
-  return `<section class="panel table-panel"><h3>${name}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${name}"><table><thead>${head}</thead><tbody>${rows.map(({name, votes, rates}) =>
-    `<tr><th scope="row">${html(name)}</th>${labels.map((_, i) => `<td>${n(votes[i])}</td><td>${pct(rates[i])}</td>`).join("")}
-    ${comparing ? `<td>${signed(delta(...votes))}</td><td>${signed(delta(...rates), true)}</td>` : ""}</tr>`
-  ).join("")}</tbody></table></div></section>`;
+    comparing ? `<th scope="col">${label}<br>Quantidade (%)</th>` :
+      `<th scope="col">${label}<br>Quantidade</th><th scope="col">${label}<br>Taxa</th>`).join("")}
+    ${comparing ? '<th scope="col">Diferença<br>Quantidade (p.p.)</th>' : ""}</tr>`;
+  const renderRows = (items) => items.map(({name, votes, rates}) =>
+    `<tr><th scope="row">${html(name)}</th>${labels.map((_, i) =>
+      comparing ? `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>` :
+        `<td>${n(votes[i])}</td><td>${pct(rates[i])}</td>`).join("")}
+    ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)), signed(delta(...rates), true))}</td>` : ""}</tr>`
+  ).join("");
+  const totals = indicators.length ?
+    `<tbody><tr class="table-group"><th scope="rowgroup" colspan="4">Eleitorado e apuração</th></tr>${renderRows(indicators)}</tbody>` : "";
+  return `<section class="panel table-panel"><h3>${name}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${name}"><table><thead>${head}</thead><tbody>${renderRows(rows)}</tbody>${totals}</table></div></section>`;
 }
 
 function chart(rows, labels) {
   const top = rows.filter((row) => row.rates.some((value) => value > 0)).slice(0, 6);
   if (!top.length) return "";
+  const comparing = labels.length === 2;
   return `<section class="panel chart"><div class="chart-head"><h3>Participação nos votos válidos</h3>
     <div class="legend">${labels.map((label, i) => `<span><i class="${i ? "base" : "focus"}-key"></i>${label}</span>`).join("")}</div></div>
-    ${top.map(({name, rates}) => `<div class="chart-row"><strong>${html(name)}</strong><div>${labels.map((label, i) =>
-      `<div class="bar-line" aria-label="${label}, ${pct(rates[i])}"><span class="track" aria-hidden="true">
-      <i class="${i ? "base" : "focus"}-bar" style="width:${Math.min(100, rates[i] || 0)}%"></i></span><span>${pct(rates[i])}</span></div>`
-    ).join("")}</div></div>`).join("")}</section>`;
+    ${top.map(({name, votes, rates}) => `<div class="chart-row"><strong>${html(name)}</strong><div>${labels.map((label, i) => {
+      const value = comparing ? countWithRate(n(votes[i]), pct(rates[i])) : pct(rates[i]);
+      return `<div class="bar-line${comparing ? " bar-line-compare" : ""}"><span class="track" aria-hidden="true">
+      <i class="${i ? "base" : "focus"}-bar" style="width:${Math.min(100, rates[i] || 0)}%"></i></span><span><span class="sr-only">${label}: </span>${value}</span></div>`;
+    }).join("")}</div></div>`).join("")}</section>`;
 }
 
 function cards(rows, labels) {
@@ -309,10 +321,14 @@ function show(sel, periodList, results) {
   const found = results.some(Boolean);
   const nominal = results.some((result) => result?.votes);
   const notices = notes.map((note) => `<p class="notice">${html(note)}</p>`).join("");
+  const bars = nominal ? chart(candidates, labels) : "";
+  const resultsPanels = labels.length === 2 ?
+    table("Comparação de resultados", nominal ? candidates : indicators, labels, "Indicador", nominal ? indicators : []) + bars :
+    bars + (nominal ? table("Votação nominal", candidates, labels, "Candidatura") : "") +
+    table("Eleitorado e apuração", indicators, labels, "Indicador");
   $("output").innerHTML = notices + (found ?
-    cards(indicators, labels) + (nominal ? chart(candidates, labels) + table("Votação nominal", candidates, labels, "Candidatura") : "") +
-    table("Eleitorado e apuração", indicators, labels, "Indicador") +
-    '<p class="hint">Taxas de candidatos sobre válidos. Comparecimento e abstenções sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.</p>' : "");
+    cards(indicators, labels) + resultsPanels +
+    '<p class="hint">Taxas de candidatos sobre válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.</p>' : "");
   if (results[0]?.address) $("subtitle").textContent += " · " + titleCase(results[0].address);
   visibleReport = found ? {sel, labels, indicators, candidates: nominal ? candidates : []} : null;
   $("actions").hidden = !found;
