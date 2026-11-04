@@ -2,20 +2,62 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Projeto de Análise Eleitoral 2010–2026</title>
-<meta name="description" content="Metodologia, revisão técnica e análises municipais das eleições presidenciais brasileiras.">
-<style>
-*{box-sizing:border-box}body{margin:0;color:#17323c;background:#f2f7f5;font:16px/1.6 system-ui,sans-serif}main{max-width:960px;margin:auto;padding:clamp(20px,5vw,56px)}header{background:#163b45;color:white;padding:clamp(20px,5vw,40px);border-radius:12px;border-bottom:5px solid #79bdad}.kicker{margin:0;color:#c0e8df;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem;font-weight:700}h1{margin:.25em 0;font-size:clamp(1.8rem,5vw,3.25rem);line-height:1.12}header p:last-child{margin-bottom:0;max-width:56ch}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;margin:24px 0}article{background:#fff;border:1px solid #d3e3df;border-radius:9px;padding:18px}h2{font-size:1.13rem;margin:0 0 .5rem;line-height:1.3}article p{margin:0;font-size:.95rem}a{color:#065b50;text-underline-offset:.2em}a:focus-visible{outline:3px solid #127964;outline-offset:4px}footer{font-size:.85rem;color:#456167}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore resultados presidenciais do TSE por UF, município, local de votação e seção eleitoral.">
+<meta name="theme-color" content="#102b31">
+<title>Atlas Eleitoral | Eleições 2026</title>
+<link rel="stylesheet" href="assets/atlas.css">
+<script src="assets/atlas.js" defer></script>
 </head>
-<body><main>
-<header><p class="kicker">Eleições presidenciais brasileiras</p><h1>Projeto de Análise Eleitoral 2010–2026</h1><p>Metodologia, revisão técnica e estudos municipais com dados públicos do Tribunal Superior Eleitoral.</p></header>
-<div class="cards">
-<article><h2><a href="municipios/campos-dos-goytacazes/">Campos dos Goytacazes</a></h2><p>Resultados de 2022 e 2026, comparação entre turnos e contexto político local.</p></article>
-<article><h2><a href="municipios/macapa/">Macapá</a></h2><p>Resultados de 2022 e 2026, mudança entre turnos e alianças no Amapá.</p></article>
-<article><h2><a href="projeto.html">Projeto e metodologia</a></h2><p>Desenho do estudo, reconciliação dos dados do Rio de Janeiro e primeira avaliação do modelo de referência.</p></article>
-<article><h2><a href="parecer.html">Parecer de revisão</a></h2><p>Decisões metodológicas e estado de execução na versão 0.4.</p></article>
+<body>
+<a class="skip" href="#explorador">Ir para a consulta</a>
+<header class="top"><div class="wrap top-inner">
+<a class="brand" href="./"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Atlas <b>Eleitoral</b><small>REDE VOTO LEGAL</small></span></a>
+<nav aria-label="Navegação principal"><a href="#explorador">Explorador</a><a href="#estudos">Estudos</a><a href="#fontes">Fontes</a></nav>
+</div></header>
+<main>
+<section class="hero"><div class="wrap hero-grid">
+<div><p class="eyebrow"><span></span> Eleições gerais · Brasil</p>
+<h1>O voto em <em>cada território.</em></h1>
+<p class="lede">Explore a votação para presidente, da UF à seção eleitoral. Veja o resultado de um turno ou compare 2026 com outros pleitos.</p></div>
+<div class="hero-art" aria-hidden="true"><svg viewBox="0 0 360 205" fill="none"><defs><pattern id="grid" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M18 0H0V18" stroke="#b7f1d5" stroke-opacity=".17"/></pattern></defs><rect width="360" height="205" fill="url(#grid)"/><path d="M35 160l66-47 65 14 66-64 80-26M101 113l65-56 66 6 59 73M166 127l55 43 70-34 21-99M166 57v70m66-64-11 107" stroke="#87dfb8" stroke-opacity=".65" stroke-width="1.5"/><g fill="#102b31" stroke="#94e3be" stroke-width="2"><circle cx="35" cy="160" r="5"/><circle cx="101" cy="113" r="7"/><circle cx="166" cy="57" r="6"/><circle cx="166" cy="127" r="10"/><circle cx="221" cy="170" r="5"/><circle cx="291" cy="136" r="7"/><circle cx="312" cy="37" r="6"/></g><circle cx="232" cy="63" r="18" stroke="#ebc780" stroke-opacity=".5"/><circle cx="232" cy="63" r="6" fill="#ebc780"/></svg><div><span>UF → MUNICÍPIO → LOCAL → SEÇÃO</span><span>01 / BR</span></div></div>
+</div></section>
+<div class="wrap main">
+<section class="panel explorer" id="explorador" aria-labelledby="explorador-titulo">
+<div class="section-head"><div><p class="overline">Consulta interativa</p><h2 id="explorador-titulo">Explore os resultados</h2></div><span class="tag">Presidência</span></div>
+<form id="filters">
+<fieldset class="mode"><legend>Modo de consulta</legend><label><input type="radio" name="mode" value="analisar" checked><span>Analisar um turno</span></label><label><input type="radio" name="mode" value="comparar"><span>Comparar resultados</span></label></fieldset>
+<div class="group"><p class="overline"><span class="step">01</span> Selecione o território</p>
+<div class="fields geography"><label>UF<select id="uf" required></select></label><label>Município<select id="municipio"></select></label><label>Local de votação<select id="local"></select></label><label>Seção eleitoral<select id="secao"></select></label></div>
+<p class="hint" id="geo-hint">Escolha até o nível que deseja consultar. Pare na UF para ver o estado inteiro.</p></div>
+<div class="group"><p class="overline"><span class="step">02</span> Escolha os dados</p>
+<div class="fields periods">
+<label id="analysis-field">Turno de 2026<select id="turno"><option value="2">2º turno</option><option value="1">1º turno</option></select></label>
+<label id="compare-field" hidden>Tipo de comparação<select id="comparacao"><option value="turnos">2º × 1º turno de 2026</option><option value="historico2">2º turno de 2026 × 2º turno de outro ano</option><option value="historico1">1º turno de 2026 × 1º turno de outro ano</option></select></label>
+<label id="year-field" hidden>Ano de referência<select id="ano"><option>2022</option><option>2018</option><option>2014</option><option>2010</option></select></label>
+<button class="primary" type="submit">Ver resultados <span aria-hidden="true">→</span></button></div></div>
+<div class="quick"><span>Acesso rápido</span><button type="button" data-preset="RJ:58190">Campos dos Goytacazes</button><button type="button" data-preset="AP:06050">Macapá</button></div>
+</form>
+<noscript><p>Ative o JavaScript para usar o explorador. Os estudos municipais continuam disponíveis abaixo.</p></noscript>
+</section>
+<section id="resultado" aria-labelledby="resultado-titulo" class="results">
+<div class="section-head"><div><p class="overline" id="breadcrumb">Resultados</p><h2 id="resultado-titulo" tabindex="-1">Sua consulta</h2><p id="subtitle" class="hint"></p></div>
+<div id="actions" class="actions" hidden><button type="button" id="share">Copiar link</button><button type="button" id="csv">Baixar CSV</button></div></div>
+<p id="status" class="status" role="status" aria-live="polite"></p><div id="output"></div>
+</section>
+<section id="estudos" aria-labelledby="estudos-titulo"><div class="section-head"><div><p class="overline">Leitura complementar</p><h2 id="estudos-titulo">Estudos municipais</h2></div></div>
+<div class="study-grid">
+<a class="panel study" href="municipios/campos-dos-goytacazes/"><span class="tag">Rio de Janeiro</span><h3>Campos dos Goytacazes</h3><p>Disputa presidencial e contexto político local em 2022 e 2026.</p><span class="study-link">Ler estudo →</span></a>
+<a class="panel study" href="municipios/macapa/"><span class="tag">Amapá</span><h3>Macapá</h3><p>Variações entre os turnos e alianças no contexto da capital.</p><span class="study-link">Ler estudo →</span></a>
+</div></section>
+<section id="fontes" class="panel sources" aria-labelledby="fontes-titulo"><p class="overline">Transparência</p><h2 id="fontes-titulo">Fontes e critérios de leitura</h2>
+<details open><summary>De onde vêm os números?</summary><p>O Atlas usa os arquivos públicos do TSE de detalhe da apuração e votação nominal para presidente. As bases por município e zona fornecem os totais de UF e município. Os arquivos por seção fornecem as contagens de seções e dos locais que as agrupam. O universo inclui as 27 UFs brasileiras.</p>
+<p>Os válidos por seção são calculados com a destinação dos votos publicada pelo TSE. Quando os nominais brutos não fecham com o detalhe, a distribuição por candidato fica indisponível naquele recorte. Os aptos seguem a base publicada, que em 2026 inclui 39 vínculos de origem duplicados no total nacional informado pelo TSE.</p>
+<p><a href="https://dadosabertos.tse.jus.br/dataset/resultados-2026">Resultados 2026</a> · <a href="https://dadosabertos.tse.jus.br/dataset/resultados-2022">Resultados 2022</a> · <a href="https://dadosabertos.tse.jus.br/dataset/eleitorado-2026">Locais de votação</a> · <a href="dados/fontes.json">Manifesto de ingestão</a></p></details>
+<details><summary>Como interpretar as comparações?</summary><p>As diferenças são calculadas como período em foco menos período de referência. As taxas de comparecimento usam os aptos de cada período. Brancos e nulos usam o comparecimento. As participações dos candidatos usam os votos válidos de cada período.</p><p>Comparações territoriais usam as chaves publicadas pelo TSE. A composição das seções e do eleitorado pode mudar. Os saldos descrevem totais agregados e não identificam como uma pessoa votou em cada turno.</p></details>
+<details><summary>Como o Atlas se relaciona com a auditoria?</summary><p>O Atlas é uma ferramenta descritiva para consultar e comparar resultados divulgados. A proposta de auditoria do projeto exige evidência independente da cadeia de votação, apuração e divulgação.</p><p><a href="projeto.html">Projeto de análise</a> · <a href="parecer.html">Parecer metodológico</a></p></details>
+</section>
 </div>
-<footer>Estudos exploratórios. Os resultados e suas limitações estão documentados em cada página.</footer>
-</main></body></html>
+</main>
+<footer><div class="wrap"><strong>Atlas Eleitoral</strong><span>Rede Voto Legal · Dados abertos do TSE</span><a href="#explorador">Voltar à consulta ↑</a></div></footer>
+</body></html>
