@@ -13,29 +13,14 @@ const municipio = $("municipio");
 const local = $("local");
 const secao = $("secao");
 const geoHint = $("geo-hint");
-const year = 2026;
 const municipalList = "lista";
-const states = {AC:"Acre", AL:"Alagoas", AP:"Amapá", AM:"Amazonas", BA:"Bahia", CE:"Ceará",
-  DF:"Distrito Federal", ES:"Espírito Santo", GO:"Goiás", MA:"Maranhão", MT:"Mato Grosso",
-  MS:"Mato Grosso do Sul", MG:"Minas Gerais", PA:"Pará", PB:"Paraíba", PR:"Paraná",
-  PE:"Pernambuco", PI:"Piauí", RJ:"Rio de Janeiro", RN:"Rio Grande do Norte",
-  RS:"Rio Grande do Sul", RO:"Rondônia", RR:"Roraima", SC:"Santa Catarina",
-  SP:"São Paulo", SE:"Sergipe", TO:"Tocantins"};
 const int = new Intl.NumberFormat(locale);
 const decimal = new Intl.NumberFormat(locale, {minimumFractionDigits:2, maximumFractionDigits:2});
 const ordered = new Intl.Collator("pt-BR", {numeric:true, sensitivity:"base"});
-const titleCase = (s) => s.toLocaleLowerCase("pt-BR").replace(
-  /(^|[^\p{L}])([\p{L}]+)/gu, (match, prefix, word, offset) =>
-    prefix + (offset && ["de","do","da","das","dos","e"].includes(word) ? word : word[0].toUpperCase() + word.slice(1))
-);
 const html = (s) => String(s).replace(/[&<>"']/g, (c) =>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const n = (x) => x == null ? "—" : int.format(x);
-const rate = (a, b) => b > 0 && a != null ? 100 * a / b : null;
 const pct = (x) => x == null ? "—" : decimal.format(x) + "%";
-const delta = (a, b) => a == null || b == null ? null : a - b;
-const relativeChange = (focus, reference) => reference > 0 && focus != null ?
-  100 * (focus - reference) / reference : null;
 const signed = (x, unit = "") => {
   if (x == null) return "—";
   const rounded = unit ? Math.round(Math.abs(x) * 100) / 100 : Math.abs(x);
@@ -49,14 +34,16 @@ const relativeNote = t(
   "For electorate and vote-count indicators, Change % divides the change in the rate by the reference rate. The change is unavailable when the reference rate is zero or missing."
 );
 const sortLabels = (a, b) => ordered.compare(a[1], b[1]);
-const metrics = [
-  [t("Aptos", "Eligible voters"), 0, null], [t("Comparecimento", "Turnout"), 1, 0], [t("Abstenção", "Abstention"), 2, 0],
-  [t("Votos válidos", "Valid votes"), 3, 1], [t("Brancos", "Blank votes"), 4, 1], [t("Nulos", "Invalid votes"), 5, 1]
-];
 const files = new Map();
-const rjMunicipalPacks = new Map();
-let catalog, geography, geoTask = Promise.resolve(), geoRevision = 0, runRevision = 0;
+let catalog, data, common, states, geography, geoTask = Promise.resolve(), geoRevision = 0, runRevision = 0;
 let visibleReport = null;
+
+// O painel de alianças também usa essas funções do Explorador.
+const titleCase = (value) => common.titleCase(value);
+const rate = (count, base) => common.rate(count, base);
+const delta = (focus, reference) => common.delta(focus, reference);
+const loadMunicipalPack = (ano, state) => data.loadMunicipalPack(ano, state);
+const municipalResult = (pack, city, turn) => common.municipalResult(pack, city, turn);
 
 function options(select, entries, placeholder, selected = "") {
   const items = placeholder ? [["", placeholder], ...entries] : entries;
@@ -84,12 +71,6 @@ function fetchData(path, compressed = false) {
   return files.get(path);
 }
 
-async function detailed(ano, state, city) {
-  const pack = catalog.indice[ano]?.[state]?.[city];
-  if (pack == null) return null;
-  return (await fetchData(`secoes-${ano}-${state}-${pack}.json.gz`, true))[city] || null;
-}
-
 function sectionLabel(key) {
   const [zone, number] = key.split(":");
   return t(`Seção ${number} · zona ${zone}`, `Polling section ${number} · zone ${zone}`);
@@ -98,25 +79,18 @@ function sectionLabel(key) {
 function locationLabel(data, key) {
   const [zone, number] = key.split(":");
   const label = data?.l[key]?.[0];
-  const name = label ? titleCase(label) : t("Local ", "Polling place ") + number;
+  const name = label ? common.titleCase(label) : t("Local ", "Polling place ") + number;
   return t(`${name} · zona ${zone} · cód. ${number}`, `${name} · zone ${zone} · code ${number}`);
-}
-
-function localKeys(key, records) {
-  const zone = key.split(":")[0];
-  return records.filter(([section, turns]) =>
-    section.split(":")[0] === zone && turns.some((row) => row && `${zone}:${row[0]}` === key)
-  );
 }
 
 function updateSections(selected = "") {
   const records = Object.entries(geography?.s || {});
-  const keys = (local.value ? localKeys(local.value, records) : records).map(([key]) => key);
+  const keys = (local.value ? common.localKeys(local.value, records) : records).map(([key]) => key);
   options(secao, keys.sort(ordered.compare).map((key) => [key, sectionLabel(key)]), t("Todas as seções", "All polling sections"), selected);
 }
 
 function loadCities(selected = "") {
-  const cities = Object.entries(catalog.uf[uf.value]).map(([code, name]) => [code, titleCase(name)]);
+  const cities = Object.entries(catalog.uf[uf.value]).map(([code, name]) => [code, common.titleCase(name)]);
   cities.sort(sortLabels);
   const rio = uf.value === "RJ";
   if (rio) cities.unshift([municipalList, t("Tabela dos 92 municípios", "Table of 92 municipalities")]);
@@ -137,7 +111,7 @@ function loadGeography(location = "", section = "") {
   const state = uf.value;
   const city = municipio.value;
   geoHint.textContent = t("Carregando locais e seções…", "Loading polling places and sections…");
-  geoTask = detailed(year, state, city).then((data) => {
+  geoTask = data.detailed(common.year, state, city).then((data) => {
     if (revision !== geoRevision) return;
     geography = data;
     const keys = new Set();
@@ -194,125 +168,8 @@ function updateLanguageLink() {
   languageSwitch.href = link.href;
 }
 
-function periods(sel) {
-  if (sel.mode === "analisar") return [[year, +sel.turno]];
-  if (sel.comparacao === "turnos") return [[year, 2], [year, 1]];
-  const turn = sel.comparacao === "historico1" ? 1 : 2;
-  return [[year, turn], [+sel.ano, turn]];
-}
-
 const periodLabel = ([ano, turno]) =>
   t(`${ano} · ${turno}º turno`, `${ano} · ${turno === 1 ? "First" : "Second"} round`);
-
-function decodeDetail(rows, order) {
-  if (!rows.length) return null;
-  const values = Array(6).fill(0);
-  const counts = Array(order.length).fill(0);
-  const incomplete = rows.some((row) => row.length !== order.length + 7);
-  for (const row of rows) {
-    for (let i = 0; i < values.length; i++) {
-      values[i] = values[i] == null || row[i + 1] == null ? null : values[i] + row[i + 1];
-    }
-    if (!incomplete) for (let i = 0; i < counts.length; i++) counts[i] += row[i + 7];
-  }
-  return {values, votes: incomplete ? null : Object.fromEntries(order.map((id, i) => [id, counts[i]]))};
-}
-
-function loadRjMunicipalPack(ano) {
-  if (!rjMunicipalPacks.has(ano)) {
-    const path = `${ano}/presidente/RJ/municipios.json`;
-    const pending = (async () => {
-      try {
-        const {release} = await fetchData("r2-rj-release.json");
-        if (/^[a-f0-9]{40}-[0-9]+-[0-9]+$/.test(release)) {
-          const response = await fetch(
-            "https://atlas-data.electoralintegrity.org/releases/" + release + "/" + path,
-            {signal: AbortSignal.timeout(3500)}
-          );
-          if (response.ok) {
-            const data = await response.json();
-            const records = data.registros;
-            if (data.schema === 1 && data.ano === ano && data.cargo === "presidente" &&
-                data.uf === "RJ" && records?.[""] && Object.keys(records).length === 93 &&
-                Object.values(records).every(turns =>
-                  Array.isArray(turns?.[1]) && Array.isArray(turns?.[2]))) return records;
-          }
-        }
-      } catch {
-        // A rede, o CORS ou um desafio do Cloudflare podem bloquear a leitura pública.
-      }
-      return (await fetchData(path)).registros;
-    })();
-    rjMunicipalPacks.set(ano, pending);
-    pending.catch(() => rjMunicipalPacks.delete(ano));
-  }
-  return rjMunicipalPacks.get(ano);
-}
-
-async function loadMunicipalPack(ano, state) {
-  if (state === "RJ") return loadRjMunicipalPack(ano);
-  return fetchData(`municipios-${ano}-${state}.json.gz`, true);
-}
-
-function municipalResult(pack, city, turn) {
-  const row = pack[city]?.[turn];
-  return row ? {values: row.slice(0, 6), votes: Object.fromEntries(row.slice(6))} : null;
-}
-
-async function loadResult(sel, [ano, turno]) {
-  if (!sel.local && !sel.secao) {
-    return municipalResult(await loadMunicipalPack(ano, sel.uf), sel.municipio, turno);
-  }
-  const pack = await detailed(ano, sel.uf, sel.municipio);
-  if (!pack) return null;
-  if (sel.secao) {
-    const row = pack.s[sel.secao]?.[turno - 1];
-    if (!row) return null;
-    const loc = `${sel.secao.split(":")[0]}:${row[0]}`;
-    return {...decodeDetail([row], catalog.anos[ano].ordem), sectionKeys: [sel.secao],
-      loc, locationName: pack.l[loc]?.[0], address: pack.l[loc]?.[1]};
-  }
-  const keys = localKeys(sel.local, Object.entries(pack.s))
-    .filter(([key, turns]) => turns[turno - 1]?.[0] === +sel.local.split(":")[1])
-    .map(([key]) => key);
-  const decoded = decodeDetail(keys.map((key) => pack.s[key][turno - 1]), catalog.anos[ano].ordem);
-  return decoded ? {...decoded, sectionKeys: keys, loc: sel.local, locationName: pack.l[sel.local]?.[0],
-    address: pack.l[sel.local]?.[1]} : null;
-}
-
-function candidateRows(periodList, results) {
-  const people = new Map();
-  periodList.forEach(([ano, turno], i) => {
-    const data = catalog.anos[ano];
-    for (const code of data.turnos[turno]) {
-      const [short, full] = data.candidatos[code];
-      const identity = full.normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().replace(/\s+/g, " ").toUpperCase();
-      if (!people.has(identity)) people.set(identity, {name: titleCase(short), votes: [null, null]});
-      const current = results[i];
-      if (current?.votes) people.get(identity).votes[i] = current.votes[code] || 0;
-    }
-  });
-  return [...people.entries()].map(([identity, {name, votes}]) => ({
-    key: "c:" + identity, name, votes, rates: votes.map((value, i) => rate(value, results[i]?.values[3]))
-  })).sort((a, b) => (b.votes[0] ?? -1) - (a.votes[0] ?? -1) ||
-    (b.votes[1] ?? -1) - (a.votes[1] ?? -1) || ordered.compare(a.name, b.name));
-}
-
-function metricRows(results) {
-  const rows = metrics.map(([name, idx, divisor]) => ({
-    key: "m:" + idx, name, votes: [0, 1].map((i) => results[i]?.values[idx] ?? null),
-    rates: [0, 1].map((i) => divisor == null ? null : rate(results[i]?.values[idx], results[i]?.values[divisor]))
-  }));
-  const other = [0, 1].map((i) => {
-    const values = results[i]?.values;
-    return values && results[i].votes ? values[1] - values[3] - values[4] - values[5] : null;
-  });
-  if (other.some((value) => value)) rows.push({
-    key: "m:other", name:t("Outras categorias da apuração", "Other count categories"), votes:other,
-    rates:other.map((value, i) => rate(value, results[i]?.values[1]))
-  });
-  return rows;
-}
 
 function countWithRate(count, formattedRate) {
   return `${count}${formattedRate === "—" ? "" : ` <span class="paired-rate">(${formattedRate})</span>`}`;
@@ -331,8 +188,8 @@ function table(name, rows, labels, type, indicators = [], relative = false) {
     `<tr><th scope="row">${html(name)}</th>${labels.map((_, i) =>
       comparing ? `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>` :
         `<td>${n(votes[i])}</td><td>${pct(rates[i])}</td>`).join("")}
-    ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)),
-      relativeRates ? signed(relativeChange(...rates), "%") : signed(delta(...rates), pointsUnit))}</td>` : ""}</tr>`
+    ${comparing ? `<td class="paired-count">${countWithRate(signed(common.delta(...votes)),
+      relativeRates ? signed(common.relativeChange(...rates), "%") : signed(common.delta(...rates), pointsUnit))}</td>` : ""}</tr>`
   ).join("");
   const totals = indicators.length ?
     `<tbody><tr class="table-group"><th scope="rowgroup" colspan="3">${t("Eleitorado e apuração", "Electorate and vote count")}</th>
@@ -357,7 +214,7 @@ function cards(rows, labels) {
   const comparing = labels.length === 2;
   return `<div class="metrics">${[0, 1, 3].map((idx) => {
     const {name, votes, rates} = rows[idx];
-    const change = idx === 1 ? signed(relativeChange(...rates), "%") : signed(delta(...votes));
+    const change = idx === 1 ? signed(common.relativeChange(...rates), "%") : signed(common.delta(...votes));
     const reference = t(`${n(votes[1])} na referência · diferença ${change}`, `${n(votes[1])} in the reference period · change ${change}`);
     return `<div class="panel metric"><span>${name}</span><b>${n(votes[0])}</b><small>${comparing ? reference : (idx ? pct(rates[0]) : labels[0])}</small></div>`;
   }).join("")}</div>`;
@@ -365,12 +222,12 @@ function cards(rows, labels) {
 
 function territory(sel) {
   const city = catalog.uf[sel.uf]?.[sel.municipio];
-  const trail = [sel.uf, city && titleCase(city)].filter(Boolean);
+  const trail = [sel.uf, city && common.titleCase(city)].filter(Boolean);
   if (sel.local && !sel.secao) trail.push(t("Local de votação", "Polling place"));
   if (sel.secao) trail.push(t("Seção eleitoral", "Polling section"));
   const name = sel.visao ? t("92 municípios do Rio de Janeiro", "92 municipalities of Rio de Janeiro") :
     sel.secao ? sectionLabel(sel.secao) : sel.local ? locationLabel(geography, sel.local) :
-    city ? titleCase(city) : states[sel.uf];
+    city ? common.titleCase(city) : states[sel.uf];
   return {name, trail: trail.join(" / ")};
 }
 
@@ -391,8 +248,8 @@ function show(sel, periodList, results) {
       notes.push(t(`O local reúne conjuntos diferentes de seções: ${a.sectionKeys.length} no período em foco e ${b.sectionKeys.length} na referência.`, `This polling place covers different sets of sections: ${a.sectionKeys.length} in the focus period and ${b.sectionKeys.length} in the reference period.`));
     }
   }
-  const candidates = candidateRows(periodList, results);
-  const indicators = metricRows(results);
+  const candidates = common.candidateRows(catalog, periodList, results);
+  const indicators = common.metricRows(results, t);
   const found = results.some(Boolean);
   const nominal = results.some((result) => result?.votes);
   const notices = notes.map((note) => `<p class="notice">${html(note)}</p>`).join("");
@@ -407,25 +264,25 @@ function show(sel, periodList, results) {
       "Taxas de candidatos sobre válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.",
       "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round."
     )}</p>${labels.length === 2 ? `<p class="hint">${relativeNote}</p>` : ""}` : "");
-  if (results[0]?.address) $("subtitle").textContent += " · " + titleCase(results[0].address);
+  if (results[0]?.address) $("subtitle").textContent += " · " + common.titleCase(results[0].address);
   visibleReport = found ? {sel, labels, indicators, candidates: nominal ? candidates : []} : null;
   $("actions").hidden = !found;
   $("status").textContent = found ? "" : t("Nenhum resultado disponível para a consulta.", "No results available for this query.");
 }
 
 function showMunicipalities(sel, periodList, packs) {
-  const resultsFor = (code) => periodList.map(([, turn], i) => municipalResult(packs[i], code, turn));
+  const resultsFor = (code) => periodList.map(([, turn], i) => common.municipalResult(packs[i], code, turn));
   const state = resultsFor("");
-  const candidates = candidateRows(periodList, state);
-  const indicators = metricRows(state);
+  const candidates = common.candidateRows(catalog, periodList, state);
+  const indicators = common.metricRows(state, t);
   const labels = periodList.map(periodLabel);
   const comparing = labels.length === 2;
   const overview = Object.entries(catalog.uf[sel.uf]).map(([code, rawName]) => {
-    const name = titleCase(rawName);
+    const name = common.titleCase(rawName);
     const results = resultsFor(code);
     const url = urlFor({...sel, visao: "", municipio: code});
     url.hash = "resultado";
-    return {code, name, url, candidates: candidateRows(periodList, results), indicators: metricRows(results)};
+    return {code, name, url, candidates: common.candidateRows(catalog, periodList, results), indicators: common.metricRows(results, t)};
   }).sort((a, b) => ordered.compare(a.name, b.name));
   const heading = t("Resultados por município", "Results by municipality");
   const municipality = t("Município", "Municipality");
@@ -460,11 +317,11 @@ function showMunicipalities(sel, periodList, packs) {
   const sortValue = {
     count: ({votes}) => votes[0],
     rate: ({rates}) => rates[0],
-    "count-change": ({votes}) => delta(...votes)
+    "count-change": ({votes}) => common.delta(...votes)
   };
   function renderRows() {
     const relative = indicator.value.startsWith("m:");
-    const rateChange = relative ? relativeChange : delta;
+    const rateChange = relative ? common.relativeChange : common.delta;
     if (comparing) $("municipal-change").textContent = relative ? relativeLabel : t("Diferença (p.p.)", "Change (pp)");
     const rows = overview.map(({name, url, candidates, indicators}) => {
       const row = [...candidates, ...indicators].find(({key}) => key === indicator.value);
@@ -475,7 +332,7 @@ function showMunicipalities(sel, periodList, packs) {
     $("municipal-rows").innerHTML = rows.map(({name, url, votes, rates}) => `<tr>
       <th scope="row"><a href="${html(url.href)}">${html(name)}</a></th>
       ${labels.map((_, i) => `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>`).join("")}
-      ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)),
+      ${comparing ? `<td class="paired-count">${countWithRate(signed(common.delta(...votes)),
         signed(rateChange(...rates), relative ? "%" : pointsUnit))}</td>` : ""}</tr>`).join("");
   }
   indicator.addEventListener("change", renderRows);
@@ -491,7 +348,7 @@ async function run(focus = false) {
   await geoTask;
   if (revision !== runRevision) return;
   const sel = selection();
-  const periodList = periods(sel);
+  const periodList = common.periods(sel);
   const place = territory(sel);
   const labels = periodList.map(periodLabel);
   $("breadcrumb").textContent = place.trail;
@@ -504,11 +361,11 @@ async function run(focus = false) {
   if (focus) $("resultado-titulo").focus();
   try {
     if (sel.visao) {
-      const packs = await Promise.all(periodList.map(([ano]) => loadMunicipalPack(ano, sel.uf)));
+      const packs = await Promise.all(periodList.map(([ano]) => data.loadMunicipalPack(ano, sel.uf)));
       if (revision !== runRevision) return;
       showMunicipalities(sel, periodList, packs);
     } else {
-      const results = await Promise.all(periodList.map((period) => loadResult(sel, period)));
+      const results = await Promise.all(periodList.map((period) => data.loadResult(sel, period)));
       if (revision !== runRevision) return;
       show(sel, periodList, results);
     }
@@ -539,11 +396,11 @@ function csv() {
     ]) {
       for (const {name, votes, rates} of list) rows.push([...area, kind, name,
         ...labels.flatMap((_, i) => [votes[i], csvNumber(rates[i])]),
-        ...(compare ? [delta(...votes), relative ? "" : csvNumber(delta(...rates)),
-          relative ? csvNumber(relativeChange(...rates)) : ""] : [])]);
+        ...(compare ? [common.delta(...votes), relative ? "" : csvNumber(common.delta(...rates)),
+          relative ? csvNumber(common.relativeChange(...rates)) : ""] : [])]);
     }
   }
-  const fileArea = overview ? `${sel.uf}-municipios-${periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
+  const fileArea = overview ? `${sel.uf}-municipios-${common.periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
   downloadCsv(rows, `atlas-${fileArea}.csv`);
 }
 
@@ -573,7 +430,16 @@ async function start() {
   form.querySelector('button[type="submit"]').disabled = true;
   options(uf, [], t("Carregando…", "Loading…"));
   try {
-    catalog = await fetchData("catalogo.json");
+    [common, catalog] = await Promise.all([
+      import("./atlas-data.js?v=20261105-worker"),
+      fetchData("catalogo.json")
+    ]);
+    states = common.states;
+    data = common.createAtlasData(catalog, fetchData, async (url) => {
+      const response = await fetch(url, {signal: AbortSignal.timeout(3500)});
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    });
   } catch {
     $("status").textContent = t("Não foi possível abrir o catálogo eleitoral. Recarregue a página para tentar novamente.", "Could not load the election catalogue. Reload the page to try again.");
     return;
