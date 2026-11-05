@@ -22,7 +22,7 @@ Os números do primeiro turno vêm da publicação do TSE com 99,99% das urnas a
 
 1. **Receber em privado.** A equipe recebe a pergunta e eventuais anexos. Se for necessário devolver o protocolo, usa o canal pelo qual a pessoa entrou em contato. A pessoa pode optar por apenas consultar o link.
 2. **Preparar o resumo público.** Remover nomes, contatos, identificadores, dados pessoais, marcas de captura e metadados que revelem a fonte. Parafrasear trechos que possam identificá-la. Manter arquivos originais necessários à verificação em acesso restrito, separados do repositório público. Preservar o sigilo do voto.
-3. **Abrir a issue pela equipe.** O número atribuído pelo GitHub é o protocolo público. Registrar pergunta sanitizada, recorte, hipóteses, status e próximos passos. A conta que abre o ticket representa a equipe e pode aparecer publicamente. A pessoa que enviou a pergunta acompanha pelo link sem precisar comentar. Complementos podem chegar pelo canal privado.
+3. **Abrir a issue pela equipe.** O número atribuído pelo GitHub à issue é o número do protocolo público. Por exemplo, a issue `#2` corresponde ao **Protocolo #2**. Registrar pergunta sanitizada, recorte, hipóteses, status e próximos passos. A conta que abre o ticket representa a equipe e pode aparecer publicamente. A pessoa que enviou a pergunta acompanha pelo link sem precisar comentar. Complementos podem chegar pelo canal privado.
 4. **Separar protocolo e análise.** Um pedido recebe um protocolo. Quando tiver várias hipóteses, cada uma recebe um identificador dentro dele, como H1 ou H2, com critérios, evidência e conclusão próprios. Pedidos repetidos podem apontar para a análise já existente. A quantidade de encaminhamentos da mesma fonte não aumenta o peso da evidência.
 5. **Revisar e responder.** A issue registra as etapas **recebido → em triagem → em análise → em revisão → respondido**. Quando faltarem dados essenciais, indicar **aguardando evidência**. Publicar uma atualização datada quando o status mudar. Antes de aprovar a resposta pública, outra pessoa confere os números, as fontes, as limitações e o anonimato. A issue aponta para a versão revisada. Novas evidências podem justificar reabertura e revisão datada.
 
@@ -67,4 +67,4 @@ O piloto usa o RJ para organizar o pareamento e confrontar as visualizações do
 
 ## Protocolos registrados
 
-- [Protocolo #1 — Totalização, comportamento eleitoral e cenários simulados](protocolo-1.md)
+- [Protocolo #2 — Totalização, comportamento eleitoral e cenários simulados](protocolo-2.md)
