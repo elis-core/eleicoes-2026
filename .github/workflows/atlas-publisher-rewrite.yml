@@ -1,0 +1,128 @@
+name: Migrar autoria dos commits publicados do Atlas
+
+on:
+  push:
+    branches:
+      - atlas-publisher-bootstrap
+    paths:
+      - .github/workflows/atlas-publisher-rewrite.yml
+
+permissions: {}
+
+jobs:
+  migrate-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REPO: ${{ github.repository }}
+      EXPECTED_OLD: 2f07614b7defdb36d76bff13bb8b5bf92bd5aaba
+      EXPECTED_NEW: d33bd2c1256d4050711691065bd39e7a3f7e50c5
+      EXPECTED_TREE: 4650f1743919b8521cab73cb62d4470e714639f7
+      BOT_LOGIN: elis-atlas-publisher[bot]
+    steps:
+      - name: Reproduzir e conferir a migração revisada
+        run: |
+          set -euo pipefail
+          test "$REPO" = elis-core/eleicoes-2026
+          git clone --bare --single-branch --branch main "https://github.com/$REPO.git" "$RUNNER_TEMP/atlas.git"
+          cd "$RUNNER_TEMP/atlas.git"
+          new_head=$(python3 - "$EXPECTED_OLD" <<'PY'
+          import re
+          import subprocess
+          import sys
+
+          BOT = b"elis-atlas-publisher[bot] <352893640+elis-atlas-publisher[bot]@users.noreply.github.com>"
+          PERSON = re.compile(
+              rb"(author|committer) [^\n]+ <(?:[0-9]+\+)?rochasamurai@users\.noreply\.github\.com>"
+              rb"( [0-9]+ [+-][0-9]{4})",
+              re.IGNORECASE,
+          )
+
+
+          def git(*args, data=None):
+              return subprocess.run(
+                  ("git", *args), input=data, stdout=subprocess.PIPE, check=True,
+              ).stdout
+
+
+          old_head = sys.argv[1].encode()
+          if git("rev-parse", "refs/heads/main").strip() != old_head:
+              raise SystemExit("A origem mudou. A migração foi interrompida.")
+
+          commits = git("rev-list", "--reverse", "--topo-order", "refs/heads/main").splitlines()
+          if len(commits) != 11:
+              raise SystemExit("A quantidade de commits diverge da revisão.")
+
+          rewritten = {}
+          for old in commits:
+              original = git("cat-file", "commit", old.decode())
+              headers, message = original.split(b"\n\n", 1)
+              lines = []
+              changes = set()
+
+              for line in headers.splitlines():
+                  if line.startswith(b"parent "):
+                      lines.append(b"parent " + rewritten[line[7:]])
+                  elif line.startswith((b"author ", b"committer ")):
+                      match = PERSON.fullmatch(line)
+                      if match is None:
+                          raise SystemExit("Autoria inesperada no histórico revisado.")
+                      changes.add(match[1])
+                      lines.append(match[1] + b" " + BOT + match[2])
+                  elif line.startswith((b"tree ", b"encoding ")):
+                      lines.append(line)
+                  else:
+                      raise SystemExit("Cabeçalho inesperado no histórico revisado.")
+
+              if changes != {b"author", b"committer"}:
+                  raise SystemExit("Um commit não tem os dois campos de autoria esperados.")
+
+              content = b"\n".join(lines) + b"\n\n" + message
+              new = git("hash-object", "-t", "commit", "-w", "--stdin", data=content).strip()
+              if git("cat-file", "commit", new.decode()) != content:
+                  raise SystemExit("O commit gravado diverge da revisão.")
+              rewritten[old] = new
+
+          print(rewritten[old_head].decode())
+          PY
+          )
+          test "$new_head" = "$EXPECTED_NEW"
+          test "$(git show -s --format=%T "$new_head")" = "$EXPECTED_TREE"
+          diff -u <(git log --reverse --format='%T|%at|%ct|%B' "$EXPECTED_OLD") \
+                  <(git log --reverse --format='%T|%at|%ct|%B' "$new_head")
+
+      - name: Gerar token da instalação do App
+        id: publisher
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          client-id: ${{ vars.ATLAS_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.ATLAS_PUBLISHER_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Validar a autoria no GitHub e atualizar a main
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          APP_SLUG: ${{ steps.publisher.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          test "$APP_SLUG[bot]" = "$BOT_LOGIN"
+          cd "$RUNNER_TEMP/atlas.git"
+          gh auth setup-git --hostname github.com
+          preview=atlas-history-preview
+          git push --force-with-lease="refs/heads/$preview:" origin "$EXPECTED_NEW:refs/heads/$preview"
+          for attempt in 1 2 3 4 5; do
+            history=$(gh api "repos/$REPO/commits?sha=$preview&per_page=20")
+            if jq -e --arg bot "$BOT_LOGIN" --arg head "$EXPECTED_NEW" \
+              'length == 11 and .[0].sha == $head and all(.[]; .author.login == $bot and .committer.login == $bot)' \
+              <<< "$history" > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo "O GitHub não confirmou a identidade do bot nos 11 commits."
+              exit 1
+            fi
+            sleep 3
+          done
+          git push --force-with-lease="refs/heads/main:$EXPECTED_OLD" origin "$EXPECTED_NEW:refs/heads/main"
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_NEW"
+          printf 'Migração concluída em `main` com 11 commits de `%s`.\n' "$BOT_LOGIN" >> "$GITHUB_STEP_SUMMARY"
