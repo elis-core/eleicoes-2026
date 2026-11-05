@@ -54,6 +54,7 @@ const metrics = [
   [t("Votos válidos", "Valid votes"), 3, 1], [t("Brancos", "Blank votes"), 4, 1], [t("Nulos", "Invalid votes"), 5, 1]
 ];
 const files = new Map();
+const rjMunicipalPacks = new Map();
 let catalog, geography, geoTask = Promise.resolve(), geoRevision = 0, runRevision = 0;
 let visibleReport = null;
 
@@ -217,8 +218,39 @@ function decodeDetail(rows, order) {
   return {values, votes: incomplete ? null : Object.fromEntries(order.map((id, i) => [id, counts[i]]))};
 }
 
+function loadRjMunicipalPack(ano) {
+  if (!rjMunicipalPacks.has(ano)) {
+    const path = `${ano}/presidente/RJ/municipios.json`;
+    const pending = (async () => {
+      try {
+        const {release} = await fetchData("r2-rj-release.json");
+        if (/^[a-f0-9]{40}-[0-9]+-[0-9]+$/.test(release)) {
+          const response = await fetch(
+            "https://atlas-data.electoralintegrity.org/releases/" + release + "/" + path,
+            {signal: AbortSignal.timeout(3500)}
+          );
+          if (response.ok) {
+            const data = await response.json();
+            const records = data.registros;
+            if (data.schema === 1 && data.ano === ano && data.cargo === "presidente" &&
+                data.uf === "RJ" && records?.[""] && Object.keys(records).length === 93 &&
+                Object.values(records).every(turns =>
+                  Array.isArray(turns?.[1]) && Array.isArray(turns?.[2]))) return records;
+          }
+        }
+      } catch {
+        // A rede, o CORS ou um desafio do Cloudflare podem bloquear a leitura pública.
+      }
+      return (await fetchData(path)).registros;
+    })();
+    rjMunicipalPacks.set(ano, pending);
+    pending.catch(() => rjMunicipalPacks.delete(ano));
+  }
+  return rjMunicipalPacks.get(ano);
+}
+
 async function loadMunicipalPack(ano, state) {
-  if (state === "RJ") return (await fetchData(`${ano}/presidente/RJ/municipios.json`)).registros;
+  if (state === "RJ") return loadRjMunicipalPack(ano);
   return fetchData(`municipios-${ano}-${state}.json.gz`, true);
 }
 
