@@ -1,0 +1,59 @@
+name: Testar autoria do ELIS Atlas Publisher
+
+on:
+  push:
+    branches:
+      - atlas-publisher-bootstrap
+    paths:
+      - .github/workflows/atlas-publisher-smoke.yml
+
+permissions: {}
+
+jobs:
+  verify-publisher:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Gerar token do App
+        id: publisher
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          client-id: ${{ vars.ATLAS_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.ATLAS_PUBLISHER_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Criar commit de teste e conferir autoria
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          APP_SLUG: ${{ steps.publisher.outputs.app-slug }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          branch=atlas-publisher-test
+          base=$(gh api "repos/$REPO/git/ref/heads/main" --jq '.object.sha')
+          gh api --method POST "repos/$REPO/git/refs" \
+            -f "ref=refs/heads/$branch" -f "sha=$base" --silent
+
+          contents=$(printf 'Commit de teste da autoria do ELIS Atlas Publisher.\n' | base64 -w 0)
+          commit=$(jq -n --arg repo "$REPO" --arg branch "$branch" \
+            --arg base "$base" --arg contents "$contents" '{
+              query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repo, branchName: $branch},
+                expectedHeadOid: $base,
+                message: {headline: "Testa a autoria do ELIS Atlas Publisher"},
+                fileChanges: {additions: [{path: "docs/atlas-publisher-test.md", contents: $contents}]}
+              }}
+            }' | gh api graphql --input - | jq -er '.data.createCommitOnBranch.commit.oid')
+
+          result=$(gh api "repos/$REPO/commits/$commit")
+          author=$(jq -er '.author.login' <<< "$result")
+          committer=$(jq -er '.committer.login' <<< "$result")
+          printf 'Autor: %s\nCommitter: %s\nCommit: %s\n' "$author" "$committer" "$commit"
+          test "$author" = "$APP_SLUG[bot]"
+          test "$committer" != rochasamurai
+          {
+            printf '### Autoria do Atlas verificada\n\n'
+            printf 'Autor: `%s` · Committer: `%s`\n\n' "$author" "$committer"
+            printf '[Commit de teste](https://github.com/%s/commit/%s)\n' "$REPO" "$commit"
+          } >> "$GITHUB_STEP_SUMMARY"
