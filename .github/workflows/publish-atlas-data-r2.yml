@@ -88,11 +88,22 @@ jobs:
 
           for year in $PILOT_YEARS; do
             path="$year/presidente/RJ/municipios.json"
-            curl --fail --silent --show-error --compressed --retry 3 --retry-all-errors \
+            url="$release_url/$path"
+            if ! status=$(curl --silent --show-error --compressed --retry 3 \
               --connect-timeout 10 --max-time 30 \
               --header "Origin: $ATLAS_ORIGIN" \
               --dump-header "$verification_dir/headers" \
-              --output "$verification_dir/municipios.json" "$release_url/$path"
+              --output "$verification_dir/municipios.json" --write-out '%{http_code}' "$url"); then
+              echo "::error::Could not reach $url (HTTP ${status:-000})."
+              exit 1
+            fi
+            if [[ "$status" != 200 ]]; then
+              echo "::error::Public GET returned HTTP $status for $url"
+              grep -Ei '^(cf-ray|cf-mitigated|cf-cache-status|server|content-type):' \
+                "$verification_dir/headers" || true
+              printf '## Public R2 verification failed\n\nHTTP %s for %s\n\n' "$status" "$url" >> "$GITHUB_STEP_SUMMARY"
+              exit 1
+            fi
             if ! cmp -s "dados/$path" "$verification_dir/municipios.json"; then
               echo "::error::Published JSON differs from the source for $year."
               exit 1
