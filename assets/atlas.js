@@ -123,6 +123,7 @@ function loadCities(selected = "") {
 }
 
 function loadGeography(location = "", section = "") {
+  document.dispatchEvent(new Event("atlas:territorychange"));
   const revision = ++geoRevision;
   geography = null;
   options(local, [], t("Selecione um município", "Select a municipality"));
