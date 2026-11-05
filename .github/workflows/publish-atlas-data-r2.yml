@@ -1,0 +1,112 @@
+name: Publish Atlas Data to R2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  publish-rj:
+    name: Publish RJ presidential results
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: atlas-r2
+    env:
+      PILOT_YEARS: '2010 2014 2018 2022 2026'
+      RELEASE_PREFIX: releases/${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+      PUBLIC_DATA_URL: https://atlas-data.electoralintegrity.org
+      ATLAS_ORIGIN: https://atlas-brazil-2026.electoralintegrity.org
+    steps:
+      - name: Check out RJ data
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            dados/2010/presidente/RJ
+            dados/2014/presidente/RJ
+            dados/2018/presidente/RJ
+            dados/2022/presidente/RJ
+            dados/2026/presidente/RJ
+
+      - name: Validate five source files
+        run: |
+          for year in $PILOT_YEARS; do
+            source="dados/$year/presidente/RJ/municipios.json"
+            if ! jq -e --argjson year "$year" '
+              .schema == 1 and .ano == $year and .cargo == "presidente" and .uf == "RJ"
+              and (.registros | length == 93 and has("")
+                and all(keys[]; . == "" or test("^[0-9]{5}$"))
+                and all(.[]; keys == ["1", "2"] and all(.[]; type == "array" and length >= 6)))
+            ' "$source" >/dev/null; then
+              echo "::error file=$source::Expected the RJ state total and 92 municipalities with both rounds."
+              exit 1
+            fi
+          done
+
+      - name: Upload versioned JSON to R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ATLAS_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ATLAS_R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          R2_ENDPOINT: ${{ vars.ATLAS_R2_ENDPOINT }}
+          R2_BUCKET: ${{ vars.ATLAS_R2_BUCKET }}
+        run: |
+          : "${AWS_ACCESS_KEY_ID:?Set ATLAS_R2_ACCESS_KEY_ID in atlas-r2}"
+          : "${AWS_SECRET_ACCESS_KEY:?Set ATLAS_R2_SECRET_ACCESS_KEY in atlas-r2}"
+          if [[ "$R2_BUCKET" != 'elis-atlas-data' || ! "$R2_ENDPOINT" =~ ^https://[a-f0-9]{32}\.r2\.cloudflarestorage\.com$ ]]; then
+            echo '::error::Set ATLAS_R2_BUCKET to elis-atlas-data and ATLAS_R2_ENDPOINT to the S3 account endpoint.'
+            exit 1
+          fi
+
+          gzip_file=$(mktemp)
+          trap 'rm -f "$gzip_file"' EXIT
+          for year in $PILOT_YEARS; do
+            path="$year/presidente/RJ/municipios.json"
+            gzip -n -c "dados/$path" > "$gzip_file"
+            aws s3api put-object \
+              --endpoint-url "$R2_ENDPOINT" \
+              --bucket "$R2_BUCKET" \
+              --key "$RELEASE_PREFIX/$path" \
+              --body "$gzip_file" \
+              --content-type application/json \
+              --content-encoding gzip \
+              --cache-control 'public, max-age=31536000, immutable' >/dev/null
+          done
+
+      - name: Verify public files and CORS
+        run: |
+          verification_dir=$(mktemp -d)
+          trap 'rm -rf "$verification_dir"' EXIT
+          release_url="$PUBLIC_DATA_URL/$RELEASE_PREFIX"
+
+          for year in $PILOT_YEARS; do
+            path="$year/presidente/RJ/municipios.json"
+            curl --fail --silent --show-error --compressed --retry 3 --retry-all-errors \
+              --connect-timeout 10 --max-time 30 \
+              --header "Origin: $ATLAS_ORIGIN" \
+              --dump-header "$verification_dir/headers" \
+              --output "$verification_dir/municipios.json" "$release_url/$path"
+            if ! cmp -s "dados/$path" "$verification_dir/municipios.json"; then
+              echo "::error::Published JSON differs from the source for $year."
+              exit 1
+            fi
+            if ! tr -d '\r' < "$verification_dir/headers" |
+                grep -Fix "Access-Control-Allow-Origin: $ATLAS_ORIGIN" >/dev/null; then
+              echo "::error::R2 did not allow the Atlas origin for $year."
+              exit 1
+            fi
+          done
+
+          {
+            printf '## RJ presidential pilot\n\nRelease: %s\n\n' "$release_url"
+            for year in $PILOT_YEARS; do
+              printf -- '- [%s](%s/%s/presidente/RJ/municipios.json)\n' "$year" "$release_url" "$year"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
