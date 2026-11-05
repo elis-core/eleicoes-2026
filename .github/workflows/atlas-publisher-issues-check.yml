@@ -1,0 +1,37 @@
+name: Validar permissão de Issues do Atlas Publisher
+
+on:
+  push:
+    branches:
+      - atlas-publisher-bootstrap
+    paths:
+      - .github/workflows/atlas-publisher-issues-check.yml
+
+permissions: {}
+
+jobs:
+  check-issues-permission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Solicitar token com Issues write
+        id: publisher
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          client-id: ${{ vars.ATLAS_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.ATLAS_PUBLISHER_PRIVATE_KEY }}
+          permission-issues: write
+
+      - name: Confirmar App, repositório e leitura do protocolo
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          APP_SLUG: ${{ steps.publisher.outputs.app-slug }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$APP_SLUG" = elis-atlas-publisher
+          test "$REPO" = elis-core/eleicoes-2026
+          gh api installation/repositories | jq -e --arg repo "$REPO" \
+            '.total_count == 1 and .repositories[0].full_name == $repo' > /dev/null
+          test "$(gh api "repos/$REPO/issues/1" --jq '.number')" = 1
+          printf 'O App recebeu um token com Issues: write, limitado a %s, e leu a issue #1.\n' "$REPO" >> "$GITHUB_STEP_SUMMARY"
