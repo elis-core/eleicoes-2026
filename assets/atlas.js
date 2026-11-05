@@ -55,6 +55,7 @@ const metrics = [
 ];
 const files = new Map();
 const rjMunicipalPacks = new Map();
+const rjReleaseByPack = new WeakMap();
 let catalog, geography, geoTask = Promise.resolve(), geoRevision = 0, runRevision = 0;
 let visibleReport = null;
 
@@ -235,7 +236,10 @@ function loadRjMunicipalPack(ano) {
             if (data.schema === 1 && data.ano === ano && data.cargo === "presidente" &&
                 data.uf === "RJ" && records?.[""] && Object.keys(records).length === 93 &&
                 Object.values(records).every(turns =>
-                  Array.isArray(turns?.[1]) && Array.isArray(turns?.[2]))) return records;
+                  Array.isArray(turns?.[1]) && Array.isArray(turns?.[2]))) {
+              rjReleaseByPack.set(records, release);
+              return records;
+            }
           }
         }
       } catch {
@@ -629,4 +633,68 @@ async function start() {
   run();
 }
 
-start();
+const atlasExplorerReady = start();
+
+const atlasChatExplorer = {
+  async context() {
+    await atlasExplorerReady;
+    if (!catalog) throw new Error("Missing Atlas catalogue");
+    return selection();
+  },
+
+  get catalogue() {
+    return {states, cities: catalog.uf, years: catalog.anos};
+  },
+
+  async result(filters, metric) {
+    if (!filters || typeof filters !== "object") throw new Error("Missing filters");
+    const {uf, municipio = "", local = "", secao = "", mode = "analisar",
+      turno = "2", comparacao = "turnos", ano = "2022"} = filters;
+    const own = (object, key) => Object.hasOwn(object, key);
+    if (typeof uf !== "string" || !own(catalog.uf, uf) ||
+        typeof municipio !== "string" || (municipio && !own(catalog.uf[uf], municipio)) ||
+        !["analisar", "comparar"].includes(mode) || !["1", "2"].includes(turno) ||
+        !["turnos", "historico1", "historico2"].includes(comparacao) ||
+        !["2010", "2014", "2018", "2022"].includes(ano) ||
+        ![local, secao].every(key => typeof key === "string" && (!key || /^\d+:\d+$/.test(key))) ||
+        ((local || secao) && !municipio)) throw new Error("Invalid Atlas filters");
+
+    const sel = {uf, municipio, local, secao, mode, turno, comparacao, ano};
+    const periodList = periods(sel);
+    const labels = periodList.map(periodLabel);
+    const detail = local || secao ? await detailed(year, uf, municipio) : null;
+    if ((local && (!detail || !localKeys(local, Object.entries(detail.s)).length)) ||
+        (secao && (!detail || !own(detail.s, secao) ||
+          (local && !localKeys(local, [[secao, detail.s[secao]]]).length)))) {
+      return {gaps:labels, rows:[], selection:sel};
+    }
+    const area = [states[uf], municipio && titleCase(catalog.uf[uf][municipio]),
+      local && locationLabel(detail, local), secao && sectionLabel(secao)].filter(Boolean).join(" · ");
+    const results = await Promise.all(periodList.map(period => loadResult(sel, period)));
+    const link = urlFor(sel);
+    link.hash = "resultado";
+    const source = new URL("fontes.json", dataRoot).href;
+    const gaps = labels.filter((_, i) => !results[i]);
+    const candidateGap = results.some(result => result && !result.votes);
+    const versions = new Map();
+    if (uf === "RJ" && !detail) {
+      for (const periodYear of new Set(periodList.map(([itemYear]) => itemYear))) {
+        const release = rjReleaseByPack.get(await loadMunicipalPack(periodYear, uf));
+        if (release) {
+          if (!versions.has(release)) versions.set(release, []);
+          versions.get(release).push(periodYear);
+        }
+      }
+    }
+    const rows = [...metricRows(results), ...candidateRows(periodList, results)]
+      .filter(row => !metric || row.key === metric)
+      .filter(row => row.votes.slice(0, labels.length).some(value => value != null))
+      .map(row => {
+        const relative = row.key.startsWith("m:");
+        const rateDifference = relative ? relativeChange(...row.rates) : delta(...row.rates);
+        return {name:row.name, values:labels.map((_, i) => [n(row.votes[i]), pct(row.rates[i])]),
+          difference:[signed(delta(...row.votes)), signed(rateDifference, relative ? "%" : pointsUnit)]};
+      });
+    return {area, rows, labels, link:link.href, source, gaps, candidateGap, versions:[...versions], selection:sel};
+  }
+};
