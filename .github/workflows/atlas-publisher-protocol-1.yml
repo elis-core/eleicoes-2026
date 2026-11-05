@@ -1,0 +1,111 @@
+name: Transferir acompanhamento do Protocolo 1 para o Atlas Publisher
+
+on:
+  push:
+    branches:
+      - atlas-publisher-bootstrap
+    paths:
+      - .github/workflows/atlas-publisher-protocol-1.yml
+
+permissions: {}
+
+concurrency:
+  group: atlas-publisher-protocol-1
+  cancel-in-progress: false
+
+jobs:
+  move-protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Gerar token do Atlas Publisher
+        id: publisher
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          client-id: ${{ vars.ATLAS_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.ATLAS_PUBLISHER_PRIVATE_KEY }}
+          permission-issues: write
+          permission-contents: write
+
+      - name: Abrir a nova issue e conferir autoria
+        id: protocol
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          APP_SLUG: ${{ steps.publisher.outputs.app-slug }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$REPO" = elis-core/eleicoes-2026
+          test "$APP_SLUG" = elis-atlas-publisher
+          marker='<!-- atlas-protocol-id: 1 -->'
+          original=$(gh api "repos/$REPO/issues/1")
+          title="Protocolo #1 — $(jq -er '.title' <<< "$original")"
+          bot="$APP_SLUG[bot]"
+          existing=$(gh api --paginate "repos/$REPO/issues?state=all&per_page=100" |
+            jq -sc --arg bot "$bot" --arg marker "$marker" --arg title "$title" '
+              flatten | map(select(.user.login == $bot and .title == $title and
+              ((.body // "") | startswith($marker))))
+            ')
+          case "$(jq -er 'length' <<< "$existing")" in
+            0)
+              test "$(jq -er '.state' <<< "$original")" = open
+              issue=$(jq -c --arg marker "$marker" --arg title "$title" '
+                . as $original | {
+                  title: $title,
+                  body: ($marker + "\n\n" + ($original.body |
+                    sub("O número desta issue é o protocolo público[.]"; "O identificador público do atendimento é **Protocolo #1**.")) +
+                    "\n\n**Registro inicial do protocolo** · [Issue #1](" + $original.html_url + ")"),
+                  labels: [$original.labels[].name],
+                  assignees: [$original.assignees[].login]
+                } + (if $original.milestone then {milestone: $original.milestone.number} else {} end)
+              ' <<< "$original" | gh api --method POST "repos/$REPO/issues" --input -)
+              ;;
+            1) issue=$(jq -ec '.[0]' <<< "$existing") ;;
+            *) echo 'Há mais de uma issue para este protocolo.'; exit 1 ;;
+          esac
+          test "$(jq -er '.user.login' <<< "$issue")" = "$bot"
+          test "$(jq -er '.state' <<< "$issue")" = open
+          issue_url=$(jq -er '.html_url' <<< "$issue")
+          test "$issue_url" != "https://github.com/$REPO/issues/1"
+          printf 'url=%s\n' "$issue_url" >> "$GITHUB_OUTPUT"
+          printf '[Nova issue do Protocolo #1](%s) · %s\n' "$issue_url" "$bot" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Atualizar a ficha do protocolo e arquivar a issue anterior
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          ISSUE_URL: ${{ steps.protocol.outputs.url }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          old_url="https://github.com/$REPO/issues/1"
+          path=docs/analises/protocolo-1.md
+          base=$(gh api "repos/$REPO/git/ref/heads/main" --jq '.object.sha')
+          gh api "repos/$REPO/contents/$path?ref=$base" --jq '.content' |
+            base64 --decode > "$RUNNER_TEMP/atlas-protocolo-1.md"
+          doc="$RUNNER_TEMP/atlas-protocolo-1.md"
+          if grep -Fq "($old_url)" "$doc"; then
+            contents=$(sed "s|($old_url)|($ISSUE_URL)|g" "$doc" | base64 -w 0)
+            commit=$(jq -n --arg repo "$REPO" --arg base "$base" --arg path "$path" --arg contents "$contents" '{
+              query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid url } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repo, branchName: "main"},
+                expectedHeadOid: $base,
+                message: {headline: "Vincula o Protocolo #1 à issue do Atlas Publisher"},
+                fileChanges: {additions: [{path: $path, contents: $contents}]}
+              }}
+            }' | gh api graphql --input - | jq -er '.data.createCommitOnBranch.commit.url')
+            printf '\n[Ficha atualizada no repositório](%s)\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+          else
+            grep -Fq "($ISSUE_URL)" "$doc"
+          fi
+
+          original=$(gh api "repos/$REPO/issues/1")
+          if [ "$(jq -er '.state' <<< "$original")" = open ]; then
+            archived=$(jq -c --arg url "$ISSUE_URL" '
+              {state: "closed", state_reason: "duplicate",
+               body: ("**Acompanhamento transferido.** Acompanhe o [Protocolo #1 na nova issue](" + $url + "). Este registro preserva a abertura original.\n\n" + .body)}
+            ' <<< "$original" | gh api --method PATCH "repos/$REPO/issues/1" --input -)
+            test "$(jq -er '.state' <<< "$archived")" = closed
+          else
+            jq -e --arg url "$ISSUE_URL" '.body | contains($url)' <<< "$original" > /dev/null
+          fi
