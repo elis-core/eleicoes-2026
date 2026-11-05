@@ -1,6 +1,6 @@
 # O que pode explicar a mudança no resultado presidencial entre os turnos de 2026?
 
-**Protocolo [#1](https://github.com/elis-core/eleicoes-2026/issues/1) · 5 de novembro de 2026 · Versão 0.1 · Em triagem**
+**Protocolo [#1](https://github.com/elis-core/eleicoes-2026/issues/2) · 5 de novembro de 2026 · Versão 0.1 · Em triagem**
 
 **Origem:** consulta externa anonimizada
 
@@ -77,5 +77,5 @@ Se a alteração simulada atingir apenas a totalização, o confronto com o BU d
 ## Fontes
 
 - [Metodologia para investigar dúvidas sobre os resultados eleitorais](metodologia.md)
-- [Protocolo público e histórico de andamento](https://github.com/elis-core/eleicoes-2026/issues/1)
+- [Protocolo público e histórico de andamento](https://github.com/elis-core/eleicoes-2026/issues/2)
 - [Portal de Dados Abertos do TSE, resultados de 2026](https://dadosabertos.tse.jus.br/dataset/resultados-2026)
