@@ -44,3 +44,5 @@
   .atlas-chat-message table{font-size:.75rem}
   .atlas-chat-message th,.atlas-chat-message td{padding:.3rem}
 }
+
+.atlas-chat-receipt { overflow-wrap: anywhere; }

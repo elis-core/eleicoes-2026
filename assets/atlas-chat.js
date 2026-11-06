@@ -7,7 +7,7 @@
   const productionApi = {
     origin:"https://dark-term-1a8d.elis-electoral-integrity-strategies.workers.dev",
     enabled:true,
-    reports:false
+    reports:true
   };
   const localDevelopment = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
   const localApi = localDevelopment && new URLSearchParams(location.search).get("atlas-chat-api") === "local";
@@ -62,6 +62,15 @@
     const button = element("button", label);
     button.type = type;
     return button;
+  }
+
+  function reportRequestId() {
+    if (crypto.randomUUID) return crypto.randomUUID();
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+    return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join("-");
   }
 
   async function post(path, data) {
@@ -235,15 +244,28 @@
     if (published && (!Number.isSafeInteger(response.issueNumber) || response.issueNumber <= 0)) {
       throw new Error("Missing issue number");
     }
-    reply.replaceChildren(element("p", tr("Comprovante privado ", "Private receipt ") + receipt));
+    const receiptText = element("p", tr("Comprovante privado ", "Private receipt "));
+    receiptText.append(element("code", receipt, "atlas-chat-receipt"));
+    const copy = makeButton(tr("Copiar comprovante", "Copy receipt"));
+    const copyStatus = element("p");
+    copyStatus.setAttribute("role", "status");
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(receipt);
+        copyStatus.textContent = tr("Comprovante copiado.", "Receipt copied.");
+      } catch {
+        copyStatus.textContent = tr("Selecione e copie o código acima.", "Select and copy the code above.");
+      }
+    });
+    reply.replaceChildren(receiptText, copy, copyStatus);
     if (published) {
       reply.append(element("p", tr("Protocolo #", "Reference #") + response.issueNumber + "."),
         link(tr("Abrir Issue publicada", "Open published issue"),
           "https://github.com/elis-core/eleicoes-2026/issues/" + response.issueNumber));
     } else {
       const statusText = element("p", demo ? tr("Envio simulado. Nenhum relato foi encaminhado.", "Simulated submission. No report was sent.") :
-        tr("Recebido para triagem privada. A Issue estará disponível aqui após a publicação.",
-          "Received for private triage. The issue will appear here after publication."));
+        tr("Recebido para triagem privada. Guarde o comprovante para acompanhar o relato e abrir a Issue após a publicação.",
+          "Received for private triage. Keep the receipt to check the report and open the issue after publication."));
       reply.append(statusText);
       const check = makeButton(tr("Consultar situação", "Check status"));
       check.addEventListener("click", () => checkReceipt(reply, receipt, check, statusText));
@@ -331,7 +353,7 @@
       event.preventDefault();
       const reviewed = field.value.trim();
       if (!reviewed || submit.disabled) return;
-      if (reviewed !== lastSummary) requestId = crypto.randomUUID();
+      if (reviewed !== lastSummary) requestId = reportRequestId();
       lastSummary = reviewed;
       for (const control of [submit, cancel, field, lookupButton, code]) control.disabled = true;
       note.textContent = tr("Enviando…", "Sending…");

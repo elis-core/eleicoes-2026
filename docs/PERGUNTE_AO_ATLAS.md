@@ -14,4 +14,8 @@ Sirva a raiz com `python -m http.server 8000 --bind 127.0.0.1` e abra `http://12
 
 ## Relatos privados
 
-A interface mantém a opção desativada em produção enquanto `/api/questoes` estiver indisponível. Antes de ativar `productionApi.reports`, valide submissão após revisão, comprovante opaco e consulta de situação privada. Após a triagem e publicação, o protocolo é o número da Issue criada pelo GitHub App. Credenciais e relatos originais ficam no servidor.
+A interface permite revisar o resumo antes do envio. O Worker guarda o texto em D1 e devolve um comprovante privado. A consulta pelo comprovante informa apenas a situação e, após publicação, o número da Issue. O protocolo público é esse mesmo número.
+
+A triagem publica com o GitHub App `elis-atlas-publisher`, usando exclusivamente um texto público preparado pelo revisor. A chave do App permanece no computador do revisor. O relato original e o comprovante não integram a Issue.
+
+O pacote de implantação contém o módulo do Worker, a migração D1 e a CLI de triagem. Valide `GET /api/questoes`, o preflight CORS e o fluxo local antes de publicar a página. O script de publicação da interface exige que a rota do Worker esteja pronta.
