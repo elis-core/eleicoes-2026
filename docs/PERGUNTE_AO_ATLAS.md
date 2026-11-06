@@ -10,7 +10,9 @@ Sirva a raiz com `python -m http.server 8000 --bind 127.0.0.1` e abra `http://12
 
 `productionApi.origin`, em `assets/atlas-chat.js`, aponta para o Worker validado em `workers.dev`. Para mudar para `https://atlas-api.electoralintegrity.org`, valide o domínio, `GET /api/health` e o CORS de `OPTIONS` e `POST /api/chat` com a origem do Atlas antes de atualizar a configuração. Atualize a versão do script nos dois HTMLs.
 
-`POST /api/chat` recebe `message`, `filters` e `history`. O Worker retorna `type: "result"` ou `"no_data"` com `filters`, `periods`, `table`, `notes`, `explorerUrl` e `sources`, ou mensagens de esclarecimento e escopo. Os valores ausentes são `null` e aparecem como um traço.
+`POST /api/chat` recebe `message`, `filters`, `history` e, opcionalmente, `locale`. O Worker retorna `type: "result"` ou `"no_data"` com `filters`, `periods`, `table`, `notes`, `explorerUrl` e `sources`, ou mensagens de esclarecimento e escopo. Os valores ausentes são `null` e aparecem como um traço.
+
+O campo opcional `guidance` contém uma mensagem de orientação e até dois links de consulta. A primeira parte da resposta mostra o limite específico e os dados disponíveis. A segunda oferece opções cuja cobertura o Worker verificou, ou pede outro recorte. As sugestões abrem o Explorador com os filtros correspondentes. Perguntas sobre causas podem receber opções de comparação, pois os totais por si só não identificam o motivo de uma variação.
 
 ## Relatos privados
 

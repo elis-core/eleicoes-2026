@@ -28,7 +28,7 @@
 
   const idle = demo ? tr("Modo de desenvolvimento. Dados do Explorador. Relatos simulados.",
     "Development mode. Explorer data. Simulated reports.") : enabled ?
-    tr("Resultados presidenciais · Da UF à seção eleitoral", "Presidential results · From states to polling sections") :
+    "" :
     tr("Chat em preparação. O Explorador já está disponível abaixo.",
       "Chat integration in progress. The Explorer is available below.");
   status.textContent = idle;
@@ -189,17 +189,38 @@
     return {kind:"result", selection:filters, metric};
   }
 
-  function showResult(result) {
+  function showGuidance(reply, guidance) {
+    if (!guidance || typeof guidance.message !== "string") return;
+    const next = element("div", null, "atlas-chat-guidance");
+    next.append(element("h3", tr("O que posso consultar", "What I can look up")), element("p", guidance.message));
+    const actions = element("div", null, "atlas-chat-guidance-links");
+    for (const suggestion of Array.isArray(guidance.suggestions) ? guidance.suggestions.slice(0, 2) : []) {
+      if (typeof suggestion?.label !== "string" || typeof suggestion.explorerUrl !== "string") continue;
+      try {
+        const url = new URL(suggestion.explorerUrl);
+        const official = "https://atlas-brazil-2026.electoralintegrity.org";
+        if (url.origin !== official || url.hash !== "#explorador" || !["/", "/en/"].includes(url.pathname)) continue;
+        actions.append(link(suggestion.label, url.pathname + url.search + url.hash));
+      } catch { /* Ignore invalid destinations. */ }
+    }
+    if (actions.childElementCount) next.append(actions);
+    reply.append(next);
+  }
+
+  function showResult(result, answer) {
     if (!result.rows.length && !result.link) {
       const recorte = tr("Não há dados disponíveis para esse recorte na cobertura do Atlas.",
         "Data for that selection are unavailable in the Atlas coverage.");
       const indicador = tr("O indicador ou candidato solicitado não tem valores disponíveis nesse recorte.",
         "The requested indicator or candidate has no available values for that selection.");
-      message("atlas", result.gaps.length ? recorte : indicador);
+      const reply = message("atlas", result.gaps.length ? recorte : indicador);
+      showGuidance(reply, answer?.guidance);
       return;
     }
     const reply = message("atlas");
     reply.append(element("h3", result.area));
+    if (answer?.type === "no_data") reply.append(element("p", tr("Sem resultados para o recorte solicitado.",
+      "No results for the requested selection.")));
     const comparing = result.labels.length === 2;
     const wrap = element("div", null, "table-wrap");
     wrap.tabIndex = 0;
@@ -229,7 +250,7 @@
     if (result.gaps.length) reply.append(element("p", tr("Sem dados para ", "No data for ") + result.gaps.join(", ") + "."));
     if (result.candidateGap) reply.append(element("p", tr("A votação nominal está indisponível em pelo menos um período.",
       "Candidate vote totals are unavailable for at least one period.")));
-    if (comparing) reply.append(element("p", tr("Diferenças do período em foco em relação à referência. As taxas dos candidatos variam em pontos percentuais e as de apuração em termos relativos.",
+    if (comparing && !result.gaps.length) reply.append(element("p", tr("Diferenças do período em foco em relação à referência. As taxas dos candidatos variam em pontos percentuais e as de apuração em termos relativos.",
       "Changes compare the focus period with the reference. Candidate share changes are in percentage points and vote-count rate changes are relative.")));
     const sources = element("p");
     sources.append(link(tr("Abrir no Explorador", "Open in the Explorer"), result.link),
@@ -237,6 +258,7 @@
     reply.append(sources);
     if (result.versions.length) reply.append(element("p", tr("Versão dos dados no R2 ", "R2 data version ") +
       result.versions.map(([version, years]) => version + " (" + years.join(", ") + ")").join(", "), "atlas-chat-version"));
+    showGuidance(reply, answer?.guidance);
   }
 
   function showReceipt(reply, receipt, response) {
@@ -415,12 +437,13 @@
         previousMetric = answer.metric;
         pendingQuestion = pendingNeed = null;
       } else if (["result", "no_data"].includes(answer.type)) {
-        showResult(atlasChatExplorer.workerResult(answer));
+        showResult(atlasChatExplorer.workerResult(answer), answer);
         previousFilters = answer.filters;
         pendingQuestion = pendingNeed = null;
       } else if (["clarification", "unsupported", "report", "error"].includes(answer.type) &&
         typeof answer.message === "string") {
-        message("atlas", answer.message);
+        const reply = message("atlas", answer.message);
+        showGuidance(reply, answer.guidance);
         if (answer.type === "error") {
           if (!input.value) input.value = question;
           return;
