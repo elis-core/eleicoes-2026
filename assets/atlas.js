@@ -360,8 +360,8 @@ function table(name, rows, labels, type, indicators = [], relative = false) {
     comparing ? `<th scope="col">${label}<br>${t("Quantidade (%)", "Count (%)")}</th>` :
       `<th scope="col">${label}<br>${t("Quantidade", "Count")}</th><th scope="col">${label}<br>${t("Taxa", "Rate")}</th>`).join("")}
     ${comparing ? `<th scope="col">${changeLabel}<br>${changeDetail}</th>` : ""}</tr>`;
-  const renderRows = (items, relativeRates) => items.map(({name, votes, rates}) =>
-    `<tr><th scope="row">${html(name)}</th>${labels.map((_, i) =>
+  const renderRows = (items, relativeRates) => items.map(({key, name, votes, rates}) =>
+    `<tr data-result-key="${html(key)}"><th scope="row">${html(name)}</th>${labels.map((_, i) =>
       comparing ? `<td class="paired-count">${countWithRate(n(votes[i]), pct(rates[i]))}</td>` :
         `<td>${n(votes[i])}</td><td>${pct(rates[i])}</td>`).join("")}
     ${comparing ? `<td class="paired-count">${countWithRate(signed(delta(...votes)),
@@ -537,51 +537,119 @@ function showMunicipalities(sel, periodList, packs, officeResults) {
   $("status").textContent = "";
 }
 
-async function run(focus = false) {
-  const revision = ++runRevision;
-  await geoTask;
-  if (revision !== runRevision) return;
-  const sel = selection();
+function checkedSelection(filters) {
+  const sel = {
+    cargo:filters.cargo || "presidente",uf:filters.uf,municipio:filters.municipio || "",
+    local:filters.local || "",secao:filters.secao || "",mode:filters.mode || "analisar",
+    turno:filters.turno || "2",comparacao:filters.comparacao || "turnos",ano:filters.ano || "2022",
+    visao:filters.visao || ""
+  };
+  if (!officeModule.offices.includes(sel.cargo) || !Object.hasOwn(catalog.uf,sel.uf) ||
+      (sel.municipio && !Object.hasOwn(catalog.uf[sel.uf],sel.municipio)) ||
+      !["analisar","comparar"].includes(sel.mode) || !["1","2"].includes(sel.turno) ||
+      !["turnos","historico1","historico2"].includes(sel.comparacao) ||
+      !["2010","2014","2018","2022"].includes(sel.ano) ||
+      ![sel.local,sel.secao].every(key => typeof key === "string" && (!key || /^\d+:\d+$/.test(key))) ||
+      ((sel.local || sel.secao) && !sel.municipio) ||
+      (sel.visao && (sel.visao !== "municipios" || sel.uf !== "RJ"))) {
+    throw new Error("Invalid Atlas selection");
+  }
+  return sel;
+}
+
+async function synchronizeFilters(sel) {
+  cargo.value = sel.cargo;
+  uf.value = sel.uf;
+  loadCities(sel.visao ? municipalList : sel.municipio);
+  form.elements.mode.value = sel.mode;
+  $("turno").value = sel.turno;
+  $("comparacao").value = sel.comparacao;
+  $("ano").value = sel.ano;
+  updateMode();
+  await loadGeography(sel.local,sel.secao);
+}
+
+function verifyAnswer(answer, sel, periodList, results) {
+  if (!answer) return;
+  if (answer.dataVersion && answer.dataVersion !== officeManifest.versao) throw new Error("Atlas data version changed");
+  if (answer.periods.length !== periodList.length || answer.periods.some((period,i) =>
+      period.ano !== periodList[i][0] || period.turno !== periodList[i][1] || period.available !== !!results[i])) {
+    throw new Error("Atlas period coverage changed");
+  }
+  const rows = [...metricRows(results),...candidateRows(periodList,results)];
+  for (const row of answer.table) {
+    const current = rows.find(item => item.key === row.key);
+    if (!current || periodList.some((_,i) => row.counts[i] !== current.votes[i] ||
+      (row.rates[i] == null ? current.rates[i] != null :
+        current.rates[i] == null || Math.abs(row.rates[i]-current.rates[i]) > 1e-7))) {
+      throw new Error("Atlas results changed");
+    }
+  }
+}
+
+async function renderSelection(filters, {focus = false, synchronize = false, metric = "", answer, revision} = {}) {
+  const token = revision ?? ++runRevision;
+  const sel = checkedSelection(filters);
   const periodList = periods(sel);
-  const place = territory(sel);
-  const labels = periodList.map(periodLabel);
-  $("breadcrumb").textContent = officeModule.officeName(sel.cargo,t) + " / " + place.trail;
-  $("resultado-titulo").textContent = place.name;
-  $("subtitle").textContent = labels.length === 2 ? t(`Foco: ${labels[0]} · Referência: ${labels[1]}`, `Focus: ${labels[0]} · Reference: ${labels[1]}`) : labels[0];
   $("status").textContent = t("Carregando os resultados…", "Loading results…");
-  $("output").replaceChildren();
-  $("actions").hidden = true;
-  visibleReport = null;
-  if (focus) $("resultado-titulo").focus();
+  let results, packs, codes, resultsByCity;
   try {
     if (sel.visao && sel.cargo !== "presidente") {
       const pack = await officeData.pack(sel);
-      if (revision !== runRevision) return;
-      if (!pack) {
-        $("status").textContent = officeModule.coverageNote("fora_cobertura",sel.cargo,2026,Number(sel.turno),t);
-      } else {
-        const codes = Object.keys(catalog.uf[sel.uf]);
-        const resultsByCity = await Promise.all(codes.map(code =>
-          Promise.all(periodList.map(period => loadResult({...sel,municipio:code,visao:""},period)))));
-        if (revision !== runRevision) return;
-        showOfficeMunicipalities(sel,periodList,codes,resultsByCity);
-      }
+      codes = Object.keys(catalog.uf[sel.uf]);
+      resultsByCity = pack ? await Promise.all(codes.map(code =>
+        Promise.all(periodList.map(period => loadResult({...sel,municipio:code,visao:""},period))))) : null;
     } else if (sel.visao) {
-      const packs = await Promise.all(periodList.map(([ano]) => loadMunicipalPack(ano, sel.uf)));
-      if (revision !== runRevision) return;
-      showMunicipalities(sel, periodList, packs);
+      packs = await Promise.all(periodList.map(([ano]) => loadMunicipalPack(ano,sel.uf)));
     } else {
-      const results = await Promise.all(periodList.map((period) => loadResult(sel, period)));
-      if (revision !== runRevision) return;
-      show(sel, periodList, results);
+      results = await Promise.all(periodList.map(period => loadResult(sel,period)));
+      verifyAnswer(answer,sel,periodList,results);
+    }
+    if (token !== runRevision) return null;
+    if (synchronize) await synchronizeFilters(sel);
+    if (token !== runRevision) return null;
+    const place = territory(sel);
+    const labels = periodList.map(periodLabel);
+    $("breadcrumb").textContent = officeModule.officeName(sel.cargo,t) + " / " + place.trail;
+    $("resultado-titulo").textContent = place.name;
+    $("subtitle").textContent = labels.length === 2 ?
+      t(`Foco: ${labels[0]} · Referência: ${labels[1]}`,`Focus: ${labels[0]} · Reference: ${labels[1]}`) : labels[0];
+    if (sel.visao && sel.cargo !== "presidente") {
+      if (resultsByCity) showOfficeMunicipalities(sel,periodList,codes,resultsByCity);
+      else {
+        $("output").replaceChildren();
+        visibleReport = null;
+        $("actions").hidden = true;
+        $("status").textContent = officeModule.coverageNote("fora_cobertura",sel.cargo,2026,Number(sel.turno),t);
+      }
+    } else if (sel.visao) showMunicipalities(sel,periodList,packs);
+    else show(sel,periodList,results);
+    for (const row of $("output").querySelectorAll("[data-result-key]")) {
+      row.classList.toggle("atlas-row-focus",row.dataset.resultKey === metric);
     }
     const resultUrl = urlFor(sel);
     resultUrl.hash = location.hash;
-    history.replaceState(null, "", resultUrl);
+    history.replaceState(null,"",resultUrl);
     updateLanguageLink();
-  } catch {
-    if (revision === runRevision) $("status").textContent = t("Falha ao carregar os resultados. Tente novamente.", "Could not load the results. Try again.");
+    if (focus) $("resultado-titulo").focus();
+    return {selection:sel,area:place.name,found:!!visibleReport,metric};
+  } catch (error) {
+    if (token === runRevision) {
+      $("status").textContent = t(
+        "Não foi possível atualizar a consulta. O último resultado continua disponível.",
+        "Could not update the query. The last result remains available.");
+    }
+    throw error;
   }
+}
+
+async function run(focus = false) {
+  document.dispatchEvent(new Event("atlas:selectionstart"));
+  const revision = ++runRevision;
+  await geoTask;
+  if (revision !== runRevision) return;
+  try { return await renderSelection(selection(),{focus,revision}); }
+  catch { return null; }
 }
 
 function csv() {
@@ -672,6 +740,8 @@ async function start() {
   municipio.addEventListener("change", () => loadGeography());
   local.addEventListener("change", () => updateSections());
   form.addEventListener("change", async () => {
+    ++runRevision;
+    document.dispatchEvent(new Event("atlas:filterchange"));
     updateMode();
     updateLanguageLink();
     await geoTask;
@@ -711,6 +781,13 @@ async function start() {
 const atlasExplorerReady = start();
 
 const atlasChatExplorer = {
+  current() { return catalog ? selection() : null; },
+  reserve() { return ++runRevision; },
+  isCurrent(revision) { return revision === runRevision; },
+  async display(filters, options = {}) {
+    await atlasExplorerReady;
+    return renderSelection(filters,{...options,synchronize:true});
+  },
   async context() {
     await atlasExplorerReady;
     if (!catalog) throw new Error("Missing Atlas catalogue");

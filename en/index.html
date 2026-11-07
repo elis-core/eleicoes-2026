@@ -7,9 +7,11 @@
 <meta name="theme-color" content="#102b31">
 <title>Electoral Atlas | 2026 Elections</title>
 <link rel="stylesheet" href="../assets/atlas.css?v=20261105-aliancas">
-<script src="../assets/atlas.js?v=20261107-cargos" defer></script>
-<link rel="stylesheet" href="../assets/atlas-chat.css?v=20261106-orientacao">
-<script src="../assets/atlas-chat.js?v=20261107-cargos" defer></script>
+<script src="../assets/atlas.js?v=20261107-painel" defer></script>
+<link rel="stylesheet" href="../assets/atlas-chat.css?v=20261107-painel">
+<script src="../assets/atlas-questions.js?v=20261107-painel" defer></script>
+<script src="../assets/atlas-analyses.js?v=20261107-painel" defer></script>
+<script src="../assets/atlas-chat.js?v=20261107-painel" defer></script>
 <link rel="alternate" hreflang="en-GB" href="./">
 <link rel="alternate" hreflang="pt-BR" href="../">
 <script src="../assets/aliancas-rj.js?v=20261105-aliancas" defer></script>
@@ -20,6 +22,16 @@
 <a class="brand" href="./"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Electoral <b>Atlas</b><small>Electoral Integrity Strategies (ELIS)</small></span></a>
 <nav aria-label="Main navigation"><a href="#explorador">Explorer</a><a href="#estudos">Studies</a><a href="#fontes">Sources</a><a href="#aliancas-rj">Alliances</a><span class="language" role="group" aria-label="Language"><a id="language-switch" href="../" hreflang="pt-BR" lang="pt-BR" aria-label="Português">PT</a><span aria-current="true">EN</span></span></nav>
 </div></header>
+<div class="atlas-workspace">
+<aside class="atlas-sidebar" aria-label="Question history">
+<details id="atlas-history-panel">
+<summary>Your questions</summary>
+<p id="atlas-history-storage" class="hint">Saved in this browser.</p>
+<p id="atlas-history-empty" class="hint">Your questions will appear here.</p>
+<ol id="atlas-question-list" class="atlas-question-list"></ol>
+<button id="atlas-history-clear" type="button" class="atlas-history-clear" hidden>Clear history</button>
+</details>
+</aside>
 <main>
 <section class="atlas-ask-hero" aria-labelledby="atlas-ask-title">
 <div class="wrap atlas-ask-wrap" id="atlas-chat">
@@ -85,5 +97,6 @@
 </section>
 </div>
 </main>
+</div>
 <footer><div class="wrap"><strong>Electoral Atlas</strong><span>Electoral Integrity Strategies (ELIS) · TSE open data</span><a href="#explorador">Back to the explorer ↑</a></div></footer>
 </body></html>

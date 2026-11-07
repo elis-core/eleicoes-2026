@@ -59,3 +59,24 @@ body:has(.atlas-ask-hero) .mark i{background:var(--forest)}
 }
 
 .atlas-chat-receipt { overflow-wrap: anywhere; }
+
+.atlas-workspace{display:grid;grid-template-columns:230px minmax(0,1fr);align-items:start;overflow-x:clip}
+.atlas-workspace>main{min-width:0}
+.atlas-sidebar{position:sticky;top:0;max-height:100svh;overflow:auto;border-right:1px solid var(--line);padding:1rem;background:#f6f8f6}
+.atlas-sidebar details{border:0;padding:0;margin:0}
+.atlas-sidebar summary{font-size:.95rem}
+.atlas-sidebar .hint{font-size:.76rem;margin:.65rem 0}
+.atlas-question-list{list-style:none;padding:0;margin:.75rem 0;display:grid;gap:.35rem}
+.atlas-question-list button{width:100%;border:1px solid transparent;border-radius:.6rem;padding:.65rem;text-align:left;color:var(--ink);background:transparent;font:inherit;font-size:.83rem;overflow-wrap:anywhere}
+.atlas-question-list button:hover{background:#e9f1ec}
+.atlas-question-list button[aria-current=true]{background:#e0f1e8;border-color:#9fcdb9}
+.atlas-question-list span{display:block;line-height:1.4}
+.atlas-question-list small{display:block;color:var(--muted);font-size:.7rem;margin-top:.3rem}
+.atlas-history-clear{min-height:44px;border:1px solid var(--line);border-radius:.55rem;background:#fff;color:var(--muted);padding:.4rem .7rem;font-size:.8rem}
+.atlas-row-focus>*{background:#fff3cd}
+.atlas-row-focus>th{box-shadow:inset 3px 0 #ad7715}
+@media(max-width:999px){
+  .atlas-workspace{grid-template-columns:minmax(0,1fr)}
+  .atlas-sidebar{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);padding:.65rem 1rem}
+  .atlas-sidebar details[open]{max-height:42svh;overflow:auto}
+}

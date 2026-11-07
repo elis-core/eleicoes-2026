@@ -25,6 +25,7 @@
   const history = [];
   const demoReceipts = new Set();
   let previousFilters, previousMetric, pendingQuestion, pendingNeed, explorerContext, activeReport, busy = false;
+  let requestRevision = 0, pendingEntry, pendingRequest;
 
   const idle = demo ? tr("Modo de desenvolvimento. Dados do Explorador. Relatos simulados.",
     "Development mode. Explorer data. Simulated reports.") : enabled ?
@@ -76,7 +77,7 @@
   async function post(path, data) {
     const response = await fetch(new URL(path, apiOrigin), {
       method:"POST", headers:{"Content-Type":"application/json"}, credentials:"omit",
-      cache:"no-store", body:JSON.stringify(data), signal:AbortSignal.timeout(30000)
+      cache:"no-store", body:JSON.stringify(data), signal:path === "/api/chat" && pendingRequest ? AbortSignal.any([pendingRequest.signal,AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000)
     });
     if (path === "/api/chat" && [400, 429].includes(response.status)) return response.json();
     if (!response.ok) throw new Error("Atlas API HTTP " + response.status);
@@ -211,58 +212,25 @@
     reply.append(next);
   }
 
-  function showResult(result, answer) {
-    if (!result.rows.length && !result.link) {
-      const recorte = tr("Não há dados disponíveis para esse recorte na cobertura do Atlas.",
-        "Data for that selection are unavailable in the Atlas coverage.");
-      const indicador = tr("O indicador ou candidato solicitado não tem valores disponíveis nesse recorte.",
-        "The requested indicator or candidate has no available values for that selection.");
-      const reply = message("atlas", result.gaps.length ? recorte : indicador);
-      showGuidance(reply, answer?.guidance);
-      return;
-    }
-    const reply = message("atlas");
-    reply.append(element("h3", result.area));
-    if (answer?.type === "no_data") reply.append(element("p", tr("Sem resultados para o recorte solicitado.",
-      "No results for the requested selection.")));
-    const comparing = result.labels.length === 2;
-    const wrap = element("div", null, "table-wrap");
-    wrap.tabIndex = 0;
-    wrap.setAttribute("role", "region");
-    wrap.setAttribute("aria-label", tr("Resultados da consulta", "Query results"));
-    const table = element("table");
-    const header = table.createTHead().insertRow();
-    const headers = [tr("Indicador ou candidato", "Indicator or candidate"), ...result.labels];
-    if (comparing) headers.push(tr("Diferença", "Change"));
-    for (const label of headers) {
-      const cell = element("th", label);
-      cell.scope = "col";
-      header.append(cell);
-    }
-    const body = table.createTBody();
-    for (const row of result.rows) {
-      const line = body.insertRow();
-      const name = element("th", row.name);
-      name.scope = "row";
-      line.append(name);
-      const values = comparing ? [...row.values, row.difference] : row.values;
-      for (const [count, rate] of values) line.insertCell().textContent = rate === "—" ? count : count + " (" + rate + ")";
-    }
-    wrap.append(table);
-    if (result.rows.length) reply.append(wrap);
-    for (const note of result.notes ?? []) reply.append(element("p", note));
-    if (result.gaps.length) reply.append(element("p", tr("Sem dados para ", "No data for ") + result.gaps.join(", ") + "."));
-    if (result.candidateGap) reply.append(element("p", tr("A votação nominal está indisponível em pelo menos um período.",
-      "Candidate vote totals are unavailable for at least one period.")));
-    if (comparing && !result.gaps.length) reply.append(element("p", tr("Diferenças do período em foco em relação à referência. As taxas dos candidatos variam em pontos percentuais e as de apuração em termos relativos.",
-      "Changes compare the focus period with the reference. Candidate share changes are in percentage points and vote-count rate changes are relative.")));
-    const sources = element("p");
-    sources.append(link(tr("Abrir no Explorador", "Open in the Explorer"), result.link),
-      link(tr("Fonte TSE e manifesto de ingestão", "TSE source and ingestion manifest"), result.source));
-    reply.append(sources);
-    if (result.versions.length) reply.append(element("p", tr("Versão dos dados ", "Data version ") +
-      result.versions.map(([version, years]) => version + " (" + years.join(", ") + ")").join(", "), "atlas-chat-version"));
-    showGuidance(reply, answer?.guidance);
+  async function showResult(filters, {answer,metric = "",revision} = {}) {
+    const result = await atlasChatExplorer.display(filters,{answer,metric,revision});
+    if (!result) return null;
+    const reply = message("atlas",result.found ?
+      tr("Resultados atualizados abaixo para ","Results updated below for ") + result.area + "." :
+      tr("A cobertura deste recorte está indicada abaixo.","Coverage for this selection is shown below."));
+    reply.append(link(tr("Ver resultados","View results"),"#resultado"));
+    showGuidance(reply,answer?.guidance);
+    if (!input.value) get("resultado").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+    return result;
+  }
+
+  function analysisReply(analysis, automatic = false) {
+    const reply = message("atlas",tr("Análise publicada de ","Published analysis for ") + analysis.entry.title + ".");
+    const anchor = link(tr("Abrir análise em nova aba","Open analysis in a new tab"),analysis.entry.url);
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    reply.append(anchor);
+    if (automatic) window.open(analysis.entry.url,"_blank","noopener,noreferrer");
   }
 
   function showReceipt(reply, receipt, response) {
@@ -405,72 +373,171 @@
     return true;
   }
 
+  function cancelPending() {
+    if (!busy) return;
+    ++requestRevision;
+    pendingRequest?.abort();
+    if (pendingEntry) atlasQuestions.update(pendingEntry,{state:"error",message:tr(
+      "A consulta foi interrompida por uma nova seleção.","The query was interrupted by a new selection.")});
+    busy = false;
+    send.disabled = !enabled;
+    status.textContent = idle;
+  }
+  const manualSelection = () => { cancelPending(); atlasQuestions.select(""); };
+  document.addEventListener("atlas:filterchange",manualSelection);
+  document.addEventListener("atlas:selectionstart",manualSelection);
+
   async function ask(text) {
     const question = text.trim();
     if (!question || busy || !enabled) return;
+    const current = atlasChatExplorer.current();
     const reportIntent = normalize(question).match(/^(?:(?:quero|gostaria de|i want to|i would like to) )?(?:registrar (?:uma )?questao|relatar|enviar (?:um )?relato|raise (?:a )?question|submit (?:a )?report)\b(.*)$/);
     if (reportIntent) {
-      const summary = question.includes(":") ? question.slice(question.indexOf(":") + 1).trim() :
+      const summary = question.includes(":") ? question.slice(question.indexOf(":")+1).trim() :
         reportIntent[1].trim() ? question : "";
+      const entry = atlasQuestions.add(tr("Registrar uma questão","Raise a question"),current,[]);
+      atlasQuestions.update(entry,{state:"report"});
       if (openReport(summary)) input.value = "";
+      return;
+    }
+    const analysis = current && atlasAnalyses.resolve(question,current,atlasChatExplorer.catalogue);
+    if (analysis?.entry) {
+      const entry = atlasQuestions.add(question,analysis.filters,[]);
+      atlasQuestions.update(entry,{state:"analysis",filters:analysis.filters});
+      input.value = "";
+      message("user",question);
+      analysisReply(analysis,analysis.automatic);
       return;
     }
     busy = true;
     send.disabled = true;
+    const revision = ++requestRevision;
+    pendingRequest = new AbortController();
+    const entry = atlasQuestions.add(question,current,history);
+    pendingEntry = entry;
     input.value = "";
-    message("user", question);
-    status.textContent = tr("Consultando o Atlas…", "Checking the Atlas…");
+    message("user",question);
+    status.textContent = tr("Consultando o Atlas…","Checking the Atlas…");
     try {
       const explorer = await atlasChatExplorer.context();
+      if (revision !== requestRevision) return;
+      const token = atlasChatExplorer.reserve();
       const currentContext = JSON.stringify(explorer);
       if (explorerContext && explorerContext !== currentContext) {
         previousFilters = previousMetric = pendingQuestion = pendingNeed = undefined;
         history.length = 0;
       }
       explorerContext = currentContext;
+      atlasQuestions.update(entry,{context:previousFilters || explorer,history:[...history]});
       const extra = pendingNeed === "uf" && /^[a-z]{2}$/i.test(question) ? "UF " + question.toUpperCase() :
-        ["zona", "turno", "local", "secao"].includes(pendingNeed) && /^\d/.test(question) ?
+        ["zona","turno","local","secao"].includes(pendingNeed) && /^\d/.test(question) ?
           (pendingNeed === "turno" ? question + " turno" : pendingNeed + " " + question) : question;
-      const answer = demo ? demoChat(pendingQuestion ? pendingQuestion + " " + extra : question, explorer) :
-        await post("/api/chat", {message:question, locale:document.documentElement.lang,
-          filters:previousFilters || explorer, history});
-      if (answer.kind === "result") {
-        const result = await atlasChatExplorer.result(answer.selection, answer.metric);
-        showResult(result);
-        if (result.selection) previousFilters = result.selection;
-        previousMetric = answer.metric;
+      const answer = demo ? demoChat(pendingQuestion ? pendingQuestion + " " + extra : question,explorer) :
+        await post("/api/chat",{message:question,locale:document.documentElement.lang,
+          filters:previousFilters || explorer,history});
+      if (revision !== requestRevision) return;
+      if (!atlasChatExplorer.isCurrent(token)) {
+        atlasQuestions.update(entry,{state:"error",message:tr(
+          "Uma seleção mais recente está aberta. Escolha esta pergunta para retomá-la.",
+          "A more recent selection is open. Select this question to resume it.")});
+        return;
+      }
+      if (answer.kind === "result" || ["result","no_data"].includes(answer.type)) {
+        const metric = answer.metric || (answer.table?.length === 1 ? answer.table[0].key : "");
+        const result = await showResult(answer.selection || answer.filters,
+          {answer:answer.type ? answer : undefined,metric,revision:token});
+        if (!result || revision !== requestRevision) return;
+        previousFilters = result.selection;
+        previousMetric = metric;
         pendingQuestion = pendingNeed = null;
-      } else if (["result", "no_data"].includes(answer.type)) {
-        showResult(atlasChatExplorer.workerResult(answer), answer);
-        previousFilters = answer.filters;
-        pendingQuestion = pendingNeed = null;
-      } else if (["clarification", "unsupported", "report", "error"].includes(answer.type) &&
-        typeof answer.message === "string") {
-        const reply = message("atlas", answer.message);
-        showGuidance(reply, answer.guidance);
+        explorerContext = JSON.stringify(await atlasChatExplorer.context());
+        atlasQuestions.update(entry,{state:"result",filters:result.selection,metric});
+        if (analysis && !analysis.entry) message("atlas",tr(
+          "Ainda não há uma página HTML de análise publicada para este recorte. Os dados disponíveis estão no painel.",
+          "No published HTML analysis is available for this selection yet. Available data are shown in the panel."));
+      } else if (["clarification","unsupported","report","error"].includes(answer.type) &&
+          typeof answer.message === "string") {
+        const reply = message("atlas",answer.message);
+        showGuidance(reply,answer.guidance);
+        atlasQuestions.update(entry,{state:answer.type,message:answer.message});
         if (answer.type === "error") {
           if (!input.value) input.value = question;
           return;
         }
-      } else if (["clarification", "unsupported"].includes(answer.kind) && typeof answer.message === "string") {
-        message("atlas", answer.message);
+      } else if (["clarification","unsupported"].includes(answer.kind) && typeof answer.message === "string") {
+        message("atlas",answer.message);
+        atlasQuestions.update(entry,{state:answer.kind,message:answer.message});
         pendingNeed = answer.need;
-        pendingQuestion = answer.kind === "clarification" ? [pendingQuestion, question].filter(Boolean).join(" ").slice(-2000) : null;
-      } else {
-        throw new Error("Unknown Atlas chat reply");
-      }
+        pendingQuestion = answer.kind === "clarification" ?
+          [pendingQuestion,question].filter(Boolean).join(" ").slice(-2000) : null;
+      } else throw new Error("Unknown Atlas chat reply");
       history.push(question);
       if (history.length > 5) history.shift();
     } catch {
-      message("atlas", tr("Não foi possível conectar ao Atlas. Sua pergunta está no campo para tentar novamente.",
-        "Could not connect to the Atlas. Your question is in the composer so you can try again."));
+      if (revision !== requestRevision) return;
+      const explanation = tr(
+        "Não foi possível atualizar a consulta. O último resultado continua disponível. Sua pergunta está no campo para tentar novamente.",
+        "Could not update the query. The last result remains available. Your question is in the composer so you can try again.");
+      message("atlas",explanation);
+      atlasQuestions.update(entry,{state:"error",message:explanation});
       if (!input.value) input.value = question;
     } finally {
-      busy = false;
-      send.disabled = false;
-      status.textContent = idle;
+      if (revision === requestRevision) {
+        busy = false;
+        pendingRequest = null;
+        pendingEntry = null;
+        send.disabled = !enabled;
+        status.textContent = idle;
+      }
     }
   }
+
+  atlasQuestions.onRestore(async entry => {
+    cancelPending();
+    const revision = ++requestRevision;
+    atlasQuestions.select(entry.id);
+    activeReport = null;
+    log.replaceChildren();
+    history.length = 0;
+    history.push(...entry.history,entry.question);
+    previousFilters = entry.filters || entry.context;
+    previousMetric = entry.metric;
+    pendingQuestion = pendingNeed = null;
+    message("user",entry.question);
+    const current = atlasChatExplorer.current();
+    if (current) explorerContext = JSON.stringify(current);
+    const analysis = current && atlasAnalyses.resolve(entry.question,entry.filters || entry.context || current,
+      atlasChatExplorer.catalogue);
+    if (entry.state === "analysis" && analysis?.entry) {
+      analysisReply(analysis,true);
+      return;
+    }
+    if (entry.state === "report") { openReport(); return; }
+    if (entry.state !== "result" || !entry.filters) {
+      if (entry.message) message("atlas",entry.message);
+      input.value = entry.question;
+      input.focus({preventScroll:true});
+      return;
+    }
+    busy = true;
+    send.disabled = true;
+    try {
+      await atlasChatExplorer.context();
+      if (revision !== requestRevision) return;
+      const token = atlasChatExplorer.reserve();
+      const result = await showResult(entry.filters,{metric:entry.metric,revision:token});
+      if (result && revision === requestRevision) {
+        previousFilters = result.selection;
+        explorerContext = JSON.stringify(await atlasChatExplorer.context());
+      }
+    } catch {
+      if (revision === requestRevision) message("atlas",tr(
+        "Não foi possível reabrir esta consulta. O último resultado continua disponível.",
+        "Could not reopen this query. The last result remains available."));
+    } finally {
+      if (revision === requestRevision) { busy = false; send.disabled = !enabled; }
+    }
+  });
 
   form.addEventListener("submit", event => { event.preventDefault(); ask(input.value); });
   input.addEventListener("keydown", event => {
@@ -492,7 +559,7 @@
   reportButton.disabled = !enabled || !reportsEnabled;
   if (!reportsEnabled) reportButton.querySelector("span").textContent =
     tr("Envio privado em preparação.", "Private reporting in preparation.");
-  reportButton.addEventListener("click", () => openReport());
+  reportButton.addEventListener("click", () => ask(tr("Registrar uma questão","Raise a question")));
   send.disabled = !enabled;
 
   const desktop = matchMedia("(min-width: 701px) and (hover: hover) and (pointer: fine)").matches;
