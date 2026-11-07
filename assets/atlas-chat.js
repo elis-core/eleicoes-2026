@@ -112,7 +112,11 @@
     const state = city?.state || stateHint || Object.entries(states)
       .find(([,name]) => has(text, normalize(name)))?.[0];
     const selectsState = Boolean(state && !city);
-    const filters = {...base, visao:""};
+    const office = /\b(?:governador|governor)\b/.test(text) ? "governador" :
+      /\b(?:senador|senate|senator)\b/.test(text) ? "senador" :
+      /\b(?:presidente|president)\b/.test(text) ? "presidente" : base.cargo || "presidente";
+    const filters = {...base, cargo:office, visao:""};
+    if (office === "senador" && office !== base.cargo) Object.assign(filters,{turno:"1",mode:"analisar"});
     const explicitCity = city?.code || "";
     const keepsDetail = explicitCity === base.municipio && state === base.uf &&
       /\b(?:secao|section|local de votacao|polling place)\b/.test(text);
@@ -139,9 +143,9 @@
       }
     }
     if (!filters.uf || !Object.hasOwn(states, filters.uf)) return clarify("Qual é a UF da consulta?", "Which state should I look up?", "uf");
-    if (/\b(?:governador|senador|deputad[oa]|governor|senate|senator|deputy)\b/.test(text)) {
-      return unsupported("O chat consulta resultados para Presidente. Os resultados de outros cargos estão na seção Alianças, conforme a cobertura.",
-        "The chat covers presidential results. Results for other offices are in the Alliances section where available.");
+    if (/\b(?:deputad[oa]|deputy)\b/.test(text)) {
+      return unsupported("O Atlas cobre Presidente, Governador e Senador.",
+        "The Atlas covers President, Governor and Senator results.");
     }
 
     const first = /\b(?:1 o? ?turno|primeiro turno|first round)\b/.test(text);
@@ -183,8 +187,8 @@
       .replace(/\p{Diacritic}/gu, "").trim().replace(/\s+/g, " ").toUpperCase() : comparison ? "" : previousMetric || "";
     if (!state && !comparison && !first && !second && !historical && !candidate && idx < 0 && !asksSection &&
         !asksPlace && !/\b(?:resultado|resultados|results|votos|votes|votacao|presidente|president|consulta)\b/.test(text)) {
-      return clarify("Posso consultar resultados presidenciais. Qual território ou indicador você quer consultar?",
-        "I can look up presidential results. Which area or indicator would you like to check?");
+      return clarify("Posso consultar resultados de Presidente, Governador e Senador. Qual território ou indicador você quer consultar?",
+        "I can look up President, Governor and Senator results. Which area or indicator would you like to check?");
     }
     return {kind:"result", selection:filters, metric};
   }
@@ -256,7 +260,7 @@
     sources.append(link(tr("Abrir no Explorador", "Open in the Explorer"), result.link),
       link(tr("Fonte TSE e manifesto de ingestão", "TSE source and ingestion manifest"), result.source));
     reply.append(sources);
-    if (result.versions.length) reply.append(element("p", tr("Versão dos dados no R2 ", "R2 data version ") +
+    if (result.versions.length) reply.append(element("p", tr("Versão dos dados ", "Data version ") +
       result.versions.map(([version, years]) => version + " (" + years.join(", ") + ")").join(", "), "atlas-chat-version"));
     showGuidance(reply, answer?.guidance);
   }

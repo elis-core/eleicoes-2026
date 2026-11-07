@@ -21,3 +21,7 @@ A interface permite revisar o resumo antes do envio. O Worker guarda o texto em 
 A triagem publica com o GitHub App `elis-atlas-publisher`, usando exclusivamente um texto público preparado pelo revisor. A chave do App permanece no computador do revisor. O relato original e o comprovante não integram a Issue.
 
 O pacote de implantação contém o módulo do Worker, a migração D1 e a CLI de triagem. Valide `GET /api/questoes`, o preflight CORS e o fluxo local antes de publicar a página. O script de publicação da interface exige que a rota do Worker esteja pronta.
+
+## Novos cargos em 2026
+
+O piloto de Governador e Senador usa `cargo` nos filtros e nos links do Explorador. A cobertura, as taxas e a sequência de implantação estão em [CARGOS_2026.md](CARGOS_2026.md). As respostas incluem `dataVersion`, os votos brancos e nulos do cargo e a diferença entre turno sem disputa e dados ainda fora da cobertura.

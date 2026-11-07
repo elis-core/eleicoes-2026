@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Explore resultados presidenciais do TSE por UF, município, local de votação e seção eleitoral.">
+<meta name="description" content="Explore resultados do TSE para Presidente, Governador e Senador por UF, município, local de votação e seção eleitoral.">
 <meta name="theme-color" content="#102b31">
 <title>Atlas Eleitoral | Eleições 2026</title>
 <link rel="stylesheet" href="assets/atlas.css?v=20261105-aliancas">
-<script src="assets/atlas.js?v=20261105-chat" defer></script>
+<script src="assets/atlas.js?v=20261107-cargos" defer></script>
 <link rel="stylesheet" href="assets/atlas-chat.css?v=20261106-orientacao">
-<script src="assets/atlas-chat.js?v=20261106-orientacao" defer></script>
+<script src="assets/atlas-chat.js?v=20261107-cargos" defer></script>
 <link rel="alternate" hreflang="pt-BR" href="./">
 <link rel="alternate" hreflang="en-GB" href="en/">
 <script src="assets/aliancas-rj.js?v=20261105-aliancas" defer></script>
@@ -24,7 +24,7 @@
 <section class="atlas-ask-hero" aria-labelledby="atlas-ask-title">
 <div class="wrap atlas-ask-wrap" id="atlas-chat">
 <h1 id="atlas-ask-title">Pergunte ao Atlas</h1>
-<p class="atlas-ask-scope">Resultados presidenciais da UF à seção eleitoral</p>
+<p class="atlas-ask-scope">Presidente, Governador e Senador · Consulte a cobertura por cargo</p>
 <div id="atlas-chat-log" class="atlas-chat-log" role="log" tabindex="0" aria-live="polite" aria-relevant="additions text" aria-labelledby="atlas-ask-title" hidden></div>
 <form id="atlas-chat-form" class="atlas-chat-composer">
 <label for="atlas-chat-input" class="sr-only">O que você quer saber sobre as eleições?</label>
@@ -43,8 +43,9 @@
 </section>
 <div class="wrap main">
 <section class="panel explorer" id="explorador" aria-labelledby="explorador-titulo">
-<div class="section-head"><div><p class="overline">Consulta interativa</p><h2 id="explorador-titulo">Explore os resultados</h2></div><span class="tag">Presidência</span></div>
+<div class="section-head"><div><p class="overline">Consulta interativa</p><h2 id="explorador-titulo">Explore os resultados</h2></div><span class="tag" id="cargo-tag">Presidente</span></div>
 <form id="filters">
+<div class="fields"><label>Cargo<select id="cargo"><option value="presidente">Presidente</option><option value="governador">Governador</option><option value="senador">Senador</option></select></label></div><p id="cargo-coverage" class="hint" role="status"></p>
 <fieldset class="mode"><legend>Modo de consulta</legend><label><input type="radio" name="mode" value="analisar" checked><span>Analisar um turno</span></label><label><input type="radio" name="mode" value="comparar"><span>Comparar resultados</span></label></fieldset>
 <div class="group"><p class="overline"><span class="step">01</span> Selecione o território</p>
 <div class="fields geography"><label>UF<select id="uf" required></select></label><label>Município<select id="municipio"></select></label><label>Local de votação<select id="local"></select></label><label>Seção eleitoral<select id="secao"></select></label></div>

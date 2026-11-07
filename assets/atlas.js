@@ -9,6 +9,8 @@ const form = $("filters");
 const languageSwitch = $("language-switch");
 const alternatePage = languageSwitch.href;
 const uf = $("uf");
+const cargo = $("cargo");
+let officeModule, officeManifest, officeData;
 const municipio = $("municipio");
 const local = $("local");
 const secao = $("secao");
@@ -85,7 +87,14 @@ function fetchData(path, compressed = false) {
   return files.get(path);
 }
 
-async function detailed(ano, state, city) {
+async function detailed(ano, state, city, office = cargo.value) {
+  if (office !== "presidente") {
+    if (ano !== 2026) return null;
+    const data = await officeData.detailed({cargo:office, uf:state, municipio:city});
+    if (!data) return null;
+    return {l:data.locais, s:Object.fromEntries(Object.entries(data.secoes).map(([key, turns]) =>
+      [key, [1,2].map(turn => turns[turn] ? [Number(turns[turn].local.split(":")[1]), ...turns[turn].values] : null)]))};
+  }
   const pack = catalog.indice[ano]?.[state]?.[city];
   if (pack == null) return null;
   return (await fetchData(`secoes-${ano}-${state}-${pack}.json.gz`, true))[city] || null;
@@ -160,6 +169,18 @@ function loadGeography(location = "", section = "") {
 }
 
 function updateMode() {
+  const office = cargo.value;
+  const name = officeModule?.officeName(office,t) || t("Presidente", "President");
+  $("cargo-tag").textContent = name;
+  const pilot = office !== "presidente";
+  $("cargo-coverage").textContent = pilot ? t(
+    "Cobertura de 2026 em AP, RN e RJ. Brancos e nulos são apurados por cargo.",
+    "2026 coverage in AP, RN and RJ. Blank and invalid votes are counted by office.") : "";
+  for (const option of $("comparacao").options) option.disabled = pilot && option.value !== "turnos";
+  form.querySelector('input[name="mode"][value="comparar"]').disabled = office === "senador";
+
+  for (const option of $("turno").options) option.disabled = office === "senador" && option.value !== "1";
+
   const compare = form.elements.mode.value === "comparar";
   $("analysis-field").hidden = compare;
   $("compare-field").hidden = !compare;
@@ -168,7 +189,7 @@ function updateMode() {
 
 function selection() {
   const list = municipio.value === municipalList;
-  return {uf: uf.value, municipio: list ? "" : municipio.value, visao: list ? "municipios" : "",
+  return {cargo:cargo.value, uf: uf.value, municipio: list ? "" : municipio.value, visao: list ? "municipios" : "",
     local: local.value, secao: secao.value,
     mode: form.elements.mode.value, turno: $("turno").value,
     comparacao: $("comparacao").value, ano: $("ano").value};
@@ -178,7 +199,7 @@ function urlFor(sel, page = location.href) {
   const link = new URL(page);
   link.search = "";
   link.hash = "";
-  for (const key of ["uf", "municipio", "local", "secao", "mode", "visao"]) {
+  for (const key of ["cargo", "uf", "municipio", "local", "secao", "mode", "visao"]) {
     if (sel[key]) link.searchParams.set(key, sel[key]);
   }
   if (sel.mode === "analisar") link.searchParams.set("turno", sel.turno);
@@ -264,10 +285,14 @@ function municipalResult(pack, city, turn) {
 }
 
 async function loadResult(sel, [ano, turno]) {
+  if (sel.cargo && sel.cargo !== "presidente") {
+    const result = await officeData.loadResult(sel, [ano, turno]);
+    return result ? {...result, candidatePack:await officeData.pack(sel)} : null;
+  }
   if (!sel.local && !sel.secao) {
     return municipalResult(await loadMunicipalPack(ano, sel.uf), sel.municipio, turno);
   }
-  const pack = await detailed(ano, sel.uf, sel.municipio);
+  const pack = await detailed(ano, sel.uf, sel.municipio, "presidente");
   if (!pack) return null;
   if (sel.secao) {
     const row = pack.s[sel.secao]?.[turno - 1];
@@ -285,6 +310,9 @@ async function loadResult(sel, [ano, turno]) {
 }
 
 function candidateRows(periodList, results) {
+  if (!results.some(Boolean)) return [];
+  const statePack = results.find(result => result?.candidatePack)?.candidatePack;
+  if (statePack) return officeModule.officeCandidateRows(statePack, periodList, results);
   const people = new Map();
   periodList.forEach(([ano, turno], i) => {
     const data = catalog.anos[ano];
@@ -303,6 +331,7 @@ function candidateRows(periodList, results) {
 }
 
 function metricRows(results) {
+  if (results.some(result => result && "totalVotes" in result)) return officeModule.officeMetricRows(results,t);
   const rows = metrics.map(([name, idx, divisor]) => ({
     key: "m:" + idx, name, votes: [0, 1].map((i) => results[i]?.values[idx] ?? null),
     rates: [0, 1].map((i) => divisor == null ? null : rate(results[i]?.values[idx], results[i]?.values[divisor]))
@@ -378,11 +407,25 @@ function territory(sel) {
   return {name, trail: trail.join(" / ")};
 }
 
+function rateNote(sel) {
+  return sel.cargo !== "presidente" ? officeModule.officeRateNote(sel.cargo,t) : t(
+    "Candidatos sobre votos válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.",
+    "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid votes use turnout. A dash indicates unavailable data or a candidate absent from the round.");
+}
+
+function officeSources(sel) {
+  if (sel.cargo === "presidente") return "";
+  return `<p class="hint">${t("Versão dos dados", "Data version")} ${html(officeManifest.versao)} ·
+    <a href="${new URL(officeManifest.ufs[sel.uf]?.[sel.cargo]?.base + "/municipios.json",dataRoot)}">${t("Dados e fontes do cargo", "Office data and sources")}</a></p>`;
+}
+
 function show(sel, periodList, results) {
   const labels = periodList.map(periodLabel);
   const notes = [];
   results.forEach((result, i) => {
-    if (!result) notes.push(t(`Sem registro para este recorte em ${labels[i]}.`, `No data for this area in ${labels[i]}.`));
+    if (!result && sel.cargo !== "presidente") notes.push(officeModule.coverageNote(
+      officeData.coverage(sel, periodList[i]), sel.cargo, ...periodList[i], t));
+    else if (!result) notes.push(t(`Sem registro para este recorte em ${labels[i]}.`, `No data for this area in ${labels[i]}.`));
     else if (!result.votes) notes.push(t(`Em ${labels[i]}, a soma nominal diverge do detalhe da apuração em pelo menos uma seção deste recorte. O painel exibe os totais de apuração e omite a distribuição por candidato para esse período.`, `In ${labels[i]}, the sum of votes by candidate differs from the detailed count in at least one section in this area. Only vote-count totals are shown for that period.`));
   });
   if (results[0]?.sectionKeys && results[1]?.sectionKeys) {
@@ -407,19 +450,23 @@ function show(sel, periodList, results) {
     table(t("Eleitorado e apuração", "Electorate and vote count"), indicators, labels, t("Indicador", "Indicator"));
   $("output").innerHTML = notices + (found ?
     cards(indicators, labels) + resultsPanels +
-    `<p class="hint">${t(
-      "Taxas de candidatos sobre válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.",
-      "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round."
-    )}</p>${labels.length === 2 ? `<p class="hint">${relativeNote}</p>` : ""}` : "");
+    `<p class="hint">${rateNote(sel)}</p>${officeSources(sel)}${labels.length === 2 ? `<p class="hint">${relativeNote}</p>` : ""}` : "");
   if (results[0]?.address) $("subtitle").textContent += " · " + titleCase(results[0].address);
   visibleReport = found ? {sel, labels, indicators, candidates: nominal ? candidates : []} : null;
   $("actions").hidden = !found;
   $("status").textContent = found ? "" : t("Nenhum resultado disponível para a consulta.", "No results available for this query.");
 }
 
-function showMunicipalities(sel, periodList, packs) {
-  const resultsFor = (code) => periodList.map(([, turn], i) => municipalResult(packs[i], code, turn));
-  const state = resultsFor("");
+function showOfficeMunicipalities(sel, periodList, codes, resultsByCity) {
+  const results = new Map(codes.map((code,i) => [code,resultsByCity[i]]));
+  showMunicipalities(sel,periodList,[],results);
+}
+
+function showMunicipalities(sel, periodList, packs, officeResults) {
+  const resultsFor = (code) => officeResults ?
+    officeResults.get(code) || periodList.map(() => null) :
+    periodList.map(([, turn], i) => municipalResult(packs[i], code, turn));
+  const state = officeResults ? [...officeResults.values()].find(rows => rows.some(Boolean)) || [] : resultsFor("");
   const candidates = candidateRows(periodList, state);
   const indicators = metricRows(state);
   const labels = periodList.map(periodLabel);
@@ -446,7 +493,7 @@ function showMunicipalities(sel, periodList, packs) {
         ${labels.map((label) => `<th scope="col">${label}<br>${t("Quantidade (%)", "Count (%)")}</th>`).join("")}
         ${change}</tr></thead><tbody id="municipal-rows"></tbody></table>
     </div>
-    <p class="hint">${t("Candidatos sobre votos válidos. Comparecimento e abstenção sobre aptos. Válidos, brancos e nulos sobre comparecimento. O traço indica dado indisponível ou candidatura ausente no turno.", "Candidate shares use valid votes. Turnout and abstention use eligible voters. Valid, blank and invalid vote rates use turnout. A dash indicates unavailable data or a candidate absent from the round.")}</p>
+    <p class="hint">${rateNote(sel)}</p>${officeSources(sel)}
     ${comparing ? `<p class="hint">${relativeNote}</p>` : ""}
   </section>`;
   const indicator = $("municipal-indicator");
@@ -498,7 +545,7 @@ async function run(focus = false) {
   const periodList = periods(sel);
   const place = territory(sel);
   const labels = periodList.map(periodLabel);
-  $("breadcrumb").textContent = place.trail;
+  $("breadcrumb").textContent = officeModule.officeName(sel.cargo,t) + " / " + place.trail;
   $("resultado-titulo").textContent = place.name;
   $("subtitle").textContent = labels.length === 2 ? t(`Foco: ${labels[0]} · Referência: ${labels[1]}`, `Focus: ${labels[0]} · Reference: ${labels[1]}`) : labels[0];
   $("status").textContent = t("Carregando os resultados…", "Loading results…");
@@ -507,7 +554,19 @@ async function run(focus = false) {
   visibleReport = null;
   if (focus) $("resultado-titulo").focus();
   try {
-    if (sel.visao) {
+    if (sel.visao && sel.cargo !== "presidente") {
+      const pack = await officeData.pack(sel);
+      if (revision !== runRevision) return;
+      if (!pack) {
+        $("status").textContent = officeModule.coverageNote("fora_cobertura",sel.cargo,2026,Number(sel.turno),t);
+      } else {
+        const codes = Object.keys(catalog.uf[sel.uf]);
+        const resultsByCity = await Promise.all(codes.map(code =>
+          Promise.all(periodList.map(period => loadResult({...sel,municipio:code,visao:""},period)))));
+        if (revision !== runRevision) return;
+        showOfficeMunicipalities(sel,periodList,codes,resultsByCity);
+      }
+    } else if (sel.visao) {
       const packs = await Promise.all(periodList.map(([ano]) => loadMunicipalPack(ano, sel.uf)));
       if (revision !== runRevision) return;
       showMunicipalities(sel, periodList, packs);
@@ -530,7 +589,7 @@ function csv() {
   const {sel, labels, overview} = visibleReport;
   const compare = labels.length === 2;
   const context = [sel.uf, sel.municipio, sel.local, sel.secao];
-  const header = [t("UF", "State"), t("Município TSE", "Municipality (TSE code)"),
+  const header = [t("Cargo", "Office"), t("UF", "State"), t("Município TSE", "Municipality (TSE code)"),
     ...(overview ? [t("Município", "Municipality")] : []),
     t("Local (zona:código)", "Polling place (zone:code)"), t("Seção (zona:número)", "Polling section (zone:number)"), t("Tipo", "Type"), t("Indicador", "Indicator"),
     ...labels.flatMap((label) => [label + t(" quantidade", " count"), label + t(" taxa (%)", " rate (%)")]),
@@ -541,14 +600,14 @@ function csv() {
     for (const [kind, list, relative] of [
       [t("Apuração", "Vote count"), report.indicators, true], [t("Candidato", "Candidate"), report.candidates, false]
     ]) {
-      for (const {name, votes, rates} of list) rows.push([...area, kind, name,
+      for (const {name, votes, rates} of list) rows.push([sel.cargo, ...area, kind, name,
         ...labels.flatMap((_, i) => [votes[i], csvNumber(rates[i])]),
         ...(compare ? [delta(...votes), relative ? "" : csvNumber(delta(...rates)),
           relative ? csvNumber(relativeChange(...rates)) : ""] : [])]);
     }
   }
   const fileArea = overview ? `${sel.uf}-municipios-${periods(sel).flat().join("-")}` : context.filter(Boolean).join("-").replaceAll(":", "-");
-  downloadCsv(rows, `atlas-${fileArea}.csv`);
+  downloadCsv(rows, `atlas-${sel.cargo}-${fileArea}.csv`);
 }
 
 function csvNumber(value) {
@@ -577,11 +636,15 @@ async function start() {
   form.querySelector('button[type="submit"]').disabled = true;
   options(uf, [], t("Carregando…", "Loading…"));
   try {
-    catalog = await fetchData("catalogo.json");
+    [catalog, officeManifest, officeModule] = await Promise.all([
+      fetchData("catalogo.json"), fetchData("cargos-2026.json"), import("./atlas-cargos.mjs?v=20261107")
+    ]);
+    officeData = officeModule.createOfficeData(officeManifest, fetchData);
   } catch {
     $("status").textContent = t("Não foi possível abrir o catálogo eleitoral. Recarregue a página para tentar novamente.", "Could not load the election catalogue. Reload the page to try again.");
     return;
   }
+  if (officeModule.offices.includes(params.get("cargo"))) cargo.value = params.get("cargo");
   options(uf, Object.keys(catalog.uf).map((code) => [code, `${code} · ${states[code]}`]),
     null, params.get("uf") || "RJ");
   for (const id of ["turno", "comparacao", "ano"]) {
@@ -591,9 +654,21 @@ async function start() {
   if (params.get("mode") === "comparar") form.elements.mode.value = "comparar";
   const city = uf.value === "RJ" && params.get("visao") === "municipios" ? municipalList : params.get("municipio");
   loadCities(city || "");
+  if (cargo.value === "senador" && !params.has("turno")) $("turno").value = "1";
   updateMode();
   loadGeography(params.get("local") || "", params.get("secao") || "");
   uf.addEventListener("change", () => { loadCities(); loadGeography(); });
+  cargo.addEventListener("change", () => {
+    const turns = officeManifest.ufs[uf.value]?.[cargo.value]?.turnos;
+    if (turns?.length && !turns.includes(Number($("turno").value))) $("turno").value = String(turns.at(-1));
+    if (cargo.value !== "presidente" && $("comparacao").value !== "turnos") $("comparacao").value = "turnos";
+    if (cargo.value === "senador") {
+      form.elements.mode.value = "analisar";
+      $("turno").value = "1";
+    }
+    updateMode();
+    loadGeography(local.value,secao.value);
+  });
   municipio.addEventListener("change", () => loadGeography());
   local.addEventListener("change", () => updateSections());
   form.addEventListener("change", async () => {
@@ -643,14 +718,14 @@ const atlasChatExplorer = {
   },
 
   get catalogue() {
-    return {states, cities: catalog.uf, years: catalog.anos};
+    return {states, cities: catalog.uf, years: catalog.anos, officeModule};
   },
 
   workerResult(answer) {
     const {filters, periods: availablePeriods, table, notes, sources} = answer;
     const labels = availablePeriods.map(({ano, turno}) => periodLabel([ano, turno]));
     const area = [
-      states[filters.uf],
+      officeModule.officeName(filters.cargo || "presidente",t), states[filters.uf],
       filters.municipio && titleCase(catalog.uf[filters.uf][filters.municipio]),
       filters.local && t("Local de votação ", "Polling place ") + filters.local,
       filters.secao && sectionLabel(filters.secao)
@@ -666,6 +741,7 @@ const atlasChatExplorer = {
       if (!versions.has(release)) versions.set(release, []);
       versions.get(release).push(releaseYear);
     }
+    if (answer.dataVersion) versions.set(answer.dataVersion,[2026]);
     const rows = table.map(row => {
       const metric = metrics.find(([, code]) => row.key === "m:" + code);
       return {
@@ -674,17 +750,20 @@ const atlasChatExplorer = {
         difference:[signed(row.countDelta), signed(row.rateDelta, row.rateDeltaUnit === "pp" ? pointsUnit : "%")]
       };
     });
+    const officeSource = officeManifest.ufs[filters.uf]?.[filters.cargo]?.base;
     return {
-      area, rows, labels, link:link.href, source:new URL("fontes.json", dataRoot).href,
+      area, rows, labels, link:link.href,
+      source:new URL(filters.cargo && filters.cargo !== "presidente" ?
+        officeSource ? officeSource + "/municipios.json" : "cargos-2026.json" : "fontes.json", dataRoot).href,
       gaps:availablePeriods.flatMap(({available}, i) => available ? [] : [labels[i]]),
-      notes:english ? [] : notes,
-      versions:[...versions]
+      notes:english && (!filters.cargo || filters.cargo === "presidente") ? [] : notes,
+      versions:[...versions], office:filters.cargo || "presidente"
     };
   },
 
   async result(filters, metric) {
     if (!filters || typeof filters !== "object") throw new Error("Missing filters");
-    const {uf, municipio = "", local = "", secao = "", mode = "analisar",
+    const {cargo:office = "presidente", uf, municipio = "", local = "", secao = "", mode = "analisar",
       turno = "2", comparacao = "turnos", ano = "2022"} = filters;
     const own = (object, key) => Object.hasOwn(object, key);
     if (typeof uf !== "string" || !own(catalog.uf, uf) ||
@@ -695,10 +774,10 @@ const atlasChatExplorer = {
         ![local, secao].every(key => typeof key === "string" && (!key || /^\d+:\d+$/.test(key))) ||
         ((local || secao) && !municipio)) throw new Error("Invalid Atlas filters");
 
-    const sel = {uf, municipio, local, secao, mode, turno, comparacao, ano};
+    const sel = {cargo:office, uf, municipio, local, secao, mode, turno, comparacao, ano};
     const periodList = periods(sel);
     const labels = periodList.map(periodLabel);
-    const detail = local || secao ? await detailed(year, uf, municipio) : null;
+    const detail = local || secao ? await detailed(year, uf, municipio,office) : null;
     if ((local && (!detail || !localKeys(local, Object.entries(detail.s)).length)) ||
         (secao && (!detail || !own(detail.s, secao) ||
           (local && !localKeys(local, [[secao, detail.s[secao]]]).length)))) {
@@ -713,7 +792,7 @@ const atlasChatExplorer = {
     const gaps = labels.filter((_, i) => !results[i]);
     const candidateGap = results.some(result => result && !result.votes);
     const versions = new Map();
-    if (uf === "RJ" && !detail) {
+    if (office === "presidente" && uf === "RJ" && !detail) {
       for (const periodYear of new Set(periodList.map(([itemYear]) => itemYear))) {
         const release = rjReleaseByPack.get(await loadMunicipalPack(periodYear, uf));
         if (release) {
@@ -722,6 +801,7 @@ const atlasChatExplorer = {
         }
       }
     }
+    if (office !== "presidente") versions.set(officeManifest.versao,[2026]);
     const rows = [...metricRows(results), ...candidateRows(periodList, results)]
       .filter(row => !metric || row.key === metric)
       .filter(row => row.votes.slice(0, labels.length).some(value => value != null))
@@ -731,6 +811,9 @@ const atlasChatExplorer = {
         return {name:row.name, values:labels.map((_, i) => [n(row.votes[i]), pct(row.rates[i])]),
           difference:[signed(delta(...row.votes)), signed(rateDifference, relative ? "%" : pointsUnit)]};
       });
-    return {area, rows, labels, link:link.href, source, gaps, candidateGap, versions:[...versions], selection:sel};
+    return {area:officeModule.officeName(office,t) + " · " + area, rows, labels, link:link.href, source, gaps,
+      notes:office !== "presidente" ? [officeModule.officeRateNote(office,t),
+        ...periodList.map((period,i) => !results[i] ? officeModule.coverageNote(officeData.coverage(sel,period),office,...period,t) : "").filter(Boolean)] : [],
+      candidateGap, versions:[...versions], selection:sel, office};
   }
 };

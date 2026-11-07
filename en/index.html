@@ -7,9 +7,9 @@
 <meta name="theme-color" content="#102b31">
 <title>Electoral Atlas | 2026 Elections</title>
 <link rel="stylesheet" href="../assets/atlas.css?v=20261105-aliancas">
-<script src="../assets/atlas.js?v=20261105-chat" defer></script>
+<script src="../assets/atlas.js?v=20261107-cargos" defer></script>
 <link rel="stylesheet" href="../assets/atlas-chat.css?v=20261106-orientacao">
-<script src="../assets/atlas-chat.js?v=20261106-orientacao" defer></script>
+<script src="../assets/atlas-chat.js?v=20261107-cargos" defer></script>
 <link rel="alternate" hreflang="en-GB" href="./">
 <link rel="alternate" hreflang="pt-BR" href="../">
 <script src="../assets/aliancas-rj.js?v=20261105-aliancas" defer></script>
@@ -24,7 +24,7 @@
 <section class="atlas-ask-hero" aria-labelledby="atlas-ask-title">
 <div class="wrap atlas-ask-wrap" id="atlas-chat">
 <h1 id="atlas-ask-title">Ask the Atlas</h1>
-<p class="atlas-ask-scope">Presidential results from states to polling sections</p>
+<p class="atlas-ask-scope">President, Governor and Senator · Check coverage by office</p>
 <div id="atlas-chat-log" class="atlas-chat-log" role="log" tabindex="0" aria-live="polite" aria-relevant="additions text" aria-labelledby="atlas-ask-title" hidden></div>
 <form id="atlas-chat-form" class="atlas-chat-composer">
 <label for="atlas-chat-input" class="sr-only">What would you like to know about the elections?</label>
@@ -43,8 +43,9 @@
 </section>
 <div class="wrap main">
 <section class="panel explorer" id="explorador" aria-labelledby="explorador-titulo">
-<div class="section-head"><div><p class="overline">Interactive explorer</p><h2 id="explorador-titulo">Explore the results</h2></div><span class="tag">President</span></div>
+<div class="section-head"><div><p class="overline">Interactive explorer</p><h2 id="explorador-titulo">Explore the results</h2></div><span class="tag" id="cargo-tag">President</span></div>
 <form id="filters">
+<div class="fields"><label>Office<select id="cargo"><option value="presidente">President</option><option value="governador">Governor</option><option value="senador">Senator</option></select></label></div><p id="cargo-coverage" class="hint" role="status"></p>
 <fieldset class="mode"><legend>Query mode</legend><label><input type="radio" name="mode" value="analisar" checked><span>View one round</span></label><label><input type="radio" name="mode" value="comparar"><span>Compare results</span></label></fieldset>
 <div class="group"><p class="overline"><span class="step">01</span> Select an area</p>
 <div class="fields geography"><label>State<select id="uf" required></select></label><label>Municipality<select id="municipio"></select></label><label>Polling place<select id="local"></select></label><label>Polling section<select id="secao"></select></label></div>
