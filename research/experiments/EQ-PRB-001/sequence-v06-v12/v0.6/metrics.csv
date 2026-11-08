@@ -1,0 +1,7 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.6,H00 matched source/target,joint,H00,1000,95.0,60.9,5.0,39.1,9.734,,,,
+v0.6,"H11 blank transfer, fixed",joint,H11_B,1000,51.53,0.4,48.47,99.6,6.7985,99.62,96.3,0.5383542718879578,
+v0.6,"H11 blank transfer, random",joint,H11_B,1000,51.949999999999996,0.0,48.05,100.0,6.8255,99.72,97.2,0.539566767360544,
+v0.6,H00 covariate shift,joint,H00,1000,94.63000000000001,59.599999999999994,5.37,40.400000000000006,9.7135,,,,
+v0.6,H00 unmeasured natural shift,joint,H00,1000,73.59,5.7,26.41,94.3,8.7467,,,,
+v0.6,H11 transfer + covariate shift,joint,H11_B,1000,33.93,0.0,66.07000000000001,100.0,5.5277,99.81,98.1,0.5149250710898106,
