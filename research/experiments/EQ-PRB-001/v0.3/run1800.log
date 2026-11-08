@@ -1,0 +1,31 @@
+THRESHOLD 1800 restricted 1.3405328599484392 9.343442657750643
+THRESHOLD 1800 quadratic 1.3599516961692188 7.267376310083023
+THRESHOLD 1800 behavioural-envelope 1.2413011609990008 1.2413011609990008
+EVAL 1800 restricted H00 D0 none restricted 19 composite 0
+EVAL 1800 quadratic H00 D0 none restricted 27 composite 0
+EVAL 1800 behavioural-envelope H00 D0 none restricted 16 composite 16
+EVAL 1800 restricted H00 D0 step restricted 814 composite 29
+EVAL 1800 quadratic H00 D0 step restricted 735 composite 41
+EVAL 1800 behavioural-envelope H00 D0 step restricted 2 composite 2
+EVAL 1800 restricted H00 D0 logistic restricted 272 composite 0
+EVAL 1800 quadratic H00 D0 logistic restricted 147 composite 0
+EVAL 1800 behavioural-envelope H00 D0 logistic restricted 0 composite 0
+EVAL 1800 restricted H00 D0 quadratic restricted 139 composite 0
+EVAL 1800 quadratic H00 D0 quadratic restricted 10 composite 0
+EVAL 1800 behavioural-envelope H00 D0 quadratic restricted 2 composite 2
+EVAL 1800 restricted H01 D0 none restricted 565 composite 0
+EVAL 1800 quadratic H01 D0 none restricted 420 composite 0
+EVAL 1800 behavioural-envelope H01 D0 none restricted 10 composite 10
+EVAL 1800 restricted H01 D3 none restricted 551 composite 7
+EVAL 1800 quadratic H01 D3 none restricted 445 composite 18
+EVAL 1800 behavioural-envelope H01 D3 none restricted 223 composite 223
+EVAL 1800 restricted H10 D3 none restricted 561 composite 11
+EVAL 1800 quadratic H10 D3 none restricted 502 composite 28
+EVAL 1800 behavioural-envelope H10 D3 none restricted 239 composite 239
+EVAL 1800 restricted H11 D0 none restricted 831 composite 29
+EVAL 1800 quadratic H11 D0 none restricted 746 composite 36
+EVAL 1800 behavioural-envelope H11 D0 none restricted 0 composite 0
+EVAL 1800 restricted H11 D3 none restricted 740 composite 18
+EVAL 1800 quadratic H11 D3 none restricted 657 composite 39
+EVAL 1800 behavioural-envelope H11 D3 none restricted 164 composite 164
+FINISHED 27 comparison rows; 3 interval trials; 24.82 seconds; composite H00 control False all test signal power False
