@@ -1,0 +1,219 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EQ-PRB-001 v0.2 — Relatório</title><style>body{max-width:1100px;margin:auto;padding:35px 22px;background:#f9fafb;color:#142337;font:16px/1.62 system-ui,-apple-system,Segoe UI,sans-serif}h1{font-size:2rem;color:#112548}h2{margin-top:2.5rem;color:#162b4e;border-bottom:1px solid #dce2eb;padding-bottom:.35rem}table{border-collapse:collapse;width:100%;font-size:.86rem;display:block;overflow-x:auto}td,th{border:1px solid #dae1e9;padding:.55rem .65rem;text-align:left}th{background:#eaf0f6;white-space:nowrap}tr:nth-child(even){background:white}code{background:#edf1f5;padding:.1rem .3rem;border-radius:4px}li{margin:.35rem 0}blockquote{border-left:3px solid #48668e;padding-left:1rem}strong{color:#172d4d}p{margin:.85rem 0}a{color:#174fa1} @media print{body{background:white;padding:0}}</style></head><body><h1>EQ-PRB-001 — Inferência probabilística sintética e identificabilidade</h1>
+<p><strong>Versão:</strong> 0.2 · <strong>Data:</strong> 2026-11-08 · <strong>Estado:</strong> experimento executado, com falhas relevantes de identificabilidade e de calibração preditiva.</p>
+<h2>1. Resumo executivo</h2>
+<p>A v0.1 conseguia recuperar uma regra quando conhecia todas as contagens anteriores à transformação. A v0.2 remove esse acesso do <strong>avaliador</strong> e testa contagens inteiras sintéticas observadas juntamente com uma referência comportamental sintética amostrada independentemente. Os valores latentes são retidos somente no simulador para verificar as identidades contábeis.</p>
+<p><strong>Resultado principal:</strong> no cenário de referência sem transformação, o procedimento emitiu <strong>23/1.000 alarmes (2,3%)</strong>, com limite superior unilateral exato de 95% <strong>3,24%</strong>. Nas alternativas com transformação apenas em um turno, a detecção foi <strong>58,0%–65,3%</strong>, abaixo da meta de <strong>80%</strong>. Em cenários de dois turnos, variou entre <strong>78,3% e 82,2%</strong>. Quando uma mudança <em>natural</em> de comportamento reproduziu a mesma forma do sinal, houve <strong>829/1.000 alarmes (82,9%)</strong>, mesmo sem qualquer transformação das contagens.</p>
+<p><strong>Interpretação:</strong> bom controle do alarme sob a hipótese nula estreitamente especificada <strong>não se transfere automaticamente</strong> para hipóteses nulas comportamentais mais flexíveis. A regularidade estatística encontrada não identifica, por si só, a causa do padrão.</p>
+<h2>2. Desenho executado e observabilidade</h2>
+<ul>
+<li><strong>Unidade sintética:</strong> 5 municípios × 8 locais × 8 seções = <strong>320 seções</strong>, com dois turnos e quatro categorias (W, L, B, N).</li>
+<li><strong>Divisão externa:</strong> <strong>30 locais / 240 seções</strong> no treinamento, <strong>10 locais / 80 seções</strong> exclusivamente no teste; todos os dois turnos de um mesmo local ficam na mesma partição.</li>
+<li><strong>Estados ocultos:</strong> (X_{s,t}), contagens inteiras anteriores à transformação, <strong>não são entradas de seleção de modelo</strong>. O simulador as armazena apenas para auditoria.</li>
+<li><strong>Referência externa simulada:</strong> amostra independente artificial de <strong>1.800 observações por seção e turno</strong> (tamanho especialmente informativo, não um levantamento disponível ou alegado real).</li>
+<li><strong>Hipótese mecânica sintética:</strong> somente B → W, com (m_{s,t}=\min(B_{s,t},\lfloor\alpha_{s,t}B_{s,t}+0,5\rfloor)). Preserva integralmente (W+L+B+N=C).</li>
+<li><strong>Taxa simulada:</strong> (\alpha_{s,t}=\operatorname{clip}(a g(z_{s,t})+u_{\ell}+v_{s,t},0,0,85)) nos turnos habilitados, com (a=0,27). D0 sem efeitos aleatórios; D1 variação por seção; D2 por local; D3 combinação.</li>
+<li><strong>Alternativas temporais:</strong> H00 (nenhum turno), H01 (segundo), H10 (primeiro), H11 (ambos).</li>
+<li><strong>Biblioteca pré-fixada:</strong> <strong>73 candidatos</strong>, contando H00 e as combinações 3 hipóteses temporais × 2 formas de taxa × 3 amplitudes × 4 classes de heterogeneidade.</li>
+<li><strong>Referência comportamental nula:</strong> variações naturais por seção e por local com desvios-padrão de <strong>0,004</strong> e <strong>0,006</strong> na proporção de B; as funções de tendência de nível e de z em cada turno são ajustadas apenas com dados de treinamento.</li>
+<li><strong>Pontuação:</strong> pseudologverossimilhança preditiva <strong>gaussiana multivariada</strong> para o contraste proporção de B na referência menos a proporção observada. Matriz de covariância por local com componentes compartilhados; <strong>não</strong> é uma verossimilhança exata dos quatro inteiros.</li>
+</ul>
+<h3>Regras de avaliação</h3>
+<p>Foram executadas <strong>1500 replicações nulas independentes para calibração</strong> do processo de busca integral e <strong>1000 replicações de avaliação por gerador</strong>: H00, doze combinações H01/H10/H11 × D0–D3, mais a alternativa comportamental de estresse. <strong>Total: 15.500 conjuntos sintéticos</strong>. As amostras de calibração e avaliação são disjuntas. A regra seleciona pelo escore de treinamento e calcula no teste reservado o ganho em relação ao modelo H00. O limiar é o quantil 97,5% da distribuição nula de calibração, restringido a valores não negativos: <strong>1.140 unidades do escore</strong>.</p>
+<h2>3. Resultados completos de seleção</h2>
+<table>
+<thead>
+<tr>
+  <th>Gerador</th>
+  <th>Classe D</th>
+  <th style="text-align:right">Alarmes</th>
+  <th style="text-align:right">Taxa de detecção</th>
+  <th style="text-align:right">Seleção correta de H no treino</th>
+  <th style="text-align:right">Seleção correta de D no treino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>H00</td>
+  <td>D0</td>
+  <td style="text-align:right">23/1.000</td>
+  <td style="text-align:right">2.3%</td>
+  <td style="text-align:right">40.0%</td>
+  <td style="text-align:right">—</td>
+</tr>
+<tr>
+  <td>H01</td>
+  <td>D0</td>
+  <td style="text-align:right">644/1.000</td>
+  <td style="text-align:right">64.4%</td>
+  <td style="text-align:right">91.8%</td>
+  <td style="text-align:right">99.8%</td>
+</tr>
+<tr>
+  <td>H01</td>
+  <td>D1</td>
+  <td style="text-align:right">582/1.000</td>
+  <td style="text-align:right">58.2%</td>
+  <td style="text-align:right">88.6%</td>
+  <td style="text-align:right">2.0%</td>
+</tr>
+<tr>
+  <td>H01</td>
+  <td>D2</td>
+  <td style="text-align:right">580/1.000</td>
+  <td style="text-align:right">58.0%</td>
+  <td style="text-align:right">92.4%</td>
+  <td style="text-align:right">63.1%</td>
+</tr>
+<tr>
+  <td>H01</td>
+  <td>D3</td>
+  <td style="text-align:right">586/1.000</td>
+  <td style="text-align:right">58.6%</td>
+  <td style="text-align:right">93.7%</td>
+  <td style="text-align:right">1.0%</td>
+</tr>
+<tr>
+  <td>H10</td>
+  <td>D0</td>
+  <td style="text-align:right">646/1.000</td>
+  <td style="text-align:right">64.6%</td>
+  <td style="text-align:right">89.2%</td>
+  <td style="text-align:right">99.6%</td>
+</tr>
+<tr>
+  <td>H10</td>
+  <td>D1</td>
+  <td style="text-align:right">593/1.000</td>
+  <td style="text-align:right">59.3%</td>
+  <td style="text-align:right">87.8%</td>
+  <td style="text-align:right">1.5%</td>
+</tr>
+<tr>
+  <td>H10</td>
+  <td>D2</td>
+  <td style="text-align:right">653/1.000</td>
+  <td style="text-align:right">65.3%</td>
+  <td style="text-align:right">92.8%</td>
+  <td style="text-align:right">60.7%</td>
+</tr>
+<tr>
+  <td>H10</td>
+  <td>D3</td>
+  <td style="text-align:right">598/1.000</td>
+  <td style="text-align:right">59.8%</td>
+  <td style="text-align:right">92.8%</td>
+  <td style="text-align:right">0.8%</td>
+</tr>
+<tr>
+  <td>H11</td>
+  <td>D0</td>
+  <td style="text-align:right">822/1.000</td>
+  <td style="text-align:right">82.2%</td>
+  <td style="text-align:right">95.7%</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td>H11</td>
+  <td>D1</td>
+  <td style="text-align:right">800/1.000</td>
+  <td style="text-align:right">80.0%</td>
+  <td style="text-align:right">92.6%</td>
+  <td style="text-align:right">0.2%</td>
+</tr>
+<tr>
+  <td>H11</td>
+  <td>D2</td>
+  <td style="text-align:right">802/1.000</td>
+  <td style="text-align:right">80.2%</td>
+  <td style="text-align:right">96.9%</td>
+  <td style="text-align:right">58.5%</td>
+</tr>
+<tr>
+  <td>H11</td>
+  <td>D3</td>
+  <td style="text-align:right">783/1.000</td>
+  <td style="text-align:right">78.3%</td>
+  <td style="text-align:right">94.6%</td>
+  <td style="text-align:right">0.1%</td>
+</tr>
+<tr>
+  <td>H00-natural-shift</td>
+  <td>D0</td>
+  <td style="text-align:right">829/1.000</td>
+  <td style="text-align:right">82.9%</td>
+  <td style="text-align:right">—</td>
+  <td style="text-align:right">—</td>
+</tr>
+</tbody>
+</table>
+<p>A taxa da tabela é o evento <strong>escore do candidato selecionado menos escore H00 no teste maior que o limiar calibrado</strong>. Uma taxa de seleção correta de H não é automaticamente uma detecção; a seleção ocorre antes de consultar o limiar do teste.</p>
+<p><strong>Controle de falso alarme dentro do modelo nulo especificado:</strong> 23/1.000, 2,3%, limite superior unilateral exato de 95% <strong>3.2%</strong>. A exigência de limite superior ≤ 5% foi satisfeita <strong>somente para essa hipótese nula sintética restrita</strong>.</p>
+<p><strong>Poder estatístico:</strong> o objetivo de pelo menos 80% <strong>não foi atingido em todos os cenários</strong>. Os casos de apenas um turno ficaram abaixo de 80%, e H11-D3 ficou em 78,3%.</p>
+<p><strong>Identificação dos efeitos aleatórios:</strong> a classe D3 verdadeira foi escolhida corretamente em apenas <strong>0,1%</strong> dos casos de H11-D3; D1 também foi quase sempre confundida. A família de candidatos não identifica de modo confiável a estrutura de variabilidade.</p>
+<h2>4. Calibração de intervalos — cenário H11-D3</h2>
+<p>Na mesma bateria de 1.000 replicações, foram testadas <strong>160.000 previsões seção–turno</strong> nos 10 locais reservados de cada realização. As coberturas efetivamente observadas foram:</p>
+<table>
+<thead>
+<tr>
+  <th>Intervalo nominal</th>
+  <th style="text-align:right">W</th>
+  <th style="text-align:right">L</th>
+  <th style="text-align:right">B (brancos)</th>
+  <th style="text-align:right">N (nulos)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>50%</td>
+  <td style="text-align:right">46.8%</td>
+  <td style="text-align:right">49.9%</td>
+  <td style="text-align:right">44.9%</td>
+  <td style="text-align:right">50.0%</td>
+</tr>
+<tr>
+  <td>80%</td>
+  <td style="text-align:right">76.6%</td>
+  <td style="text-align:right">80.0%</td>
+  <td style="text-align:right">73.8%</td>
+  <td style="text-align:right">80.1%</td>
+</tr>
+<tr>
+  <td>95%</td>
+  <td style="text-align:right">93.1%</td>
+  <td style="text-align:right">94.9%</td>
+  <td style="text-align:right">90.6%</td>
+  <td style="text-align:right">95.1%</td>
+</tr>
+</tbody>
+</table>
+<p>A cobertura conjunta da região retangular de Bonferroni projetada para 95% foi <strong>92.8%</strong>, abaixo do nominal. Há <strong>subcobertura</strong> em B e W; os intervalos não são considerados calibrados para todas as categorias. Usou-se aproximação normal, com parâmetros de tendência ajustados no treinamento e sem correção completa de sua incerteza. Os intervalos são marginalmente aproximados, não derivados de uma distribuição conjunta exata dos quatro inteiros.</p>
+<h2>5. Teste de identificabilidade — mudança natural sem transformação</h2>
+<p>No gerador <strong>H00-natural-shift</strong>, não existe transferência alguma; a probabilidade latente de voto branco sofre uma mudança natural com a mesma forma de degrau da família candidata e W aumenta compensatoriamente. Os quatro inteiros continuam contabilizados de maneira íntegra. Com o limiar <strong>calibrado exclusivamente no H00 mais restrito</strong>, o algoritmo emitiu <strong>829/1.000 alarmes (82,9%)</strong>.</p>
+<p>Esse percentual <strong>não</strong> é uma taxa universal de falso positivo do método: é uma falha deliberada sob <em>deslocamento de distribuição</em> da hipótese comportamental nula. O teste evidencia que <strong>o conjunto de possíveis comportamentos naturais precisa ser ampliado</strong> e que, sem referências independentes restritivas, uma alteração comportamental pode imitar a regularidade de uma hipótese de transformação.</p>
+<p>A construção determinística de v0.1 continua válida: dados observados iguais podem surgir de estados latentes distintos, com e sem transformação. A v0.2 <strong>não resolve</strong> essa não identificabilidade estrutural.</p>
+<h2>6. Conclusões metodológicas e critérios não satisfeitos</h2>
+<ol>
+<li><strong>Executado:</strong> simulador inteiro, contagens latentes ocultas ao avaliador, quatro classes D, 73 candidatos, dois turnos, validação por local, calibração da seleção completa, 1.000 avaliações por gerador e intervalos preditivos aproximados.</li>
+<li><strong>Aprovado somente sob a hipótese nula restrita:</strong> controle de alarme com limite superior de 95% ≤ 5%.</li>
+<li><strong>Não aprovado:</strong> poder de 80% para todas as alternativas e calibração de intervalos 50/80/95% para todas as quatro categorias.</li>
+<li><strong>Não identificado:</strong> mecanismo probabilístico D0–D3 de modo consistente, nem a separação entre mudança comportamental flexível e conversão hipotética.</li>
+<li><strong>Ainda não executado:</strong> distribuição exata conjunta das quatro contagens, parâmetros de transferência por pesquisas reais, transição comportamental individual entre turnos, mecanismos N/L/O, busca simbólica aberta, critérios municipais da metodologia v1.2 e teste externo em dados reais.</li>
+</ol>
+<h2>7. Recomendação para v0.3</h2>
+<p>Priorizar um <strong>teste de robustez comportamental</strong> antes de ampliar a biblioteca de equações: (a) incluir a família H00 de tendências naturais não lineares e efeitos territoriais; (b) simular referências de precisão progressivamente menor e avaliar sensibilidade; (c) melhorar a distribuição preditiva inteira e intervalos de B/W; (d) só depois tentar distinguir formas de conversão por sua assinatura de arredondamento ou dependência espacial. Se uma alternativa natural admissível reproduz a mesma distribuição dos observados, classificar o mecanismo como <strong>não identificável</strong>, em vez de selecionar um vencedor por maior escore.</p>
+<p><strong>Próxima condição de passagem:</strong> no conjunto ampliado de hipóteses comportamentais, demonstrar limite superior de falso alarme ≤ 5%, poder ≥ 80% nas alternativas pré-especificadas e cobertura confiável dos intervalos preditivos; os três critérios devem valer fora da amostra e sem reescolher o limiar.</p>
+<h2>8. Arquivos, execução e proveniência</h2>
+<ul>
+<li><code>eq_prb_001_v02.py</code>: gerador, biblioteca e inferência sintética, replicações e intervalos.</li>
+<li><code>verify_v02.py</code>: verificações de conservação, divisão por local, matriz de covariância e consistência.</li>
+<li><code>results_v0.2.json</code>: todos os indicadores e ressalvas em formato estruturado.</li>
+<li><code>calibration_results.csv</code>: resumo comparativo por cenário.</li>
+<li><code>synthetic_holdout_example.csv</code>: realização sintética de auditoria, com estados latentes identificados como dados do simulador.</li>
+<li><code>experiment_log.txt</code>: registro da execução.</li>
+</ul>
+<p>Reprodução com <strong>Python 3</strong>, <strong>NumPy 2.3.5</strong>, <strong>SciPy 1.17.0</strong>:</p>
+<p><code>python eq_prb_001_v02.py &gt; experiment_log.txt</code></p>
+<p><code>python verify_v02.py</code></p>
+<p>A semente de NumPy é <strong>20261108</strong>, gerador PCG64. O tempo de execução pode variar; os resultados estatísticos, e não a duração, integram o arquivo determinístico. A execução sobrescreve os arquivos de resultados na mesma pasta. Este relatório é derivado dos resultados efetivamente calculados, sem números imputados.</p>
+<p><strong>Escopo:</strong> exercício matemático em dados inventados, sem inferências sobre o resultado de qualquer eleição real ou sistemas de votação.</p>
+</body></html>
