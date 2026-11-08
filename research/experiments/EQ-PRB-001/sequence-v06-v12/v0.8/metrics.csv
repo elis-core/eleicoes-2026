@@ -1,0 +1,9 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.8,"H00, calibration sites=80",joint,H00,1000,95.05,61.1,4.95,38.9,9.7435,,,,
+v0.8,"H00, calibration sites=80",bonferroni,H00,1000,100.0,100.0,0.0,0.0,10.0,,,,
+v0.8,"H11_B, calibration sites=80",joint,H11_B,1000,51.65,0.2,48.35,99.8,6.794,99.58,96.0,0.5387171682165037,
+v0.8,"H11_B, calibration sites=80",bonferroni,H11_B,1000,100.0,100.0,0.0,0.0,10.0,100.0,100.0,0.6,
+v0.8,"H00, calibration sites=240",joint,H00,1000,94.67999999999999,58.3,5.32,41.699999999999996,9.7062,,,,
+v0.8,"H00, calibration sites=240",bonferroni,H00,1000,99.59,96.2,0.41000000000000003,3.8,9.977,,,,
+v0.8,"H11_B, calibration sites=240",joint,H11_B,1000,52.059999999999995,0.5,47.94,99.5,6.8101,99.61,96.1,0.5383898599445619,
+v0.8,"H11_B, calibration sites=240",bonferroni,H11_B,1000,58.95,1.5,41.05,98.5,7.4832,99.97,99.7,0.5718883876604952,
