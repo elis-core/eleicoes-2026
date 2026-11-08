@@ -1,0 +1,7 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.12,H00 representative,frozen_selected_model_and_sensitivity,H00,1000,99.98,99.8,0.02,0.2,9.998,,,,
+v0.12,H00 known covariate shift,frozen_selected_model_and_sensitivity,H00,1000,99.99,99.9,0.01,0.1,9.9999,,,,
+v0.12,H00 unmeasured natural shift,frozen_selected_model_and_sensitivity,H00,1000,99.15,92.30000000000001,0.8500000000000001,7.7,9.9723,,,,
+v0.12,H11 fixed rate,frozen_selected_model_and_sensitivity,H11_B,1000,69.35,4.3,30.65,95.7,8.4452,100.0,100.0,0.588871301901438,
+v0.12,H11 site+section heterogeneity,frozen_selected_model_and_sensitivity,H11_B,1000,69.44,4.3,30.560000000000002,95.7,8.4473,100.0,100.0,0.5883402650359376,
+v0.12,H11 with known geographic shift,frozen_selected_model_and_sensitivity,H11_B,1000,55.089999999999996,0.7000000000000001,44.91,99.3,7.6957,100.0,100.0,0.5823260733454275,
