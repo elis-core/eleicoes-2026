@@ -1,0 +1,22 @@
+completed 1800 H00 worlds 1000
+completed 1800 H01_D0 worlds 1000
+completed 1800 H10_D0 worlds 1000
+completed 1800 H11_D0 worlds 1000
+completed 1800 H11_D3 worlds 1000
+completed 1800 natural_step worlds 1000
+completed 1800 reference_bias worlds 1000
+completed 300 H00 worlds 1000
+completed 300 H01_D0 worlds 1000
+completed 300 H10_D0 worlds 1000
+completed 300 H11_D0 worlds 1000
+completed 300 H11_D3 worlds 1000
+completed 300 natural_step worlds 1000
+completed 300 reference_bias worlds 1000
+completed 75 H00 worlds 1000
+completed 75 H01_D0 worlds 1000
+completed 75 H10_D0 worlds 1000
+completed 75 H11_D0 worlds 1000
+completed 75 H11_D3 worlds 1000
+completed 75 natural_step worlds 1000
+completed 75 reference_bias worlds 1000
+Finished: 21000 independent synthetic worlds; 126 evaluations; 64 frozen candidate models
