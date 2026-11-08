@@ -1,0 +1,152 @@
+{
+  "project": "EQ-PRB-001",
+  "version": "v0.10",
+  "purpose": "Competing synthetic donor flows and mechanism ambiguity",
+  "date": "2026-11-08",
+  "evidence_type": "Synthetic mathematical experiments only",
+  "independent_replicates_per_generator": 1000,
+  "assumptions": [
+    "External donor sites, calibration sites and held-out target sites are disjoint.",
+    "Only model source features and donor-site panel counts are fitted; no target outcomes enter training.",
+    "Site-level exchangeability is required for ordinary conformal H00 marginal calibration.",
+    "Covariate-shift weighted conformal assumes an exactly known density ratio and conditional invariance.",
+    "Off-grid inverted intervals approximate rounded rates by a bounded deterministic moment error and heterogeneity allowance; positive-mechanism coverage is empirical, not an unconditional theorem.",
+    "Reported tests remain synthetic and do not establish a mechanism in real election data."
+  ],
+  "results": [
+    {
+      "version": "v0.10",
+      "condition": "H00: three competing donor categories",
+      "generator": "H00",
+      "synthetic_worlds": 1000,
+      "heldout_target_sites": 10,
+      "H00_retained_per_site_pct": 96.24000000000001,
+      "H00_retained_all_sites_pct": 70.19999999999999,
+      "mean_compatible_mechanisms_per_site": 3.8746,
+      "compatible_mechanism_retention": {
+        "B": {
+          "retained_site_pct": 97.1,
+          "true_amplitude_inside_site_pct": 76.19
+        },
+        "N": {
+          "retained_site_pct": 97.00999999999999,
+          "true_amplitude_inside_site_pct": 96.78999999999999
+        },
+        "L": {
+          "retained_site_pct": 97.11,
+          "true_amplitude_inside_site_pct": 30.570000000000004
+        }
+      },
+      "donor_labels": [
+        "B",
+        "N",
+        "L"
+      ],
+      "categorywise_alpha": 0.016666666666666666,
+      "simultaneous_across_sites_guaranteed": false
+    },
+    {
+      "version": "v0.10",
+      "condition": "H11_B: three competing donor categories",
+      "generator": "H11_B",
+      "synthetic_worlds": 1000,
+      "heldout_target_sites": 10,
+      "H00_retained_per_site_pct": 53.75,
+      "H00_retained_all_sites_pct": 0.5,
+      "mean_compatible_mechanisms_per_site": 2.5946,
+      "compatible_mechanism_retention": {
+        "B": {
+          "retained_site_pct": 97.39,
+          "true_amplitude_inside_site_pct": 97.35000000000001
+        },
+        "N": {
+          "retained_site_pct": 54.120000000000005,
+          "true_amplitude_inside_site_pct": 54.1
+        },
+        "L": {
+          "retained_site_pct": 54.2,
+          "true_amplitude_inside_site_pct": 29.110000000000003
+        }
+      },
+      "donor_labels": [
+        "B",
+        "N",
+        "L"
+      ],
+      "categorywise_alpha": 0.016666666666666666,
+      "simultaneous_across_sites_guaranteed": false,
+      "true_donor_retained_per_site_pct": 97.39,
+      "true_donor_amplitude_covered_per_site_pct": 97.35000000000001,
+      "true_donor_amplitude_covered_all_sites_pct": 77.3
+    },
+    {
+      "version": "v0.10",
+      "condition": "H11_N: three competing donor categories",
+      "generator": "H11_N",
+      "synthetic_worlds": 1000,
+      "heldout_target_sites": 10,
+      "H00_retained_per_site_pct": 67.97,
+      "H00_retained_all_sites_pct": 6.4,
+      "mean_compatible_mechanisms_per_site": 3.0236,
+      "compatible_mechanism_retention": {
+        "B": {
+          "retained_site_pct": 68.52000000000001,
+          "true_amplitude_inside_site_pct": 60.99
+        },
+        "N": {
+          "retained_site_pct": 97.42,
+          "true_amplitude_inside_site_pct": 97.42
+        },
+        "L": {
+          "retained_site_pct": 68.45,
+          "true_amplitude_inside_site_pct": 30.270000000000003
+        }
+      },
+      "donor_labels": [
+        "B",
+        "N",
+        "L"
+      ],
+      "categorywise_alpha": 0.016666666666666666,
+      "simultaneous_across_sites_guaranteed": false,
+      "true_donor_retained_per_site_pct": 97.42,
+      "true_donor_amplitude_covered_per_site_pct": 97.42,
+      "true_donor_amplitude_covered_all_sites_pct": 77.5
+    },
+    {
+      "version": "v0.10",
+      "condition": "H11_L: three competing donor categories",
+      "generator": "H11_L",
+      "synthetic_worlds": 1000,
+      "heldout_target_sites": 10,
+      "H00_retained_per_site_pct": 23.71,
+      "H00_retained_all_sites_pct": 0.0,
+      "mean_compatible_mechanisms_per_site": 1.6907,
+      "compatible_mechanism_retention": {
+        "B": {
+          "retained_site_pct": 23.87,
+          "true_amplitude_inside_site_pct": 23.7
+        },
+        "N": {
+          "retained_site_pct": 23.87,
+          "true_amplitude_inside_site_pct": 23.87
+        },
+        "L": {
+          "retained_site_pct": 97.61999999999999,
+          "true_amplitude_inside_site_pct": 97.58
+        }
+      },
+      "donor_labels": [
+        "B",
+        "N",
+        "L"
+      ],
+      "categorywise_alpha": 0.016666666666666666,
+      "simultaneous_across_sites_guaranteed": false,
+      "true_donor_retained_per_site_pct": 97.61999999999999,
+      "true_donor_amplitude_covered_per_site_pct": 97.58,
+      "true_donor_amplitude_covered_all_sites_pct": 78.5
+    }
+  ],
+  "completion": "executed and verified (exploratory, not preregistered or real-data validated)"
+}

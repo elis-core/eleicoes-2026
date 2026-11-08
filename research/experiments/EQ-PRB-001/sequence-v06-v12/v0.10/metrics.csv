@@ -1,0 +1,5 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.10,H00: three competing donor categories,,H00,1000,96.24000000000001,70.19999999999999,,,,,,,3.8746
+v0.10,H11_B: three competing donor categories,,H11_B,1000,53.75,0.5,,,,,,,2.5946
+v0.10,H11_N: three competing donor categories,,H11_N,1000,67.97,6.4,,,,,,,3.0236
+v0.10,H11_L: three competing donor categories,,H11_L,1000,23.71,0.0,,,,,,,1.6907
