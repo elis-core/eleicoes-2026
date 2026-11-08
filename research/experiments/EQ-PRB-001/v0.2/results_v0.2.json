@@ -1,0 +1,330 @@
+{
+  "id": "EQ-PRB-001",
+  "version": "0.2",
+  "date": "2026-11-08",
+  "synthetic_only": true,
+  "parent_version": "0.1",
+  "seed": 20261108,
+  "numpy_version": "2.3.5",
+  "scipy_version": "1.17.0",
+  "reference_sample_size_per_section_turn": 1800,
+  "reference_design": "independent hypothetical sample, informative and not claimed available in real elections",
+  "sections": 320,
+  "locations": 40,
+  "municipalities": 5,
+  "train_sections": 240,
+  "test_sections": 80,
+  "holdout": "two whole locations per municipality; independent by location, across BOTH turns",
+  "model_library_size": 73,
+  "candidate_temporal_scenarios": [
+    "H00",
+    "H01",
+    "H10",
+    "H11"
+  ],
+  "candidate_shapes": [
+    "step",
+    "logistic"
+  ],
+  "candidate_amplitudes": [
+    0.17,
+    0.27,
+    0.37
+  ],
+  "candidate_random_effects": [
+    "D0",
+    "D1",
+    "D2",
+    "D3"
+  ],
+  "null_calibration_replicates": 1500,
+  "independent_evaluation_replicates_per_generator": 1000,
+  "calibration_threshold_conservative_97_5_percentile": 1.1402528535519423,
+  "results": [
+    {
+      "generator": "H00",
+      "d_class": "D0",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 23,
+      "detection_rate": 0.023,
+      "upper_one_sided_95_ci_detection_rate": 0.032428870441319126,
+      "selected_H00_fraction": 0.4,
+      "correct_temporal_scenario_fraction": 0.4,
+      "correct_D_fraction_positives": null,
+      "mean_test_score_improvement": -0.4246480772089143,
+      "median_test_score_improvement": 0.0
+    },
+    {
+      "generator": "H01",
+      "d_class": "D0",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 644,
+      "detection_rate": 0.644,
+      "upper_one_sided_95_ci_detection_rate": 0.6690673880067435,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": 0.918,
+      "correct_D_fraction_positives": 0.998,
+      "mean_test_score_improvement": 1.7293415829675098,
+      "median_test_score_improvement": 1.7579941242886434
+    },
+    {
+      "generator": "H01",
+      "d_class": "D1",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 582,
+      "detection_rate": 0.582,
+      "upper_one_sided_95_ci_detection_rate": 0.6079514999007398,
+      "selected_H00_fraction": 0.003,
+      "correct_temporal_scenario_fraction": 0.886,
+      "correct_D_fraction_positives": 0.02,
+      "mean_test_score_improvement": 1.4422917537871276,
+      "median_test_score_improvement": 1.4831387562226155
+    },
+    {
+      "generator": "H01",
+      "d_class": "D2",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 580,
+      "detection_rate": 0.58,
+      "upper_one_sided_95_ci_detection_rate": 0.6059729212192508,
+      "selected_H00_fraction": 0.003,
+      "correct_temporal_scenario_fraction": 0.924,
+      "correct_D_fraction_positives": 0.631,
+      "mean_test_score_improvement": 1.802112307796324,
+      "median_test_score_improvement": 1.5786634359378695
+    },
+    {
+      "generator": "H01",
+      "d_class": "D3",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 586,
+      "detection_rate": 0.586,
+      "upper_one_sided_95_ci_detection_rate": 0.6119073578650751,
+      "selected_H00_fraction": 0.002,
+      "correct_temporal_scenario_fraction": 0.937,
+      "correct_D_fraction_positives": 0.01,
+      "mean_test_score_improvement": 1.8102536109801772,
+      "median_test_score_improvement": 1.7239521209246504
+    },
+    {
+      "generator": "H10",
+      "d_class": "D0",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 646,
+      "detection_rate": 0.646,
+      "upper_one_sided_95_ci_detection_rate": 0.6710315412066621,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": 0.892,
+      "correct_D_fraction_positives": 0.996,
+      "mean_test_score_improvement": 1.8842628572347226,
+      "median_test_score_improvement": 1.9093832110258404
+    },
+    {
+      "generator": "H10",
+      "d_class": "D1",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 593,
+      "detection_rate": 0.593,
+      "upper_one_sided_95_ci_detection_rate": 0.6188259212135984,
+      "selected_H00_fraction": 0.001,
+      "correct_temporal_scenario_fraction": 0.878,
+      "correct_D_fraction_positives": 0.015,
+      "mean_test_score_improvement": 1.6534743829679954,
+      "median_test_score_improvement": 1.6467296543254406
+    },
+    {
+      "generator": "H10",
+      "d_class": "D2",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 653,
+      "detection_rate": 0.653,
+      "upper_one_sided_95_ci_detection_rate": 0.6779023239493345,
+      "selected_H00_fraction": 0.002,
+      "correct_temporal_scenario_fraction": 0.928,
+      "correct_D_fraction_positives": 0.607,
+      "mean_test_score_improvement": 2.1588814873079643,
+      "median_test_score_improvement": 2.0143604568815476
+    },
+    {
+      "generator": "H10",
+      "d_class": "D3",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 598,
+      "detection_rate": 0.598,
+      "upper_one_sided_95_ci_detection_rate": 0.6237644692053903,
+      "selected_H00_fraction": 0.003,
+      "correct_temporal_scenario_fraction": 0.928,
+      "correct_D_fraction_positives": 0.008,
+      "mean_test_score_improvement": 1.9490345935698026,
+      "median_test_score_improvement": 1.7804531177720833
+    },
+    {
+      "generator": "H11",
+      "d_class": "D0",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 822,
+      "detection_rate": 0.822,
+      "upper_one_sided_95_ci_detection_rate": 0.8416751422210118,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": 0.957,
+      "correct_D_fraction_positives": 1.0,
+      "mean_test_score_improvement": 3.7836299208802235,
+      "median_test_score_improvement": 3.662305579622398
+    },
+    {
+      "generator": "H11",
+      "d_class": "D1",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 800,
+      "detection_rate": 0.8,
+      "upper_one_sided_95_ci_detection_rate": 0.8206319706351374,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": 0.926,
+      "correct_D_fraction_positives": 0.002,
+      "mean_test_score_improvement": 3.2903976112145146,
+      "median_test_score_improvement": 3.358149173717038
+    },
+    {
+      "generator": "H11",
+      "d_class": "D2",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 802,
+      "detection_rate": 0.802,
+      "upper_one_sided_95_ci_detection_rate": 0.8225492467163001,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": 0.969,
+      "correct_D_fraction_positives": 0.585,
+      "mean_test_score_improvement": 3.5614960487013163,
+      "median_test_score_improvement": 3.412377550666463
+    },
+    {
+      "generator": "H11",
+      "d_class": "D3",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 783,
+      "detection_rate": 0.783,
+      "upper_one_sided_95_ci_detection_rate": 0.8043031891047271,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": 0.946,
+      "correct_D_fraction_positives": 0.001,
+      "mean_test_score_improvement": 3.285883754142046,
+      "median_test_score_improvement": 3.075235988908105,
+      "predictive_intervals_holdout": {
+        "marginal": {
+          "50": {
+            "W": {
+              "coverage": 0.46826875,
+              "mean_width_pp": 4.080879345685674
+            },
+            "L": {
+              "coverage": 0.49945625,
+              "mean_width_pp": 3.79353221463027
+            },
+            "B": {
+              "coverage": 0.44928125,
+              "mean_width_pp": 2.3341483656326276
+            },
+            "N": {
+              "coverage": 0.50040625,
+              "mean_width_pp": 1.3629149778722702
+            }
+          },
+          "80": {
+            "W": {
+              "coverage": 0.76628125,
+              "mean_width_pp": 7.753798056592738
+            },
+            "L": {
+              "coverage": 0.8004875,
+              "mean_width_pp": 7.207829544021943
+            },
+            "B": {
+              "coverage": 0.73833125,
+              "mean_width_pp": 4.432252094423297
+            },
+            "N": {
+              "coverage": 0.800825,
+              "mean_width_pp": 2.5895809730075556
+            }
+          },
+          "95": {
+            "W": {
+              "coverage": 0.9314375,
+              "mean_width_pp": 11.858410806794446
+            },
+            "L": {
+              "coverage": 0.94949375,
+              "mean_width_pp": 11.023424021945933
+            },
+            "B": {
+              "coverage": 0.90609375,
+              "mean_width_pp": 6.715952056107076
+            },
+            "N": {
+              "coverage": 0.95085,
+              "mean_width_pp": 3.9600525864106735
+            }
+          }
+        },
+        "simultaneous_four_95_bonferroni_coverage": 0.9284125,
+        "n_holdout_section_round_observations": 160000
+      }
+    },
+    {
+      "generator": "H00-natural-shift",
+      "d_class": "D0",
+      "n_eval": 1000,
+      "rejection_threshold": 1.1402528535519423,
+      "detections": 829,
+      "detection_rate": 0.829,
+      "upper_one_sided_95_ci_detection_rate": 0.8483478257340724,
+      "selected_H00_fraction": 0.0,
+      "correct_temporal_scenario_fraction": null,
+      "correct_D_fraction_positives": null,
+      "mean_test_score_improvement": 3.668020185537224,
+      "median_test_score_improvement": 3.5884974450719938
+    }
+  ],
+  "all_positive_meet_80_percent_power": false,
+  "null_upper_95_less_equal_5_percent": true,
+  "model_assumptions": {
+    "mechanism": "B -> W integer rounding; exact count conservation",
+    "latent_X": "unknown to scoring process, used only to generate and audit synthetic data",
+    "score": "Gaussian multivariate pseudo log predictive density on independent-reference minus observed B proportions",
+    "nuisance": "round-specific intercept and slope of z fit only on training locations",
+    "natural_location_sd": 0.006,
+    "natural_section_sd": 0.004,
+    "conversion_location_rate_sd": 0.11,
+    "conversion_section_rate_sd": 0.08,
+    "true_mean_rate_amplitude": 0.27,
+    "true_shape": "step",
+    "true_alpha_formula": "clip(a*g(z)+u_location+v_section,0,0.85), active rounds only",
+    "selection": "train score maximization across all candidates including H00; independent test score difference vs H00; 97.5% null calibration of entire selection",
+    "test_uses_latent_counts": false
+  },
+  "limitations": [
+    "Gaussian score is approximate; the synthetic generator uses integer multinomial counts and integer rounding.",
+    "The data generator, covariance family and candidate library share structural assumptions.",
+    "The independent synthetic reference is unusually informative; results depend on its precision.",
+    "Conversion D classes may be unidentifiable under similar natural behavioural random effects.",
+    "The H00-natural-shift stress generator changes preferences without any conversion, creating signal-shaped natural behaviour.",
+    "No election data, no empirical claim about any actual election or system.",
+    "The four-category intervals are Gaussian/marginal approximations, not exact joint count likelihoods.",
+    "Across turns, synthetic first/second-round counts are linked via shared location and covariate, not a full survey-based behavioural transfer matrix.",
+    "Unrestricted behavioural functions and unconstrained latent X can recreate observed counts without transformation."
+  ],
+  "execution_duration_is_not_part_of_reproducible_results": true
+}

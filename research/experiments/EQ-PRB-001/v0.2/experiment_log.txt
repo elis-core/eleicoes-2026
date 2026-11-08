@@ -1,0 +1,15 @@
+H00                D0 detect   23/1000=0.023 temp_correct=0.4 
+H01                D0 detect  644/1000=0.644 temp_correct=0.918 
+H01                D1 detect  582/1000=0.582 temp_correct=0.886 
+H01                D2 detect  580/1000=0.580 temp_correct=0.924 
+H01                D3 detect  586/1000=0.586 temp_correct=0.937 
+H10                D0 detect  646/1000=0.646 temp_correct=0.892 
+H10                D1 detect  593/1000=0.593 temp_correct=0.878 
+H10                D2 detect  653/1000=0.653 temp_correct=0.928 
+H10                D3 detect  598/1000=0.598 temp_correct=0.928 
+H11                D0 detect  822/1000=0.822 temp_correct=0.957 
+H11                D1 detect  800/1000=0.800 temp_correct=0.926 
+H11                D2 detect  802/1000=0.802 temp_correct=0.969 
+H11                D3 detect  783/1000=0.783 temp_correct=0.946 
+H00-natural-shift  D0 detect  829/1000=0.829 temp_correct=None 
+RESULTS_DONE False True elapsed 12.53
