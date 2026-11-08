@@ -1,0 +1,263 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EQ-PRB-001 v0.5 — Off-grid partial identification</title><style>
+:root{color-scheme:light}body{font:15px/1.58 system-ui,-apple-system,Segoe UI,sans-serif;max-width:1020px;margin:0 auto;padding:32px;color:#213049;background:#f8fafc}
+h1,h2,h3{line-height:1.2;color:#10213c}h1{font-size:30px}h2{padding-top:18px;border-top:1px solid #dce4ee;margin-top:32px}blockquote{border-left:4px solid #d97706;background:#fffbeb;padding:12px 18px;margin:18px 0}
+table{border-collapse:collapse;background:white;width:100%;display:block;overflow-x:auto}th,td{border:1px solid #d8e0eb;padding:7px 9px;text-align:left;font-size:13px}th{background:#eaf1fa}tr:nth-child(2n){background:#f3f7fc}pre{overflow:auto;background:#eef3fa;padding:14px;border-radius:8px}code{font-family:ui-monospace,Consolas,monospace}p,li{max-width:100ch}a{color:#1451a0}</style></head><body><h1>EQ-PRB-001 v0.5 — Independent behavioural panels and off-grid partial identification</h1>
+<p><strong>Date:</strong> 8 November 2026<br />
+<strong>Status:</strong> Executed, exploratory; not pre-registered or externally validated<br />
+<strong>Scope:</strong> Synthetic paired-round mathematical counts only; UK English</p>
+<blockquote>
+<p><strong>Interpretation:</strong> Every transfer rule below is a hypothetical mathematical generator. No real electoral returns, operational evidence, or voting software were analysed. Compatibility or exclusion is conditional on the model and external-panel assumptions, and does not demonstrate that any transformation occurred in practice.</p>
+</blockquote>
+<h2>Executive summary</h2>
+<ul>
+<li>Implemented <strong>analytical continuous-amplitude intervals</strong> for the nine H01/H10/H11 × constant/step/logistic equation families, with amplitude <strong>a ∈ [0, 0.60]</strong>, plus the separate exact H00 no-transformation hypothesis. No numerical amplitude grid is used by the interval solver.</li>
+<li>Generated <strong>20,000 independently seeded synthetic two-round datasets</strong>: six generator scenarios each at three behavioural-panel precisions, plus two additional independent reference-precision experiments, all with 1,000 trials. These worlds were reused within each case for two identification procedures, giving <strong>42 procedure/assumption comparisons</strong>, not 42 independent batches.</li>
+<li>Preserved <strong>40 polling places (320 sections), five hypothetical municipalities, two rounds, and a 30/10 whole-site training/holdout partition</strong>. Latent before-transformation counts were generated but were not supplied to inference.</li>
+<li>Compared a <strong>matched independent behavioural panel</strong> against a <strong>finite-sample conservative envelope derived from the same independent samples</strong>. Under favourable matched-panel conditions, H00 can be excluded while 3–6 equation families remain compatible; the true off-grid generator was included in all correctly specified evaluated configurations. The conservative envelope instead retained all ten families throughout this design.</li>
+<li>Deliberate <strong>panel representativeness failure</strong> caused exclusion of true H00 in all 1,000 high-precision stress trials. This is a model-misspecification failure, not evidence for a transfer.</li>
+</ul>
+<h2>1. Results for the paired-panel procedure</h2>
+<p>Each row is 1,000 independently generated synthetic datasets; the independent baseline reference has 1,800 draws per section and round. The rate-heterogeneity envelope is multiplicative ±15%. &quot;H00 retained&quot; measures whether zero transformation remains compatible. The true equation family was retained in all properly specified rows of these cases; this does <strong>not</strong> establish universal coverage or unique identification.</p>
+<table>
+<thead>
+<tr>
+  <th>Synthetic generator</th>
+  <th style="text-align:right">Panel draws per section/round</th>
+  <th style="text-align:right">H00 retained</th>
+  <th style="text-align:right">Mean compatible families (of 10)</th>
+  <th style="text-align:right">Mean width of true-family amplitude interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Natural behaviour, stable</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural behaviour, stable</td>
+  <td style="text-align:right">1,000</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural behaviour, stable</td>
+  <td style="text-align:right">10,000</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural step change (no transformation)</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural step change (no transformation)</td>
+  <td style="text-align:right">1,000</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural step change (no transformation)</td>
+  <td style="text-align:right">10,000</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Hypothetical H01, fixed rate</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">58.0%</td>
+  <td style="text-align:right">8.32</td>
+  <td style="text-align:right">0.588</td>
+</tr>
+<tr>
+  <td>Hypothetical H01, fixed rate</td>
+  <td style="text-align:right">1,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">6.00</td>
+  <td style="text-align:right">0.476</td>
+</tr>
+<tr>
+  <td>Hypothetical H01, fixed rate</td>
+  <td style="text-align:right">10,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">6.00</td>
+  <td style="text-align:right">0.454</td>
+</tr>
+<tr>
+  <td>Hypothetical H11, fixed rate</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">32.9%</td>
+  <td style="text-align:right">6.73</td>
+  <td style="text-align:right">0.579</td>
+</tr>
+<tr>
+  <td>Hypothetical H11, fixed rate</td>
+  <td style="text-align:right">1,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">3.00</td>
+  <td style="text-align:right">0.467</td>
+</tr>
+<tr>
+  <td>Hypothetical H11, fixed rate</td>
+  <td style="text-align:right">10,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">3.00</td>
+  <td style="text-align:right">0.446</td>
+</tr>
+<tr>
+  <td>Hypothetical H11, site/section variation</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">32.2%</td>
+  <td style="text-align:right">6.66</td>
+  <td style="text-align:right">0.579</td>
+</tr>
+<tr>
+  <td>Hypothetical H11, site/section variation</td>
+  <td style="text-align:right">1,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">3.00</td>
+  <td style="text-align:right">0.466</td>
+</tr>
+<tr>
+  <td>Hypothetical H11, site/section variation</td>
+  <td style="text-align:right">10,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">3.00</td>
+  <td style="text-align:right">0.446</td>
+</tr>
+<tr>
+  <td>Natural step with biased behavioural panel</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">74.5%</td>
+  <td style="text-align:right">8.94</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural step with biased behavioural panel</td>
+  <td style="text-align:right">1,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">3.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+<tr>
+  <td>Natural step with biased behavioural panel</td>
+  <td style="text-align:right">10,000</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">3.00</td>
+  <td style="text-align:right">n/a</td>
+</tr>
+</tbody>
+</table>
+<p>The H00 and nine positive-rate families are <strong>nested at amplitude zero</strong> under the multiplicative model. Therefore ten compatible families under H00 do not represent ten distinct positive-transfer mechanisms. For the H11-D3 generator with 10,000 panel draws, three function families remain compatible, and the mean amplitude interval width is approximately <strong>0.446</strong> of the full 0.600 range. That is partial, not unique, identification.</p>
+<p>For the stable H00 and natural-step H00 generators, there were 0 false exclusions across 1,000 trials each at n_panel=10,000. The exact one-sided 95% binomial upper confidence bound for an observed 0/1,000 false-exclusion rate is <strong>0.3%</strong>. This is an empirical check within these two synthetic generators, not a general false-alarm certificate. For the invalid biased-panel generator, 1,000/1,000 true H00 models were excluded at the same precision.</p>
+<h2>2. Independent reference precision and alternative constraints</h2>
+<table>
+<thead>
+<tr>
+  <th>H11-D3, panel size 10,000</th>
+  <th style="text-align:right">H00 retained</th>
+  <th style="text-align:right">Mean true-family amplitude width</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Independent reference 75</td>
+  <td style="text-align:right">1.9%</td>
+  <td style="text-align:right">0.546</td>
+</tr>
+<tr>
+  <td>Independent reference 300</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">0.476</td>
+</tr>
+<tr>
+  <td>Independent reference 1,800</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">0.446</td>
+</tr>
+</tbody>
+</table>
+<p>For the deterministic-rate H11 generator, assuming the rate is <strong>known to have no location/section heterogeneity</strong> (a valid but stronger constraint for D0 only) reduced the mean compatible amplitude width from <strong>0.446</strong> to <strong>0.320</strong>. The zero-heterogeneity specification is not valid for D3 and was not scored as though it were.</p>
+<h3>Why the conservative envelope remains broad</h3>
+<p>A separate, distribution-free panel calibration takes the <strong>maximum absolute measured behavioural difference over all 640 section-round positions</strong>, then adds a simultaneous 99% sampling-error allowance. The result is mathematically protective but very conservative:</p>
+<table>
+<thead>
+<tr>
+  <th>Panel draws</th>
+  <th style="text-align:right">Median calibrated envelope for stable natural behaviour</th>
+  <th style="text-align:right">H00 retained under H11-D3</th>
+  <th style="text-align:right">Mean compatible families</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>100</td>
+  <td style="text-align:right">0.619</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+</tr>
+<tr>
+  <td>1,000</td>
+  <td style="text-align:right">0.196</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+</tr>
+<tr>
+  <td>10,000</td>
+  <td style="text-align:right">0.062</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">10.00</td>
+</tr>
+</tbody>
+</table>
+<p>The conservative envelope retained <strong>all ten families</strong> in every tested configuration, including the hypothetical transformation cases. Its loss of precision is an important finding: a guaranteed per-cell behavioural envelope can be too wide to identify even a sizeable hypothetical signal. A direct matched-panel adjustment is more informative only under its stronger representativeness and independence premises.</p>
+<h2>3. Mathematical specification</h2>
+<p>For synthetic section-round index i, the latent blank count is X_B,i, the observed count is Y_B,i, turnout is C_i and a candidate transformation has amplitude a and frozen shape f_i ∈ [0, 1]. For active rounds:</p>
+<pre><code class="language-text">Y_B,i = X_B,i − floor(alpha_i × X_B,i + 0.5)
+Y_W,i = X_W,i + floor(alpha_i × X_B,i + 0.5)
+alpha_i = a f_i (1 + u_site(i) + v_i),  |u_site(i)| &lt;= 0.10, |v_i| &lt;= 0.05
+</code></pre>
+<p>In H00 or an inactive round, alpha_i=0. Exact integer conservation of all four category counts is checked in every generated dataset. The off-grid generating amplitude is <strong>a = 0.377</strong>, deliberately not one of the v0.4 candidates.</p>
+<p>Let p_i be the unknown latent blank probability and q_i the independently sampled baseline blank probability, with p_i, q_i &lt;= 0.20. Let R_i ~ Binomial(n_ref, q_i) be an independent baseline reference, P_i ~ Binomial(n_panel, p_i) an independent <em>representative</em> behavioural panel, and Q_i ~ Binomial(n_panel, q_i) a second independent baseline panel. Every sampling draw is independent given the site-level parameters; the site-level parameters themselves may be shared across sections.</p>
+<p>The paired correction is Z_i = R_i/n_ref + (P_i−Q_i)/n_panel; conditional on panel representativeness, <strong>E[Z_i] = p_i</strong>. Neither p_i nor latent X_B,i is given to the identification routine.</p>
+<p>For each of <strong>four fixed groups</strong> (training/holdout × round), define</p>
+<pre><code class="language-text">c_g = mean_i[ Z_i − Y_B,i/C_i ]
+k_g = mean_i[ f_i Z_i ]
+u_g = 0.5 × mean_i[1/C_i]
+      + sqrt( log(2×4/0.05) / (2 m_g²) × Σ_i [1/C_i + 1/n_ref + 2/n_panel] )
+h_g = 0.20 × 0.15 × mean_i[f_i]
+</code></pre>
+<p>A candidate family/amplitude passes the group only when <strong>|c_g − a k_g| &lt;= u_g + a h_g</strong>. Both sides are affine in a, so each group produces an interval obtainable through linear half-space intersection. The final compatible interval is the intersection of all four groups and <strong>[0, 0.60]</strong>. H00 is tested separately with amplitude zero and no rate-heterogeneity term.</p>
+<p>The rounding term permits a maximum half-count discrepancy per section. The concentration term uses conditional bounded differences of independent category draws and independent panel draws; four group tests share a 5% Bonferroni budget. For a correctly specified off-grid candidate in one of the stated families, the resulting set has a <strong>conditional nominal inclusion guarantee of at least 95%</strong> under those assumptions. This claim applies to the true candidate amplitude, <em>not</em> to uniformly correct classification of all other candidate mechanisms.</p>
+<h3>Alternative 99%-calibrated behavioural envelope</h3>
+<p>Without using the measured panel difference as a direct correction, calculate</p>
+<pre><code class="language-text">epsilon = sqrt( log(4 × 640 / 0.01) / (2 n_panel) )
+d_hat = max over 640 positions |P_i/n_panel − Q_i/n_panel| + 2 epsilon
+</code></pre>
+<p>Under independent representative binomial sampling, a union bound ensures <strong>Pr[d_hat &gt;= max_i |p_i−q_i|] &gt;= 99%</strong>. The envelope procedure uses Z=R/n_ref, substitutes d_hat into the behavioural allowance, and allocates 4% to the four moment tests. The two failure budgets sum to 5%, giving conditional at-least-95% inclusion of the true fixed candidate when <em>all</em> premises hold. This envelope is expected to be wide in small/medium panels and is not a recommendation to impose it on real datasets without independent justification.</p>
+<h2>4. Failure modes and evidential requirements</h2>
+<p><strong>Independent sampling does not imply representativeness.</strong> The matched panel must sample the same latent behavioural distribution p_i at the same section-round resolution as the source counts. Without such a justified linkage, its precision can produce confidently wrong exclusion results. The deliberately biased-panel stress test samples P from a different distribution; its collapse of H00 coverage is expected and explicitly invalidates the nominal inference claim.</p>
+<p><strong>Site-level dependence matters.</strong> The generator includes common site drift and a separate section component. The four holdout groups contain whole sites: 30 training, 10 held out. The concentration argument conditions on common site-level effects and assumes independent individual category draws and independent survey draws, not unconditional site independence.</p>
+<p><strong>Flexible natural behaviour may be observationally equivalent.</strong> A broad envelope leaves the complete family library compatible. An identified interval can contain multiple functions; a small interval still does not establish causality. Excluding H00 within a restrictive family is not proof that a transformation occurred.</p>
+<p><strong>The synthetic external panel is hypothetical.</strong> The study does not establish that an equivalent independent, representative, sufficiently granular behavioural panel exists for real electoral observations. Such a source, its sampling frame and error structure would have to be independently demonstrated before transferring the method.</p>
+<h2>5. Reproducibility and checks</h2>
+<ul>
+<li>Generator seed <strong>20261108</strong>, with independent seed offsets for each of 20 data-generating cases; NumPy PCG64. Fixed 1,000 worlds per case, 20,000 total. The same datasets are reused for paired and envelope procedure comparisons within a case; procedure results should <strong>not</strong> be counted as independent datasets.</li>
+<li>Standalone Python source (<code>eq_prb_001_v05.py</code>), unit/integration tests (<code>verify_v05.py</code>), numerical outputs (<code>results_v0.5.json</code>, <code>identified_intervals_summary.csv</code>, <code>examples.json</code>) and execution receipt are distributed with a SHA-256 manifest.</li>
+<li>The interval solver was compared to a <strong>3,001-point grid</strong> for 1,000 independent test inequalities, with exact agreement; actual inference remains continuous and grid-free.</li>
+<li>Verified exact integer conservation, panel count bounds, disjoint whole-site holdout, representativeness-failure labels, correct off-grid amplitude inclusion in independent pilot simulations, and full-run result counts.</li>
+<li>No scientific parameter was adjusted after viewing the final 1,000-world results. Initial prototype and pilot development preceded the frozen full evaluation; therefore this remains <strong>exploratory</strong>, not formally preregistered.</li>
+</ul>
+<h2>6. Recommended v0.6 research direction</h2>
+<p>Investigate transportable behavioural constraints with <em>separately located</em> calibration sites rather than matched sampling at the target sites, and test partial-identification under distribution shift, bounded selection bias and joint confidence across multiple transfer mechanisms. Prioritise diagnostic checks of external-panel representativeness. Do not claim unique identification unless competing families are demonstrably excluded under independently supportable assumptions.</p>
+<p><strong>Bottom line:</strong> Version 0.5 demonstrates that real-valued equation intervals can be computed without discretisation, and that independent, representative behavioural data can narrow compatible families in a controlled synthetic environment. It also demonstrates that representativeness failures can invalidate the conclusion even as survey sample size increases.</p>
+</body></html>
