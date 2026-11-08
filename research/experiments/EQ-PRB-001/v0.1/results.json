@@ -1,0 +1,192 @@
+{
+  "experiment": "EQ-PRB-001",
+  "version": "0.1",
+  "seed": 20261108,
+  "numpy_version": "2.3.5",
+  "data_type": "100% synthetic, generated; not 2026 electoral results",
+  "n_municipalities": 5,
+  "n_locations": 40,
+  "n_sections": 320,
+  "train_sections": 240,
+  "test_sections": 80,
+  "holdout_rule": "locations 2 and 7 (zero-indexed) within each of five municipalities",
+  "candidate_library": [
+    "zero",
+    "constant_0.05",
+    "constant_0.10",
+    "constant_0.20",
+    "linear_clip",
+    "logistic",
+    "threshold"
+  ],
+  "scenarios": {
+    "H00": [
+      "zero",
+      "zero"
+    ],
+    "H01": [
+      "zero",
+      "linear_clip"
+    ],
+    "H10": [
+      "threshold",
+      "zero"
+    ],
+    "H11": [
+      "logistic",
+      "logistic"
+    ]
+  },
+  "fits": [
+    {
+      "scenario": "H00",
+      "round": 1,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H00",
+      "round": 2,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H01",
+      "round": 1,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H01",
+      "round": 2,
+      "true_rule": "linear_clip",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "linear_clip"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H10",
+      "round": 1,
+      "true_rule": "threshold",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "threshold"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H10",
+      "round": 2,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H11",
+      "round": 1,
+      "true_rule": "logistic",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "logistic"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H11",
+      "round": 2,
+      "true_rule": "logistic",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "logistic"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    }
+  ],
+  "identifiability_counterexample": {
+    "section_index": 0,
+    "latent_before_synthetic_transformation": [
+      98,
+      83,
+      17,
+      9
+    ],
+    "observed_synthetic_counts": [
+      99,
+      83,
+      16,
+      9
+    ],
+    "alternate_latent_counts_identity_rule": [
+      99,
+      83,
+      16,
+      9
+    ],
+    "same_observation_under_both_explanations": true,
+    "interpretation": "Without independent constraints on latent X, transformation is not identified from Y alone."
+  },
+  "caveats": [
+    "Oracle latent X1,X2 supplied to the evaluator: not feasible in real observed results.",
+    "The true generating rule is contained in the predefined candidate library.",
+    "Only B->W mechanism tested; no other transfer flows.",
+    "This is NOT a test of election fraud, software, or real-world conversion.",
+    "No Bayesian hierarchical inference, stochastic interval evaluation or 1000-replicate calibration yet."
+  ]
+}

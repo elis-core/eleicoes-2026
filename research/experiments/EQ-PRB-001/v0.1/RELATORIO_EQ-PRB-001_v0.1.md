@@ -1,0 +1,63 @@
+# EQ-PRB-001 — Validação sintética e identificabilidade
+
+**Versão:** 0.1 · **Data:** 2026-11-08 · **Status:** Etapa determinística executada; etapa probabilística pendente.
+
+## Escopo e procedência
+
+Exercício matemático com **dados inteiramente sintéticos**. Nenhum resultado de eleição real foi usado. O protótipo implementa apenas a hipótese ilustrativa de transferência de votos **B → W**, com soma dos votos preservada. Não constitui teste de fraude ou atribuição de causa.
+
+Documento metodológico de referência: `ELIS-E2026-MET-BR-001`, versão 1.2, fornecido pelo usuário. Os quatro cenários temporais são H00 (nenhum turno), H01 (segundo turno), H10 (primeiro turno), H11 (ambos os turnos).
+
+## Protocolo executado
+
+- Geração de 5 municípios × 8 locais por município × 8 seções por local = **320 seções**.
+- Divisão agrupada por local: **240 seções / 30 locais** para treinamento e **80 seções / 10 locais** inteiramente reservados.
+- Dois turnos sintéticos com comparecimento e comportamento naturalmente variáveis.
+- Função de transformação: `m_s = min(B_s, floor(alpha_s * B_s + 0.5))`; `W'_s = W_s + m_s`, `B'_s = B_s - m_s`, `L'_s = L_s`, `N'_s = N_s`.
+- Biblioteca **fixada antes da avaliação**: `zero`, `constant_0.05`, `constant_0.10`, `constant_0.20`, `linear_clip`, `logistic`, `threshold`.
+- Escolha por menor erro absoluto de contagens nas seções de treinamento; teste externo em locais excluídos.
+- Aleatoriedade reprodutível com `numpy.random.default_rng(20261108)`; versão NumPy gravada em `results.json`.
+
+## Resultados efetivamente medidos
+
+| Cenário | Regra verdadeira T1 | Regra recuperada T1 | Regra verdadeira T2 | Regra recuperada T2 | Erro absoluto no holdout |
+|---|---|---|---|---|---:|
+| H00 | zero | zero | zero | zero | 0 |
+| H01 | zero | zero | linear_clip | linear_clip | 0 |
+| H10 | threshold | threshold | zero | zero | 0 |
+| H11 | logistic | logistic | logistic | logistic | 0 |
+
+Todas as oito identificações turno/cenário apresentaram **erro absoluto zero no treino**. O erro no conjunto de teste também foi zero para a regra selecionada em cada caso. A seleção de H11 utilizou uma mesma regra nos dois turnos. Não se inferiu aqui um parâmetro desconhecido de uma família contínua: os candidatos eram especificações completas pré-definidas.
+
+## Contraexemplo de identificabilidade
+
+Para a seção sintética 0, o resultado observado foi `(W=99, L=83, B=16, N=9)`. Ele pode ser produzido por:
+
+1. Contagens latentes `(98, 83, 17, 9)` e conversão inteira de **1** voto B → W;
+2. Contagens latentes `(99, 83, 16, 9)` e **nenhuma** conversão.
+
+Os dados observados são idênticos nos dois casos. Isso demonstra que, sem informação ou restrição independente sobre os estados latentes, uma reconstrução exata não identifica univocamente o mecanismo.
+
+## Limitações explícitas
+
+1. As contagens latentes `X1` e `X2` foram disponibilizadas ao algoritmo: condição **oracle**, não reproduzível diretamente ao estudar apenas contagens publicadas.
+2. A regra geradora foi incluída na biblioteca de candidatos; não houve busca simbólica aberta ou inferência de parâmetros contínuos.
+3. Apenas um fluxo hipotético foi implementado: B → W. Os demais fluxos previstos na metodologia ainda não foram exercitados.
+4. Não foram executados o modelo hierárquico probabilístico, a calibração de intervalos 50/80/95%, a análise da incerteza da transferência comportamental, ou as ≥1.000 replicações independentes por cenário.
+5. Não há estatísticas sobre poder, falso alarme ou desempenho em dados reais; nenhuma conclusão sobre eleições reais é permitida.
+6. As metas municipais de validação da metodologia v1.2 **não foram aplicadas** a este teste de consistência interno.
+
+## Próxima implementação — EQ-PRB-001 v0.2
+
+Introduzir fator aleatório por seção, fator compartilhado por local e combinação dos dois; gerar as quatro classes D0–D3; realizar inferência com `X` latente sem acesso aos valores geradores; comparar com alternativas de comportamento natural suficientemente flexíveis; avaliar log-score preditivo, cobertura e largura de intervalos 50/80/95%, validação por local; posteriormente executar ≥1.000 replicações **independentes de avaliação** por cenário com estatística de seleção da busca inteira, para calibrar taxa de falso alarme e poder. Manter teste externo congelado.
+
+## Arquivos
+
+- `eq_prb_001.py`: gerador e avaliador reproduzível;
+- `synthetic_section_data.csv`: contagens latentes e observadas sintéticas em todos os cenários;
+- `candidate_scores.csv`: todos os escores por regra, turno e cenário;
+- `fit_summary.csv`: recuperações selecionadas;
+- `results.json`: resumo verificável, semente e ressalvas;
+- `execution_log.json`: saída da execução.
+
+**Execução:** `python eq_prb_001.py` (requer NumPy). A execução sobrescreve os quatro arquivos de dados/resultados derivados na mesma pasta.

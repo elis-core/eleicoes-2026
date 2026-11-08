@@ -1,0 +1,9 @@
+scenario,round,true_rule,train_best_abs_error,train_best_candidates,test_abs_error_of_best,test_abs_error_true_rule,train_sections,test_sections,train_locations,test_locations
+H00,1,zero,0,['zero'],0,0,240,80,30,10
+H00,2,zero,0,['zero'],0,0,240,80,30,10
+H01,1,zero,0,['zero'],0,0,240,80,30,10
+H01,2,linear_clip,0,['linear_clip'],0,0,240,80,30,10
+H10,1,threshold,0,['threshold'],0,0,240,80,30,10
+H10,2,zero,0,['zero'],0,0,240,80,30,10
+H11,1,logistic,0,['logistic'],0,0,240,80,30,10
+H11,2,logistic,0,['logistic'],0,0,240,80,30,10
