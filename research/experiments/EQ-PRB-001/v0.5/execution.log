@@ -1,0 +1,21 @@
+case 01/20 natural_stable       reference=1800 panel=  100
+case 02/20 natural_stable       reference=1800 panel= 1000
+case 03/20 natural_stable       reference=1800 panel=10000
+case 04/20 natural_step         reference=1800 panel=  100
+case 05/20 natural_step         reference=1800 panel= 1000
+case 06/20 natural_step         reference=1800 panel=10000
+case 07/20 H01_D0_offgrid       reference=1800 panel=  100
+case 08/20 H01_D0_offgrid       reference=1800 panel= 1000
+case 09/20 H01_D0_offgrid       reference=1800 panel=10000
+case 10/20 H11_D0_offgrid       reference=1800 panel=  100
+case 11/20 H11_D0_offgrid       reference=1800 panel= 1000
+case 12/20 H11_D0_offgrid       reference=1800 panel=10000
+case 13/20 H11_D3_offgrid       reference=1800 panel=  100
+case 14/20 H11_D3_offgrid       reference=1800 panel= 1000
+case 15/20 H11_D3_offgrid       reference=1800 panel=10000
+case 16/20 H00_biased_panel     reference=1800 panel=  100
+case 17/20 H00_biased_panel     reference=1800 panel= 1000
+case 18/20 H00_biased_panel     reference=1800 panel=10000
+case 19/20 H11_D3_offgrid       reference=  75 panel=10000
+case 20/20 H11_D3_offgrid       reference= 300 panel=10000
+Completed 20,000 independent worlds and 42 set evaluations in 10.0s

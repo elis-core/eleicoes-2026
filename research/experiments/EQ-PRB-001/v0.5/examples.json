@@ -1,0 +1,2984 @@
+[
+  {
+    "scenario": "natural_stable",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.382372
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.556208
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.57495
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.446803
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.382372
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.556208
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.57495
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_stable",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_stable",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.258056
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.388305
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.403008
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.279684
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.410292
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.430194
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.258056
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.388305
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.403008
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_stable",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_stable",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.192605
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.287992
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.298629
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.19702
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.291923
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.305357
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.192605
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.287992
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.298629
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_stable",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_step",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_step",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_step",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.346061
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.308737
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.543924
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.555882
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.308737
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.543924
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.555882
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_step",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_step",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.286879
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.511439
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.515799
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.256065
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.459805
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.467178
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.256065
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.459805
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.467178
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_step",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H01_D0_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.439904
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.439904
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H01_D0_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H01_D0_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.074383,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.117288,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.121457,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.074383,
+            0.213256
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.117288,
+            0.318904
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.121457,
+            0.33451
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H01_D0_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H01_D0_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.089081,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.141245,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.146506,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.089081,
+            0.142551
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.141245,
+            0.210212
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.146506,
+            0.220538
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H01_D0_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.082791,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.131663,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.136444,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.100414,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.159753,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.166917,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.009647,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.015258,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.015873,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.009647,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.015258,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.015873,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.07879,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.125551,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.129973,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.098077,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.157028,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.162635,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H00_biased_panel",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H00_biased_panel",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 100,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H00_biased_panel",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.05541,
+            0.566969
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.08828,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.091597,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H00_biased_panel",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 1000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H00_biased_panel",
+    "method": "paired",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.081801,
+            0.554501
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.129917,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.135766,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H00_biased_panel",
+    "method": "envelope",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "paired",
+    "n_reference": 75,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.05722,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.090787,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.094615,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "envelope",
+    "n_reference": 75,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "paired",
+    "n_reference": 300,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.077328,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.122751,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.128449,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D3_offgrid",
+    "method": "envelope",
+    "n_reference": 300,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "H11_D0_offgrid",
+    "method": "paired_exact_rate",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": false,
+      "compatible_families": [
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.144193,
+            0.34834
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.225485,
+            0.544926
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.235641,
+            0.564543
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "natural_stable",
+    "method": "paired_exact_rate",
+    "n_reference": 1800,
+    "n_panel": 10000,
+    "example": {
+      "H00_retained": true,
+      "compatible_families": [
+        {
+          "temporal": "H01",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.109186
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.170843
+          ]
+        },
+        {
+          "temporal": "H01",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.176942
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.111363
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.172962
+          ]
+        },
+        {
+          "temporal": "H10",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.180804
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "constant",
+          "amplitude_interval": [
+            0.0,
+            0.109186
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "step",
+          "amplitude_interval": [
+            0.0,
+            0.170843
+          ]
+        },
+        {
+          "temporal": "H11",
+          "shape": "logistic",
+          "amplitude_interval": [
+            0.0,
+            0.176942
+          ]
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,4 @@
+PASS: exact analytical intervals agree with 3,001-point independent grid check (1,000 test inequalities)
+PASS: 4-category integer conservation, panel bounds, and 30/10 site holdout
+PASS: known off-grid rate inclusion and natural-step no-transfer stress (100 independent pilot worlds each)
+PASS: released 20,000-world result counts, assumption flags and numerical ranges
