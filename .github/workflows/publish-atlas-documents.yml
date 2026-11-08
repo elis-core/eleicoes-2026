@@ -1,0 +1,99 @@
+name: Publicar documentos da busca de equações
+
+on:
+  push:
+    branches: [atlas-documentos-publish]
+    paths:
+      - publication/request.json
+      - .github/workflows/publish-atlas-documents.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-documentos-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: atlas-r2
+    steps:
+      - name: Ler transferência
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          path: stage
+          persist-credentials: false
+      - name: Gerar token do Atlas Publisher
+        id: publisher
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          client-id: ${{ vars.ATLAS_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.ATLAS_PUBLISHER_PRIVATE_KEY }}
+          permission-contents: write
+      - name: Preparar transporte binário para R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ATLAS_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ATLAS_R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ vars.ATLAS_R2_ENDPOINT }}
+          R2_BUCKET: ${{ vars.ATLAS_R2_BUCKET }}
+          GRANTS_FILE: ${{ runner.temp }}/r2-grants.json
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/r2-signing"
+          "$RUNNER_TEMP/r2-signing/bin/pip" --quiet install boto3
+          "$RUNNER_TEMP/r2-signing/bin/python" stage/publication/prepare-grants.py
+          node stage/publication/seal-grants.cjs "$GRANTS_FILE" stage/publication/upload-grants-public.pem "$RUNNER_TEMP/sealed-grants.json"
+          rm -f "$GRANTS_FILE"
+      - name: Disponibilizar autorizações cifradas
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          path=publication/upload-grants.json
+          sha=$(gh api "repos/$REPO/contents/$path?ref=atlas-documentos-publish" --jq '.sha' 2>/dev/null || true)
+          content=$(base64 -w0 "$RUNNER_TEMP/sealed-grants.json")
+          jq -n --arg sha "$sha" --arg content "$content" '{message:"Prepara transporte cifrado dos documentos",branch:"atlas-documentos-publish",content:$content} + (if $sha == "" then {} else {sha:$sha} end)' |
+            gh api --method PUT "repos/$REPO/contents/$path" --input - --silent
+      - name: Receber e conferir arquivos no R2
+        run: python3 stage/publication/receive-r2.py
+      - name: Ler main atual
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          ref: main
+          path: atlas
+          token: ${{ steps.publisher.outputs.token }}
+      - name: Recompor e validar os arquivos
+        run: |
+          python3 stage/publication/publish.py stage atlas
+          python3 atlas/scripts/importar-documentos.py --validar
+          node --check atlas/assets/atlas-documents.js
+          git -C atlas diff --check
+      - name: Publicar como Atlas Publisher
+        env:
+          GH_TOKEN: ${{ steps.publisher.outputs.token }}
+          APP_SLUG: ${{ steps.publisher.outputs.app-slug }}
+          REPO: ${{ github.repository }}
+        working-directory: atlas
+        run: |
+          set -euo pipefail
+          test "$REPO" = elis-core/eleicoes-2026
+          test "$APP_SLUG" = elis-atlas-publisher
+          bot="$APP_SLUG[bot]"
+          bot_id=$(gh api "users/$bot" --jq '.id')
+          test "$bot_id" = 352893640
+          git config user.name "$bot"
+          git config user.email "$bot_id+$bot@users.noreply.github.com"
+          git add documentos assets/atlas-documents.css assets/atlas-documents.js scripts/importar-documentos.py docs/PUBLICACAO_DOCUMENTOS.md HANDOFF.md REVIEW.md index.html en/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat: publica 13 relatórios e pacotes da busca de equações'
+            git push origin HEAD:main
+          fi
+          commit=$(git rev-parse HEAD)
+          gh api "repos/$REPO/commits/$commit" > "$RUNNER_TEMP/atlas-author.json"
+          test "$(jq -r '.author.login' "$RUNNER_TEMP/atlas-author.json")" = "$bot"
+          test "$(jq -r '.committer.login' "$RUNNER_TEMP/atlas-author.json")" = "$bot"
+          printf 'Commit: [%s](https://github.com/%s/commit/%s) · %s\n' "$commit" "$REPO" "$commit" "$bot" >> "$GITHUB_STEP_SUMMARY"
+          printf '\n[Documentos](https://atlas-brazil-2026.electoralintegrity.org/documentos/)\n' >> "$GITHUB_STEP_SUMMARY"

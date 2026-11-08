@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "colecao": "Busca de equações nos dois turnos",
+  "documentos": [
+    {
+      "id": "ELIS-E2026-MET-BR-001",
+      "titulo": "Base metodológica",
+      "versao": "1.1",
+      "data": "2026-11-07",
+      "ordem": 1,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-MET-BR-001_Busca_Equacoes_Dois_Turnos_v1.1.html",
+          "tipo": "html",
+          "tamanho": 57080,
+          "sha256": "2cc27d8fe086aa27fa0720c56d21d19addff557edbae31032d8f5bbcf6e569c5"
+        }
+      ]
+    },
+    {
+      "id": "ELIS-E2026-PIL-SIM-001",
+      "titulo": "Piloto de recuperação de equações",
+      "versao": "1.0",
+      "data": "2026-11-07",
+      "ordem": 2,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-PIL-SIM-001_Piloto_Equacoes_Dois_Turnos.html",
+          "tipo": "html",
+          "tamanho": 566990,
+          "sha256": "1342e5a3fecc19c985837d07b582f37538d7fda3c3a21823dece1893c382febe"
+        },
+        {
+          "nome": "2026-11-07_ELIS-E2026-PIL-SIM-001_Reproducao.zip",
+          "tipo": "zip",
+          "tamanho": 1624209,
+          "sha256": "69e0d8f5947faf92f94cc4ce6987974732c35290eb0429de5ac410803c8cc1bc"
+        }
+      ]
+    },
+    {
+      "id": "ELIS-E2026-DAT-REF-RN-001",
+      "titulo": "Dados e referências com incerteza",
+      "versao": "1.0",
+      "data": "2026-11-07",
+      "ordem": 3,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-DAT-REF-RN-001_Consolidacao_Referencias.html",
+          "tipo": "html",
+          "tamanho": 105571,
+          "sha256": "89bb98ffe227648f2adcb069f3b5d87fc37ab3bed4a25be116f2155be13e2900"
+        },
+        {
+          "nome": "2026-11-07_ELIS-E2026-DAT-REF-RN-001_Dados_Codigo.zip",
+          "tipo": "zip",
+          "tamanho": 21360535,
+          "sha256": "c2510d4578da302ae6af9bb4a4579fbefab0fb5a407e82e3a142c20183c524a1"
+        }
+      ]
+    },
+    {
+      "id": "ELIS-E2026-INV-RN-001",
+      "titulo": "Compatibilidade e limites de conversão",
+      "versao": "1.0",
+      "data": "2026-11-07",
+      "ordem": 4,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-INV-RN-001_Compatibilidade_Limites.html",
+          "tipo": "html",
+          "tamanho": 113081,
+          "sha256": "ef62efe171f04496e14627a6aeb1a139b0d0a035deda912d20ee012588f43740"
+        },
+        {
+          "nome": "2026-11-07_ELIS-E2026-INV-RN-001_Reproducao.zip",
+          "tipo": "zip",
+          "tamanho": 8680224,
+          "sha256": "60675c5f67c83ed6418866071cc344963fc5a560a106a34954fe6a9ea5b7f58c"
+        }
+      ]
+    },
+    {
+      "id": "ELIS-E2026-REF-VAL-RN-001",
+      "titulo": "Validação das referências comportamentais",
+      "versao": "1.0",
+      "data": "2026-11-07",
+      "ordem": 5,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-REF-VAL-RN-001_Reproducao.zip",
+          "tipo": "zip",
+          "tamanho": 16908061,
+          "sha256": "27ea312b287682ab8063a445b6198d0c6e9f4f93084ac6cec4eb3c7556e52000"
+        },
+        {
+          "nome": "2026-11-07_ELIS-E2026-REF-VAL-RN-001_Validacao_Referencias.html",
+          "tipo": "html",
+          "tamanho": 126312,
+          "sha256": "21c56739182921ef77577eafc525c290208a8ee3b2aa01ce6b4b4715578b5b63"
+        }
+      ]
+    },
+    {
+      "id": "ELIS-E2026-EVI-PWR-RN-001",
+      "titulo": "Evidência independente e poder de detecção",
+      "versao": "1.1",
+      "data": "2026-11-07",
+      "ordem": 6,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-EVI-PWR-RN-001_Evidencia_Poder.html",
+          "tipo": "html",
+          "tamanho": 267502,
+          "sha256": "b0a5c66dff0d9f2767fc39e59646fc5b2449991fc5815f4424bb5c2518797e12"
+        },
+        {
+          "nome": "2026-11-07_ELIS-E2026-EVI-PWR-RN-001_Reproducao.zip",
+          "tipo": "zip",
+          "tamanho": 1973093,
+          "sha256": "677db71b29556c4961f617a2bf553608c95cbe274d0b06dd241ce8ec7c7441f2"
+        }
+      ]
+    },
+    {
+      "id": "ELIS-E2026-EQ-CMP-RN-001",
+      "titulo": "Comparação de equações",
+      "versao": "1.0",
+      "data": "2026-11-07",
+      "ordem": 7,
+      "arquivos": [
+        {
+          "nome": "2026-11-07_ELIS-E2026-EQ-CMP-RN-001_Comparacao_Equacoes.html",
+          "tipo": "html",
+          "tamanho": 194056,
+          "sha256": "cdbb40353f5d233922abc5518aee4b376ff42655d6511e7fb858a1bd237e4ffe"
+        },
+        {
+          "nome": "2026-11-07_ELIS-E2026-EQ-CMP-RN-001_Reproducao.zip",
+          "tipo": "zip",
+          "tamanho": 15141622,
+          "sha256": "c8dab42e8267e8221514906721860e1fd749d1c6c4f5fd8e7c67619abab64c40"
+        }
+      ]
+    }
+  ]
+}
