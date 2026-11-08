@@ -1,0 +1,148 @@
+{
+  "n_sections": 320,
+  "fits": [
+    {
+      "scenario": "H00",
+      "round": 1,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H00",
+      "round": 2,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H01",
+      "round": 1,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H01",
+      "round": 2,
+      "true_rule": "linear_clip",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "linear_clip"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H10",
+      "round": 1,
+      "true_rule": "threshold",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "threshold"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H10",
+      "round": 2,
+      "true_rule": "zero",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "zero"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H11",
+      "round": 1,
+      "true_rule": "logistic",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "logistic"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    },
+    {
+      "scenario": "H11",
+      "round": 2,
+      "true_rule": "logistic",
+      "train_best_abs_error": 0,
+      "train_best_candidates": [
+        "logistic"
+      ],
+      "test_abs_error_of_best": 0,
+      "test_abs_error_true_rule": 0,
+      "train_sections": 240,
+      "test_sections": 80,
+      "train_locations": 30,
+      "test_locations": 10
+    }
+  ],
+  "counterexample": {
+    "section_index": 0,
+    "latent_before_synthetic_transformation": [
+      98,
+      83,
+      17,
+      9
+    ],
+    "observed_synthetic_counts": [
+      99,
+      83,
+      16,
+      9
+    ],
+    "alternate_latent_counts_identity_rule": [
+      99,
+      83,
+      16,
+      9
+    ],
+    "same_observation_under_both_explanations": true,
+    "interpretation": "Without independent constraints on latent X, transformation is not identified from Y alone."
+  }
+}
