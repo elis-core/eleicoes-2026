@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EQ-PRB-001 v0.4 | Partial identification</title>
+<style>body{font:16px/1.58 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#17202d;background:#f6f7f9;margin:0}main{max-width:1040px;margin:24px auto;padding:45px 56px;background:white;box-shadow:0 4px 28px #16203312;border-radius:10px}h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.35rem;margin-top:2.4rem;border-bottom:1px solid #d8dfe8;padding-bottom:.35rem}h3{font-size:1.1rem}p{margin:0.8rem 0 1.1rem}blockquote{border-left:4px solid #475569;padding:.3rem 1rem;background:#f3f6fa;margin:1rem 0}table{border-collapse:collapse;display:block;overflow:auto;font-size:0.87rem;white-space:nowrap;margin:1.2rem 0 1.7rem}td,th{border-bottom:1px solid #dee4eb;padding:9px 12px;text-align:left}th{background:#eaf0f7;font-weight:700}tr:nth-child(even){background:#fafbfc}pre{padding:16px;background:#f0f3f7;border-radius:6px;overflow:auto;white-space:pre-wrap;word-break:break-word}code{font-family:ui-monospace,Consolas,monospace;font-size:.85em}li{margin:.3rem 0}a{color:#1e5188}.small{color:#62708a}header{border-bottom:3px solid #273c5b;margin-bottom:28px}footer{margin-top:40px;border-top:1px solid #d9e2ed;padding-top:18px;color:#65748b;font-size:13px}@media(max-width:730px){main{margin:0;padding:24px 18px;border-radius:0;box-shadow:none}h1{font-size:1.6rem}table{font-size:.8rem}}</style>
+</head><body><main><header><p class="small">ELIS | Mathematical research | Synthetic-only | 8 November 2026</p></header><h1>EQ-PRB-001 v0.4 — Partial identification under behavioural constraints</h1>
+<p><strong>Date:</strong> 8 November 2026<br />
+<strong>Status:</strong> Executed; exploratory statistical experiment, not a uniquely identifying method.<br />
+<strong>Language:</strong> UK English<br />
+<strong>Scope:</strong> 100% synthetic paired-round category-count data; no actual election returns, voting-system evidence or personal data.</p>
+<blockquote>
+<p><strong>Interpretation guardrail:</strong> Every transformation described here is an invented mathematical scenario. The experiment does not establish that any transformation happened in a real election. A compatible equation is not proof of a causal mechanism.</p>
+</blockquote>
+<h2>1. Executive findings</h2>
+<p>Version 0.3 showed that a sufficiently flexible natural-behaviour model could absorb the same average shift as a proposed count transformation. Version 0.4 therefore <strong>returns sets of compatible equations</strong>, rather than choosing a single putative generator. A candidate is retained only when it passes four pre-specified moment inequalities under stated bounds on natural behaviour and rate heterogeneity.</p>
+<p>After a small exploratory pilot, the final parameter grid was frozen; the subsequent evaluation generated <strong>21,000 independent synthetic datasets</strong> (seven generators × three independently seeded reference-precision conditions × 1,000 datasets), evaluated <strong>64 candidate equations</strong> and <strong>126</strong> constraint combinations. There are five invented municipalities, 40 sites and eight sections at each site, in two rounds: 30 complete sites are used for training and 10 complete sites remain held out, preserving both rounds together. For the study's frozen candidate-grid cases, the correct candidate was retained in <strong>all 93 correctly specified evaluation configurations</strong>; these 100% empirical inclusion rates are deliberately conservative and are not a universal coverage guarantee.</p>
+<p><strong>Main negative result:</strong> when the independently justified natural-behaviour envelope is broad enough to accommodate alternative natural explanations, a hypothetical transformation and the no-transformation scenario usually remain jointly compatible. Under the broadest envelope, all 64 candidates survive in every assessed H11-D3 configuration. <strong>Unique identification has not been attained.</strong></p>
+<h2>2. Tight-envelope sensitivity: detection versus misinterpretation</h2>
+<p>The following results use a natural-behaviour envelope of <strong>±0.25 percentage points</strong> in the underlying blank-category probability and allow a transformation-rate deviation of <strong>±0.055</strong> on active rounds. Both figures are <em>assumed bounds</em> for the simulation, not measured facts. The rate bound covers the bounded D3 location-plus-section variation generated here. Each percentage uses <strong>1,000 independent synthetic trials</strong>.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Independent reference size</th>
+  <th style="text-align:right">H00 exclusion: synthetic H11-D3</th>
+  <th style="text-align:right">Mean identified-set size</th>
+  <th style="text-align:right">H00 exclusion: synthetic natural step</th>
+  <th style="text-align:right">H00 exclusion: biased reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">21.0/64</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td style="text-align:right">98.3%</td>
+  <td style="text-align:right">26.6/64</td>
+  <td style="text-align:right">98.0%</td>
+  <td style="text-align:right">97.7%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td style="text-align:right">7.2%</td>
+  <td style="text-align:right">62.4/64</td>
+  <td style="text-align:right">8.2%</td>
+  <td style="text-align:right">9.2%</td>
+</tr>
+</tbody>
+</table>
+<p>The apparent detection of a natural step change (H00) or a biased independent reference is a <strong>model-misspecification failure</strong>, not a valid demonstration of a transformation: neither generator satisfies the tight behavioural-envelope premise. Under these cases, excluding H00 is scientifically misleading. At reference size 1,800 the H11-D3 setting excludes H00 in all 1,000 trials but still retains an average <strong>21.0 distinct equations out of 64</strong>; the result is therefore not uniquely identified even in the favourable regime.</p>
+<h2>3. Graded behavioural constraints and reference precision</h2>
+<p>The natural-envelope levels are 0.25, 1.00 and 3.50 percentage points, frozen for the final evaluation after pilot design. The exploratory pilot means this study is not a formally preregistered confirmatory experiment. The smallest is correct for the constructed stable-behaviour generators (bounded site variation ±0.15 pp and section variation ±0.10 pp); it is <strong>not</strong> correct for the deliberately misspecified natural-step and reference-bias stress tests. The largest also covers those stress-test generators. The independent reference sample sizes (75, 300 and 1,800 per section/round) are mathematical counterfactuals, not assertions about practical field surveys.</p>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Reference</th>
+  <th style="text-align:right">Natural envelope (percentage points)</th>
+  <th style="text-align:right">H00 retained with H11-D3</th>
+  <th style="text-align:right">Mean compatible equations</th>
+  <th style="text-align:right">H00 retained under natural-step H00</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td style="text-align:right">0.25</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">21.0/64</td>
+  <td style="text-align:right">0.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td style="text-align:right">1.00</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">64.0/64</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td style="text-align:right">3.50</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">64.0/64</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td style="text-align:right">0.25</td>
+  <td style="text-align:right">1.7%</td>
+  <td style="text-align:right">26.6/64</td>
+  <td style="text-align:right">2.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td style="text-align:right">1.00</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">64.0/64</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td style="text-align:right">3.50</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">64.0/64</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td style="text-align:right">0.25</td>
+  <td style="text-align:right">92.8%</td>
+  <td style="text-align:right">62.4/64</td>
+  <td style="text-align:right">91.8%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td style="text-align:right">1.00</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">64.0/64</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td style="text-align:right">3.50</td>
+  <td style="text-align:right">100.0%</td>
+  <td style="text-align:right">64.0/64</td>
+  <td style="text-align:right">100.0%</td>
+</tr>
+</tbody>
+</table>
+<p>The wide envelope yields <strong>the complete 64-model library</strong> for the H11-D3 example at each precision. This is the central partial-identification result: in that regime the data and declared bounds permit the no-transformation rule, multiple temporal patterns and multiple rate shapes. More reference observations alone cannot resolve this overlap without stronger and externally justified restrictions on behaviour.</p>
+<p>In contrast, under valid narrow bounds, the no-transformation rule can be excluded at high precision without selecting a unique temporal pattern or curve. A statistical confidence set describes <strong>compatibility conditional on assumptions</strong>; its size does not measure the probability that a particular candidate is true.</p>
+<h2>4. Mathematical definition of the identified set</h2>
+<p>For synthetic section-round index <code class="math-inline">i</code>, let <code class="math-inline">C_i</code> be observed turnout, <code class="math-inline">X_{B,i}</code> the latent count in category B, <code class="math-inline">Y_{B,i}</code> the published synthetic B count, and <code class="math-inline">R_{B,i}</code> an independent reference count based on <code class="math-inline">n</code> draws. The discrete transformation is</p>
+<pre class="formula">Y_{B,i}=X_{B,i}-\left\lfloor\alpha_i X_{B,i}+\tfrac12\right\rfloor,\qquad
+Y_{W,i}=X_{W,i}+\left\lfloor\alpha_i X_{B,i}+\tfrac12\right\rfloor.</pre>
+<p>Other categories remain unchanged, and <strong>all four integer counts sum exactly to <code class="math-inline">C_i</code></strong>. The candidate grid freezes <code class="math-inline">\alpha_i(\theta)=a f(z_i)\mathbf{1}[\mathrm{round}(i)\in H]</code> before simulation. It includes H00 (zero), H01, H10 and H11; constant, step and logistic shapes; and seven amplitudes 0.06 to 0.42, giving 64 candidates including H00.</p>
+<p>The behavioural and reference assumptions are</p>
+<pre class="formula">X_{B,i}\mid p_i\sim\operatorname{Binomial}(C_i,p_i),\quad
+R_{B,i}\sim\operatorname{Binomial}(n,q_i),\quad
+|p_i-q_i|\le d,\quad q_i\le0.20.</pre>
+<p>For active rounds, the realised rate differs from the candidate curve by at most <code class="math-inline">e</code>, and zero is required on inactive rounds. In particular, <strong>the latent count <code class="math-inline">X_B</code>, the true reference probability <code class="math-inline">q</code> and the simulated random effects are not supplied to the identification routine</strong>. Only synthetic observations <code class="math-inline">Y</code>, independent reference counts <code class="math-inline">R</code>, turnout, site/round identifiers and frozen candidate covariates are available.</p>
+<p>For each of four groups (training round 1 and 2, held-out round 1 and 2), with <code class="math-inline">m_g</code> sections, invert the statistic</p>
+<pre class="formula">T_g(\theta)=\frac1{m_g}\sum_{i\in g}
+\left[(1-\alpha_i(\theta))\frac{R_{B,i}}{n}-\frac{Y_{B,i}}{C_i}\right].</pre>
+<p>Candidate <code class="math-inline">\theta</code> survives only if <code class="math-inline">|T_g(\theta)|\le U_g(\theta)</code> in <strong>all four groups</strong>, where</p>
+<pre class="formula">\begin{aligned}
+U_g(\theta)=&amp;\ d\,\overline{(1-\alpha(\theta))}_g
++0.20\,e\,\overline{I_{\rm active}}_g
++\frac{1}{2m_g}\sum_{i\in g}\frac1{C_i}\\
+&amp;+\sqrt{\frac{\log(2\cdot4/0.05)}{2m_g^2}\sum_{i\in g}
+\left[\frac{(1-\alpha_i(\theta))^2}{n}+\frac1{C_i}\right]}.
+\end{aligned}</pre>
+<p>The first two terms cover bounded unknown natural preferences and bounded rate heterogeneity; the third covers deterministic half-up rounding (at most half a count per section); the last is a conditional bounded-differences concentration radius for independent category draws and reference draws. Within-site dependencies are allowed through shared <strong>bounded effects</strong>, while the individual draws are conditionally independent. The four-test Bonferroni allocation provides a <strong>minimum 95% inclusion probability for a true <em>on-grid</em> candidate when all assumptions hold</strong>, not a confidence guarantee for every off-grid equation or for arbitrary natural behaviours.</p>
+<p>There is deliberately <strong>no multiplication by 64 in the test threshold</strong>: a confidence set is obtained by inverting valid tests for each fixed candidate, so inclusion of the <em>true</em> candidate does not depend on the total number tested. Four separate group inequalities <em>do</em> require multiplicity control for the advertised full-set coverage. Group holdouts are used both to prevent location leakage and to report training-only versus fully refined set sizes.</p>
+<h2>5. Exact integer-count likelihood diagnostic</h2>
+<p>The procedure independently implements the <strong>exact four-category observation likelihood</strong>, conditional on fixed latent category probabilities <code class="math-inline">p=(p_W,p_L,p_B,p_N)</code> and a fixed deterministic half-up rate <code class="math-inline">\alpha</code>. It sums multinomial probabilities over <em>all compatible latent B counts</em>:</p>
+<pre class="formula">\Pr(Y=y\mid p,\alpha)=\sum_{x_B:\ x_B-\lfloor\alpha x_B+\frac12\rfloor=y_B}
+\frac{C!}{x_W!x_L!x_B!x_N!}\prod_{k\in\{W,L,B,N\}}p_k^{x_k},</pre>
+<p>where <code class="math-inline">x_L=y_L</code>, <code class="math-inline">x_N=y_N</code>, <code class="math-inline">x_W=y_W-(x_B-y_B)</code> and all latent counts must be non-negative. Independent tests exhaustively enumerate all reported outcomes for counts 1–7 across six rates and verify that their likelihoods sum to <strong>1.0000000000</strong> within numerical tolerance.</p>
+<p>A restricted 120-world <strong>oracle diagnostic</strong>, on 10 held-out sites (160 section-round observations per world), compares a deterministic H11 step-rate generator with a natural-only multinomial whose <strong>first-order means</strong> are matched, ignoring a rounding error of up to half a count. Because the scorer is intentionally given the <em>true latent source probabilities</em>, this is an <strong>upper-bound illustration</strong> rather than a procedure available for observed unknown-source data.</p>
+<table>
+<thead>
+<tr>
+  <th>Actual synthetic generator</th>
+  <th style="text-align:right">Mean log-likelihood gain: rounded minus natural</th>
+  <th style="text-align:right">Worlds preferring rounded model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Deterministic half-up transformation</td>
+  <td style="text-align:right">+8.90</td>
+  <td style="text-align:right">98.3% (118/120)</td>
+</tr>
+<tr>
+  <td>Natural-only first-order match</td>
+  <td style="text-align:right">-10.07</td>
+  <td style="text-align:right">0.8% (1/120)</td>
+</tr>
+</tbody>
+</table>
+<p>This does <strong>not</strong> prove that distributions can be uniquely separated once baseline behaviour, higher-order dependence and reference bias are unknown. The two alternatives do not have identical second moments by design. A distinct <em>stochastic independent thinning</em> mechanism is exactly observationally equivalent to a suitably changed natural multinomial, as established in v0.3; that equivalence must not be extrapolated to deterministic rounding.</p>
+<h2>6. Validation, interpretation and unresolved issues</h2>
+<ul>
+<li><strong>Accounting:</strong> all observed W, L, B and N synthetic counts are non-negative integers and sum to turnout for each section and round.</li>
+<li><strong>Partition:</strong> 30 training and 10 held-out sites are disjoint; both rounds of a site stay in the same partition.</li>
+<li><strong>Frozen final protocol, not formal preregistration:</strong> 64 candidate functions and the three behavioural bounds were fixed before the final 21,000-world evaluation, following exploratory pilot development; no section-specific parameter is fitted after observing those evaluation outcomes.</li>
+<li><strong>Reference data:</strong> independently generated multinomial counts; source probabilities and source latent counts do not enter confidence-set inference.</li>
+<li><strong>Confidence qualification:</strong> 93 tested configurations satisfy their stated generator bounds; all retained the exact true on-grid candidate across 1,000 trials each. This does <em>not</em> validate assumptions outside the constructed simulation family.</li>
+<li><strong>Mis-specification:</strong> narrow-envelope alarms under natural-step changes or reference bias are <strong>invalid inferences</strong>, explicitly labelled in <code>identified_sets.csv</code>.</li>
+<li><strong>Rate dependence:</strong> the inequalities allow bounded rate variation on active rounds, but <strong>cannot recover whether that variation is shared by site or independent by section</strong>. More structural data are needed.</li>
+<li><strong>Other transfer flows:</strong> only a hypothetical B→W component was simulated. L→W, N→W and first-round eliminated-candidate flow were not implemented in v0.4.</li>
+<li><strong>No unique attribution:</strong> a compatible set, particularly one containing H00, cannot identify a transformation, its origin or any real-world event.</li>
+<li><strong>No continuous-grid guarantee:</strong> the correct generating amplitudes and functions deliberately occur on the fixed grid; off-grid uncertainty requires a new coverage treatment.</li>
+<li><strong>No full probabilistic posterior:</strong> this is finite-sample confidence-set inversion for a restricted count component, not posterior inference of the entire four-count latent process.</li>
+<li><strong>No higher-order moment-matched simulation:</strong> the exact likelihood example matches first-order expectations only. Matching higher-order dependence while allowing behavioural nuisance remains further research.</li>
+</ul>
+<h2>7. Recommended v0.5 decision</h2>
+<p>Do not enlarge the equation library until <strong>external behavioural constraints</strong> can be justified independently of the target outcomes. A useful v0.5 would derive and validate behavioural-envelope assumptions from a genuinely independent source, propagate source bias and model uncertainty, extend the integer-count construction to additional donor components, and report off-grid robust identified sets. If the necessary restrictions cannot be established, report the compatibility set as wide or unidentified; do not select an equation by convenience.</p>
+<h2>8. Files and reproduction</h2>
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>eq_prb_001_v04.py</code></td>
+  <td>Synthetic generation, frozen candidate library, confidence-set inversion and exact four-count likelihood</td>
+</tr>
+<tr>
+  <td><code>verify_v04.py</code></td>
+  <td>Conservation, disjoint sites, exact small-count likelihood normalisation and mathematical checks</td>
+</tr>
+<tr>
+  <td><code>results_v0.4.json</code></td>
+  <td>Reproducible aggregate results, assumptions, seeds, candidate definitions and oracle diagnostic</td>
+</tr>
+<tr>
+  <td><code>identified_sets.csv</code></td>
+  <td>All 126 evaluated scenarios, including misspecification flags</td>
+</tr>
+<tr>
+  <td><code>examples.json</code></td>
+  <td>Example candidate sets under selected conditions, with the four moment bounds</td>
+</tr>
+<tr>
+  <td><code>execution.log</code></td>
+  <td>Full execution receipt</td>
+</tr>
+<tr>
+  <td><code>build_report.py</code></td>
+  <td>This report generator</td>
+</tr>
+<tr>
+  <td><code>RELATORIO_EQ-PRB-001_v0.4.md</code></td>
+  <td>Editable UK-English research report</td>
+</tr>
+<tr>
+  <td><code>RELATORIO_EQ-PRB-001_v0.4.html</code></td>
+  <td>Standalone HTML report</td>
+</tr>
+<tr>
+  <td><code>MANIFEST.sha256</code></td>
+  <td>SHA-256 integrity check of released files (excluding the manifest itself)</td>
+</tr>
+</tbody>
+</table>
+<p>Reproduce with Python, NumPy and SciPy (and Mistune for HTML rendering):</p>
+<pre><code class="language-bash">python -m pip install -r requirements.txt
+OPENBLAS_NUM_THREADS=1 python eq_prb_001_v04.py --seed 20261108 --replicates 1000 --reference-sizes 1800 300 75 --out . &gt; execution.log
+OPENBLAS_NUM_THREADS=1 python verify_v04.py
+python build_report.py
+sha256sum -c MANIFEST.sha256
+</code></pre>
+<p>For an integrity check of the <strong>released, unchanged artefacts</strong>, run <code>sha256sum -c MANIFEST.sha256</code> <strong>before</strong> re-running the simulation: regeneration overwrites derived files, and results may differ between dependency versions. <code>MANIFEST.sha256</code> excludes itself and the ZIP, preventing cyclic hashes. The scripts and results are versioned together under <code>research/experiments/EQ-PRB-001/v0.4/</code>.</p>
+<p><strong>Conclusion:</strong> v0.4 successfully implements partial identification under explicit, testable synthetic assumptions and demonstrates that identification contracts or collapses as those assumptions change. It does <strong>not</strong> produce a uniquely identified equation for any observed election.</p>
+<footer>EQ-PRB-001 v0.4 · UK English · Generated directly from the accompanying numerical results. Hypothetical mathematical exercise only.</footer></main></body></html>
