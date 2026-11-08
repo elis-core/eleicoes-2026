@@ -1,0 +1,88 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>v0.10 · EQ-PRB-001</title><style>:root{color-scheme:light}body{font:15px/1.6 system-ui,-apple-system,Segoe UI,Arial,sans-serif;max-width:1050px;margin:36px auto;padding:0 24px;color:#1a2735;background:#fff}h1{font-size:29px;line-height:1.25;color:#162f51}h2{border-bottom:1px solid #d9e1eb;padding-bottom:8px;margin-top:36px;color:#234c73}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}th{background:#eef3f9;text-align:left}td,th{padding:9px 10px;border:1px solid #d4dee9;vertical-align:top}tr:nth-child(even){background:#f8fafc}blockquote{border-left:4px solid #66849d;padding-left:16px}code,pre{font-family:ui-monospace,Consolas,monospace;font-size:13px}pre{overflow:auto;background:#f3f6fa;padding:14px;border-radius:8px}p,li{max-width:1000px}footer{color:#65788a;font-size:12px;margin-top:40px}</style></head><body><h1>EQ-PRB-001 v0.10 — Competing donor-flow categories</h1>
+<p><strong>Date:</strong> 8 November 2026<br />
+<strong>Status:</strong> Executed synthetic study; exploratory and not externally validated<br />
+<strong>Language:</strong> UK English<br />
+<strong>Data provenance:</strong> 100% synthetic mathematical counts. No observed electoral returns, operational records or software were analysed.</p>
+<h2>1. Research objective</h2>
+<p><strong>Main question.</strong> Can the same synthetic equations distinguish transferring rounded counts from blank, null, and another valid-vote category to a fixed beneficiary?
+The three donor-category panels are independently sampled; each donor category is calibrated with <code>alpha/3</code>, to account for three tested categories within one site. The receiver's count follows exactly from the integer accounting identity.
+<strong>Scope restriction.</strong> Category identification is not equivalent to identifying software, intent or real-world behaviour. Site-level retained rates are not ten-site simultaneous confidence guarantees.</p>
+<h2>2. Design and frozen calculation</h2>
+<p>The generator creates two rounds of integer W/L/B/N counts, eight sections per simulated site, and disjoint training, calibration and target sites. A latent transfer is an explicitly hypothetical generator, not an inference about observed voting.
+[m_{s,t,j}=\lfloor a, f(x_s,t)(1+u_s+v_{s,t,j}) X_{D,s,t,j} + 0.5\rfloor,\qquad a=0.377\text{ in positive synthetic generators}.]</p>
+<p>The receiving category W increases by exactly <code>m</code>; donor category D decreases by <code>m</code>. All other counts and turnout remain unchanged. The generator alone can access the latent <code>X</code>, while the identification routine receives only donor-site reference panels, observable counts and site covariates.</p>
+<p>An ex-ante behavioural regression is fitted on independent training-site panels. Site-level conformal calibration uses the maximum of the absolute residuals across both rounds. Each candidate off-grid amplitude <code>a in [0, 0.60]</code> must satisfy the affine constraints</p>
+<p><code>|p_hat - Y_D/C - a*f*p_hat| &lt;= q_site + delta + 4/C_site + a*(0.22*0.15*f)</code></p>
+<p>where <code>q_site</code> is calibrated at donor sites, <code>delta</code> is an externally set sensitivity allowance, and <code>4/C_site</code> bounds eight integer roundings of at most half a vote apiece. The candidate amplitude interval is the exact algebraic intersection of those affine inequalities; the probabilistic model that motivates the inequalities is an approximation.</p>
+<p><strong>Validity:</strong> split-conformal marginal H00 coverage requires site exchangeability (or, for weighted conformal, an exact density ratio and invariant conditional distribution). No unconditional coverage theorem is asserted for the positive-transfer confidence sets. All positive-amplitude inclusion rates below are empirical.</p>
+<h2>3. Executed results</h2>
+<p>4 procedure/condition rows from <strong>1,000 independently seeded worlds per distinct generator configuration</strong>. Rows comparing methods or sensitivity bounds reuse the same worlds and must not be counted as additional independent datasets.</p>
+<table>
+<thead>
+<tr>
+  <th>Generator</th>
+  <th style="text-align:right">H00 retained per site</th>
+  <th style="text-align:right">H00 retained at all sites</th>
+  <th style="text-align:right">True donor retained per site</th>
+  <th style="text-align:right">True amplitude covered per site</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>H00</td>
+  <td style="text-align:right">96.2%</td>
+  <td style="text-align:right">70.2%</td>
+  <td style="text-align:right">—%</td>
+  <td style="text-align:right">—%</td>
+</tr>
+<tr>
+  <td>H11_B</td>
+  <td style="text-align:right">53.8%</td>
+  <td style="text-align:right">0.5%</td>
+  <td style="text-align:right">97.4%</td>
+  <td style="text-align:right">97.4%</td>
+</tr>
+<tr>
+  <td>H11_N</td>
+  <td style="text-align:right">68.0%</td>
+  <td style="text-align:right">6.4%</td>
+  <td style="text-align:right">97.4%</td>
+  <td style="text-align:right">97.4%</td>
+</tr>
+<tr>
+  <td>H11_L</td>
+  <td style="text-align:right">23.7%</td>
+  <td style="text-align:right">0.0%</td>
+  <td style="text-align:right">97.6%</td>
+  <td style="text-align:right">97.6%</td>
+</tr>
+</tbody>
+</table>
+<p>The H00 column is <strong>retention</strong>, not evidence of the absence or presence of a transformation. Under an H00 generator, its complement measures a false exclusion; under an H11 generator, it measures a degree of discrimination. All-ten-site retention must not be confused with the nominal 95% per-site calibration.</p>
+<h2>4. Version-specific interpretation</h2>
+<ul>
+<li>Under no transformation, H00 was retained at <strong>96.2% per site</strong> but only <strong>70.2% across all ten</strong>.</li>
+<li>The correct synthetic donor was retained at about 97% of individual sites for each of the three positive scenarios, while other donor equations frequently remained compatible.</li>
+<li>A compatible donor flow does not imply that the flow occurred in real data or identify the generator outside this laboratory setting.</li>
+</ul>
+<h2>5. Reproducibility and scientific limitations</h2>
+<ul>
+<li>The first 80 sites are for model training, a distinct set is used for conformity calibration, and the final ten sites are held out. In v0.11/v0.12, a further 40 of the labelled calibration sites are reserved for frozen model selection before a separate 80-site calibration.</li>
+<li>Exact four-category count conservation and non-negative integers are asserted on every generated dataset; the source code contains explicit checks.</li>
+<li>One thousand independent Monte Carlo worlds are generated per scenario; method comparisons on the same worlds are paired experiments, not separate replicates.</li>
+<li>All candidate equations and behavioural models are deliberately limited. No universal recovery, uniquely identified mechanism, or real-data fraud diagnostic is claimed.</li>
+<li>Version design and parameters were refined during an exploratory synthetic series; the programmes were not independently preregistered or audited.</li>
+<li>A nominal per-site conformal result does not extend automatically to familywise tests, transported populations or positive-rate confidence sets.</li>
+</ul>
+<h2>6. Reproduction</h2>
+<p>Python 3.13 and NumPy 2.3.5 were used. Commands from the release directory:</p>
+<pre><code class="language-bash">python -m pip install -r requirements.txt
+OPENBLAS_NUM_THREADS=1 python experiment.py --version v0.10 --output . &gt; execution.log
+OPENBLAS_NUM_THREADS=1 python verify.py --version v0.10 --directory . &gt; verify.log
+python build_report.py --version v0.10 --directory .
+sha256sum -c MANIFEST.sha256
+</code></pre>
+<p>Re-running replaces generated results and logs. Run <code>sha256sum -c MANIFEST.sha256</code> <strong>before</strong> regeneration to verify the released originals. The reports are UK English.</p>
+<h2>7. Next research decision</h2>
+<p><strong>v0.10 is an executed synthetic research milestone, not a conclusion about actual election outcomes.</strong></p>
+<footer>ELIS / EQ-PRB-001 · Synthetic research only · 8 November 2026</footer></body></html>

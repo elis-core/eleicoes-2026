@@ -1,0 +1,7 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.11,H00: frozen model choice,external_validation_freeze,H00,1000,95.33,63.9,4.670000000000001,36.1,9.7535,,,,
+v0.11,H00: fixed step comparator,frozen_comparator,H00,1000,95.3,63.7,4.7,36.3,9.7535,,,,
+v0.11,H00: fixed quadratic comparator,frozen_comparator,H00,1000,95.35,64.2,4.65,35.8,9.7546,,,,
+v0.11,H11_B: frozen model choice,external_validation_freeze,H11_B,1000,52.7,0.2,47.29999999999999,99.8,6.8506,99.66000000000001,96.8,0.5411082205583183,
+v0.11,H11_B: fixed step comparator,frozen_comparator,H11_B,1000,52.690000000000005,0.2,47.31,99.8,6.8518,99.66000000000001,96.7,0.5409826832775009,
+v0.11,H11_B: fixed quadratic comparator,frozen_comparator,H11_B,1000,52.75,0.2,47.25,99.8,6.8508,99.64,96.6,0.5413799791847499,

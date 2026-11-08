@@ -1,0 +1,7 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.7,Exchangeable H00,joint,H00,1000,95.09,62.0,4.91,38.0,9.7298,,,,
+v0.7,Exchangeable H00,weighted,H00,1000,95.76,66.2,4.24,33.800000000000004,9.7692,,,,
+v0.7,Known covariate-shift H00,joint,H00,1000,94.67999999999999,59.099999999999994,5.32,40.9,9.7134,,,,
+v0.7,Known covariate-shift H00,weighted,H00,1000,95.87,66.5,4.13,33.5,9.7736,,,,
+v0.7,Known covariate-shift H11-B,joint,H11_B,1000,33.1,0.0,66.9,100.0,5.4478,99.81,98.2,0.5137185372647779,
+v0.7,Known covariate-shift H11-B,weighted,H11_B,1000,33.4,0.0,66.60000000000001,100.0,5.4913,99.85000000000001,98.5,0.5201494832702767,

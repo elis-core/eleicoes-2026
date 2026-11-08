@@ -1,0 +1,13 @@
+version,condition,method,generator,synthetic_worlds,H00_retained_per_site_pct,H00_retained_all_sites_pct,H00_exclusion_per_site_pct,H00_exclusion_any_of_10_pct,mean_compatible_families_per_site,true_amplitude_covered_per_site_pct,true_amplitude_covered_all_sites_pct,mean_true_interval_width,mean_compatible_mechanisms_per_site
+v0.9,H00: actual natural shift -0.015,site_joint_plus_sensitivity,H00,1000,79.39,12.3,20.610000000000003,87.7,9.0826,,,,
+v0.9,H00: actual natural shift -0.015,site_joint_plus_sensitivity,H00,1000,90.74,40.2,9.260000000000003,59.8,9.6434,,,,
+v0.9,H00: actual natural shift -0.015,site_joint_plus_sensitivity,H00,1000,99.19,92.60000000000001,0.8100000000000002,7.3999999999999995,9.9742,,,,
+v0.9,H00: actual natural shift -0.015,site_joint_plus_sensitivity,H00,1000,99.99,99.9,0.01,0.1,9.9999,,,,
+v0.9,H11_B: actual natural shift -0.015,site_joint_plus_sensitivity,H11_B,1000,49.03,0.1,50.970000000000006,99.9,6.6783,99.56,95.8,0.5054624569253813,
+v0.9,H11_B: actual natural shift -0.015,site_joint_plus_sensitivity,H11_B,1000,54.35,0.3,45.65,99.7,6.8828,99.96000000000001,99.6,0.5282181636590754,
+v0.9,H11_B: actual natural shift -0.015,site_joint_plus_sensitivity,H11_B,1000,56.940000000000005,0.3,43.06,99.7,7.1436,100.0,100.0,0.5630634540855528,
+v0.9,H11_B: actual natural shift -0.015,site_joint_plus_sensitivity,H11_B,1000,70.8,3.6999999999999997,29.2,96.3,8.568,100.0,100.0,0.5906912335659638,
+v0.9,H00: actual natural shift +0.000,site_joint_plus_sensitivity,H00,1000,95.07,61.0,4.93,39.0,9.7217,,,,
+v0.9,H00: actual natural shift +0.000,site_joint_plus_sensitivity,H00,1000,98.72,88.0,1.28,12.0,9.9335,,,,
+v0.9,H00: actual natural shift +0.000,site_joint_plus_sensitivity,H00,1000,99.96000000000001,99.6,0.04,0.4,9.9996,,,,
+v0.9,H00: actual natural shift +0.000,site_joint_plus_sensitivity,H00,1000,100.0,100.0,0.0,0.0,10.0,,,,
