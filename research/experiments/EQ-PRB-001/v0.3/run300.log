@@ -1,0 +1,31 @@
+THRESHOLD 300 restricted 1.0402331125774253 6.563210733703841
+THRESHOLD 300 quadratic 1.0812143323987584 5.820679552202364
+THRESHOLD 300 behavioural-envelope 0.8294621614138578 0.8294621614138578
+EVAL 300 restricted H00 D0 none restricted 43 composite 0
+EVAL 300 quadratic H00 D0 none restricted 32 composite 0
+EVAL 300 behavioural-envelope H00 D0 none restricted 30 composite 30
+EVAL 300 restricted H00 D0 step restricted 633 composite 19
+EVAL 300 quadratic H00 D0 step restricted 543 composite 17
+EVAL 300 behavioural-envelope H00 D0 step restricted 12 composite 12
+EVAL 300 restricted H00 D0 logistic restricted 263 composite 0
+EVAL 300 quadratic H00 D0 logistic restricted 138 composite 0
+EVAL 300 behavioural-envelope H00 D0 logistic restricted 13 composite 13
+EVAL 300 restricted H00 D0 quadratic restricted 123 composite 0
+EVAL 300 quadratic H00 D0 quadratic restricted 23 composite 0
+EVAL 300 behavioural-envelope H00 D0 quadratic restricted 12 composite 12
+EVAL 300 restricted H01 D0 none restricted 452 composite 0
+EVAL 300 quadratic H01 D0 none restricted 339 composite 0
+EVAL 300 behavioural-envelope H01 D0 none restricted 25 composite 25
+EVAL 300 restricted H01 D3 none restricted 379 composite 6
+EVAL 300 quadratic H01 D3 none restricted 306 composite 9
+EVAL 300 behavioural-envelope H01 D3 none restricted 150 composite 150
+EVAL 300 restricted H10 D3 none restricted 422 composite 6
+EVAL 300 quadratic H10 D3 none restricted 362 composite 7
+EVAL 300 behavioural-envelope H10 D3 none restricted 175 composite 175
+EVAL 300 restricted H11 D0 none restricted 677 composite 24
+EVAL 300 quadratic H11 D0 none restricted 576 composite 15
+EVAL 300 behavioural-envelope H11 D0 none restricted 0 composite 0
+EVAL 300 restricted H11 D3 none restricted 589 composite 23
+EVAL 300 quadratic H11 D3 none restricted 521 composite 30
+EVAL 300 behavioural-envelope H11 D3 none restricted 178 composite 178
+FINISHED 27 comparison rows; 3 interval trials; 26.23 seconds; composite H00 control True all test signal power False

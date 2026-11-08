@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>EQ-PRB-001 v0.3 — Synthetic identification and calibration</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#17202b;background:#f5f7fa}
+body{max-width:1160px;margin:0 auto;padding:36px 42px;line-height:1.57}
+main{background:white;border:1px solid #e0e6ed;border-radius:12px;padding:38px 50px;box-shadow:0 3px 12px #1c365610}
+h1,h2,h3{color:#16385f;line-height:1.24}h1{font-size:2.0em;border-bottom:2px solid #c1d3e5;padding-bottom:20px}
+h2{margin-top:35px;border-top:1px solid #e3e9ef;padding-top:19px}blockquote{border-left:4px solid #a54f3d;background:#faf4f1;margin:18px 0;padding:5px 20px}
+table{border-collapse:collapse;display:block;overflow-x:auto;width:100%;font-size:13.5px}
+th,td{border:1px solid #dae1e9;padding:9px 10px;vertical-align:top}th{background:#e7eef6;color:#16385f}tr:nth-child(even){background:#f8fafc}
+code{font-size:0.92em;background:#eff3f7;padding:1px 4px;border-radius:3px}li{margin:4px 0}
+footer{margin-top:27px;color:#607080;font-size:0.85em}@media(max-width:700px){body{padding:0}main{padding:20px;border:0;border-radius:0}}</style></head><body><main><h1>EQ-PRB-001 v0.3 — Behavioural alternatives, reference uncertainty and predictive calibration</h1>
+<p><strong>Date:</strong> 8 November 2026<br />
+<strong>Experiment:</strong> EQ-PRB-001<br />
+<strong>Version:</strong> 0.3<br />
+<strong>Status:</strong> Executed; exploratory, <strong>not statistically validated</strong>.<br />
+<strong>Language:</strong> UK English.</p>
+<blockquote>
+<p><strong>Synthetic-only research:</strong> No election returns, voting-system logs or real personal data were used. The reported transformations are invented mathematical mechanisms. None of the findings establishes that any such transformation occurred in an election.</p>
+</blockquote>
+<h2>1. Executive findings</h2>
+<p>The v0.2 method could distinguish some known synthetic transformations from a narrow natural-behaviour benchmark but raised many alarms when a <em>natural</em> change resembled a hypothetical transformation. Version 0.3 investigated this confounding directly and checked the precision of predictive intervals.</p>
+<p>The decisive result is <strong>lack of unique mechanistic identification</strong> once sufficiently flexible natural behaviour is admissible. A threshold calibrated on four synthetic natural-behaviour models reduces false alarms but also sharply reduces the ability to detect transformations. In one tested configuration the one-sided 95% upper false-alarm limit exceeds the prescribed 5% bound, and numerous signal configurations fail the 80% detection objective.</p>
+<p>The protocol generated <strong>12,000</strong> independent calibration worlds for the four H00 variants, <strong>27,000</strong> independent evaluation worlds and <strong>9,000</strong> separate worlds for prediction-interval calibration: <strong>48,000 synthetic worlds</strong> in all.</p>
+<h2>2. Design and observations</h2>
+<ul>
+<li>Five invented municipalities; 40 polling places, eight sections each (320 sections per synthetic two-round dataset).</li>
+<li>Thirty entire polling places for training and ten entire polling places for evaluation, retaining both rounds in the same partition.</li>
+<li>Four generated count categories: W (putative beneficiary), L (other finalist), B (blank) and N (null). All transformations conserve the exact integer turnout total and move only B→W. This deliberately does <strong>not</strong> cover the whole mechanism library envisaged in the wider research specification.</li>
+<li>At fitting time the latent pre-transformation category counts are not available; scoring receives observed synthetic counts and independently simulated reference counts. The <em>candidate design still knows the true synthetic baseline probability function</em> q_B, which is a substantial oracle advantage.</li>
+<li>Candidate search: 73 models including H00, H01, H10, H11; two signal shapes, three amplitudes and D0–D3 random-effect structures. A Gaussian multilevel pseudo-predictive score, not an exact count likelihood, is used.</li>
+<li>Competing behavioural baselines: <strong>restricted</strong> (intercept and linear term per round), <strong>quadratic</strong> (adds curvature) and <strong>behavioural envelope</strong> (adds exactly signal-shaped natural preference functions). All are pooled functions; none fits a free coefficient to every section.</li>
+<li>Independent reference sample sizes of 1,800, 300 or 75 observations <strong>per section and round</strong> are artificial experimental conditions, not claims about survey availability.</li>
+<li>Four H00 calibration/evaluation generators: stable natural variation, natural step change, natural logistic change and natural quadratic change; five positive generators: H01-D0, H01-D3, H10-D3, H11-D0 and H11-D3.</li>
+<li>For each reference size: 1,000 independent calibration worlds per H00 generator; 1,000 independent evaluation worlds per generator; and 1,000 further worlds for interval calibration in each of H00-D0, H01-D3 and H11-D3.</li>
+</ul>
+<h2>3. Signal identification versus a composite natural-behaviour null</h2>
+<p>For each design, a frozen search selects the highest training pseudo-score among all 73 candidates. The evaluation statistic is the held-out pseudo-score improvement of that selected candidate over H00. The <strong>narrow</strong> threshold is the higher-method 97.5th percentile under stable H00 only. The <strong>composite</strong> threshold is the maximum of the separately calibrated 97.5th percentiles under all four H00 generators. Evaluation draws are independent of the draws that determine thresholds.</p>
+<h3>3.1. Detection of a two-round H11-D3 transformation</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Independent reference per section/round</th>
+  <th style="text-align:right">Restricted: narrow H00</th>
+  <th style="text-align:right">Restricted: composite H00</th>
+  <th style="text-align:right">Quadratic: composite H00</th>
+  <th style="text-align:right">Behavioural envelope: composite H00</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td style="text-align:right">74.0%</td>
+  <td style="text-align:right">1.8%</td>
+  <td style="text-align:right">3.9%</td>
+  <td style="text-align:right">16.4%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td style="text-align:right">58.9%</td>
+  <td style="text-align:right">2.3%</td>
+  <td style="text-align:right">3.0%</td>
+  <td style="text-align:right">17.8%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td style="text-align:right">32.0%</td>
+  <td style="text-align:right">2.1%</td>
+  <td style="text-align:right">3.3%</td>
+  <td style="text-align:right">9.1%</td>
+</tr>
+</tbody>
+</table>
+<p>The composite-null calibration sharply reduces the ability to flag H11-D3, because natural-behaviour generators include a comparable expected shift. A wider behaviour model can absorb the same mean pattern; identifying the generator therefore requires independent restrictions rather than a more complicated curve fit.</p>
+<h3>3.2. False alarms from a natural step change (H00, no transformation)</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Reference</th>
+  <th>Behavioural model</th>
+  <th style="text-align:right">Narrow H00 alarms</th>
+  <th style="text-align:right">Composite H00 alarms</th>
+  <th style="text-align:right">Composite alarms (out of 1,000)</th>
+  <th style="text-align:right">One-sided 95% upper limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td>restricted</td>
+  <td style="text-align:right">81.4%</td>
+  <td style="text-align:right">2.9%</td>
+  <td style="text-align:right">29</td>
+  <td style="text-align:right">3.93%</td>
+</tr>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td>quadratic</td>
+  <td style="text-align:right">73.5%</td>
+  <td style="text-align:right">4.1%</td>
+  <td style="text-align:right">41</td>
+  <td style="text-align:right">5.29%</td>
+</tr>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td>behavioural-envelope</td>
+  <td style="text-align:right">0.2%</td>
+  <td style="text-align:right">0.2%</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">0.63%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td>restricted</td>
+  <td style="text-align:right">63.3%</td>
+  <td style="text-align:right">1.9%</td>
+  <td style="text-align:right">19</td>
+  <td style="text-align:right">2.78%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td>quadratic</td>
+  <td style="text-align:right">54.3%</td>
+  <td style="text-align:right">1.7%</td>
+  <td style="text-align:right">17</td>
+  <td style="text-align:right">2.54%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td>behavioural-envelope</td>
+  <td style="text-align:right">1.2%</td>
+  <td style="text-align:right">1.2%</td>
+  <td style="text-align:right">12</td>
+  <td style="text-align:right">1.94%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td>restricted</td>
+  <td style="text-align:right">34.6%</td>
+  <td style="text-align:right">3.1%</td>
+  <td style="text-align:right">31</td>
+  <td style="text-align:right">4.16%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td>quadratic</td>
+  <td style="text-align:right">24.8%</td>
+  <td style="text-align:right">3.6%</td>
+  <td style="text-align:right">36</td>
+  <td style="text-align:right">4.73%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td>behavioural-envelope</td>
+  <td style="text-align:right">2.1%</td>
+  <td style="text-align:right">2.1%</td>
+  <td style="text-align:right">21</td>
+  <td style="text-align:right">3.01%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pre-specified false-alarm confidence objective not met:</strong> the most demanding tested result is reference n=1,800, quadratic design, natural step: 41/1,000 alarms (empirical 4.1%) with upper bound 5.29% &gt; 5.00%. Although many individual null configurations meet the bound, it is incorrect to report universal calibration success.</p>
+<p><strong>Multiplicity qualification:</strong> the stated upper bounds are individual one-sided 95% binomial bounds; they are not a joint 95% familywise confidence guarantee across the 36 H00 design/precision/generator configurations. Calibration of the adaptive model search is included in the statistic, but does not remove this separate uncertainty.</p>
+<h3>3.3. Consequences for the decision rule</h3>
+<ul>
+<li>The 80% target for detection is <strong>not attained consistently</strong>: under composite-null calibration it fails repeatedly, including the H11-D3 restricted example in every reference-size regime.</li>
+<li>A decision of “identified transformation mechanism” is explicitly <strong>withheld</strong>. A positive score can at most indicate departure from one specified natural-behaviour model; if the reference class contains an observationally equivalent process, no score can uniquely label the process.</li>
+<li>D0–D3 are searched as candidates, but the evaluation generators in v0.3 cover D0 and D3 for selected temporal patterns; comprehensive four-way D-structure recovery remains out of scope.</li>
+</ul>
+<h2>4. Split-calibrated prediction intervals</h2>
+<p>The predictive mean and Gaussian standard deviations are calculated from observed synthetic counts, independent reference counts and training-only coefficients. For each generator and reference precision, a <strong>separate</strong> independent sample of 1,000 synthetic worlds determines empirical standardised-residual quantiles for nominal 50%, 80% and 95% intervals. These cut-offs are subsequently assessed on a disjoint 1,000-world evaluation sample. Four-category 95% joint intervals use the empirical quantile of the per-section maximum standardised error; they are <strong>not</strong> simultaneous over every section in an election.</p>
+<h3>4.1. H11-D3 results — nominal 95% intervals</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Reference n</th>
+  <th style="text-align:right">W coverage: raw → calibrated</th>
+  <th style="text-align:right">B coverage: raw → calibrated</th>
+  <th style="text-align:right">B mean width (pp): raw → calibrated</th>
+  <th style="text-align:right">Four-category joint coverage: raw → calibrated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">1,800</td>
+  <td style="text-align:right">93.1% → 95.0%</td>
+  <td style="text-align:right">90.4% → 95.0%</td>
+  <td style="text-align:right">6.72 → 7.93</td>
+  <td style="text-align:right">92.6% → 95.0%</td>
+</tr>
+<tr>
+  <td style="text-align:right">300</td>
+  <td style="text-align:right">93.7% → 94.8%</td>
+  <td style="text-align:right">91.6% → 94.9%</td>
+  <td style="text-align:right">8.08 → 8.96</td>
+  <td style="text-align:right">93.6% → 94.9%</td>
+</tr>
+<tr>
+  <td style="text-align:right">75</td>
+  <td style="text-align:right">94.5% → 94.9%</td>
+  <td style="text-align:right">94.9% → 95.1%</td>
+  <td style="text-align:right">10.84 → 10.90</td>
+  <td style="text-align:right">95.4% → 95.0%</td>
+</tr>
+</tbody>
+</table>
+<p>The raw H11-D3 B intervals under-covered at high reference precision. Split calibration corrected coverage within the named synthetic generator, generally by producing wider intervals. At reference n=1,800, mean B interval width grew from 6.72 to 7.93 percentage points. The corresponding four-category joint coverage increased from 92.6% to 95.0%.</p>
+<p><strong>Calibration limitation:</strong> these are empirical rates pooled across held-out section-round predictions. The 1,000 simulation-world replicates are independent but observations within one world share location-level effects. No general distribution-free coverage guarantee, transport guarantee across alternative generators, or simultaneous confidence statement across all sections is claimed.</p>
+<p>Results for 50% and 80%, all categories, all evaluated generator types and mean widths are retained in <code>intervals.csv</code> and <code>results_v0.3.json</code>.</p>
+<h2>5. Mathematical identification limit</h2>
+<p>Let latent counts satisfy <code>X ~ Multinomial(C, (p_W,p_L,p_B,p_N))</code>. In one synthetic mechanism, every B category draw independently changes to W with probability α. After marginalising over the latent counts:</p>
+<p><code>Y ~ Multinomial(C, (p_W + α p_B, p_L, (1−α) p_B, p_N))</code>.</p>
+<p>In a competing <strong>natural-behaviour-only</strong> model, suppose the actual category probabilities are already <code>(p_W + α p_B, p_L, (1−α) p_B, p_N)</code> and no transformation occurs. The two models then have <strong>exactly the same law for all observable category counts Y</strong>, for any C. If the independent baseline reference has the same distribution under both models, it cannot separate them either.</p>
+<p>For an illustrative invented probability vector <code>(0.48, 0.39, 0.09, 0.04)</code> and α = 0.27, both produce <code>(0.5043, 0.39, 0.0657, 0.04)</code> for the observable categories.</p>
+<p>This is a proof of <strong>observational equivalence for random independent thinning</strong>, not a claim of exact equality for the v0.2/v0.3 <em>deterministic half-up rounding</em> of a fixed number of votes. It establishes a clear boundary for unique identification in the broader probabilistic mechanism family.</p>
+<h2>6. Controls and reproducibility</h2>
+<ul>
+<li>Independent random seeds: 20261108 (reference n=1,800), 20261109 (n=300), 20261110 (n=75). NumPy PCG64; fixed generator and model search code.</li>
+<li>Verification script checks exact count conservation, reference multinomial totals, location-disjoint validation, candidate count, numerical Woodbury versus dense covariance score, and zero residual signal under the behavioural envelope when its mean basis contains the candidate signal.</li>
+<li>Generation and selection use only synthetic data. No observed 2026 results enter the programme.</li>
+<li><code>model_comparison.csv</code> contains 81 scored comparisons (3 reference sizes × 3 behavioural baselines × 9 evaluation generators); <code>results_v0.3.json</code> also retains 9 interval assessments.</li>
+</ul>
+<h2>7. Constraints on interpretation</h2>
+<ol>
+<li>The modelling task is a mathematical exercise in the behaviour of statistical models. It does not attribute any event to a system, process, person or actor.</li>
+<li>The candidate B→W transfer is an intentionally limited illustrative component; it does not implement L→W or other-first-round preferences. H00/H01/H10/H11 are <em>temporal simulation scenarios</em>, not descriptions of electoral events.</li>
+<li>q_B, the reference design and the natural-behaviour functional classes are partially shared between the simulator and inference procedure; this remains an <strong>oracle advantage</strong> even though individual latent counts are hidden.</li>
+<li>Reference samples of 75, 300 and 1,800 per section-round are hypothetical, not descriptions of feasible election surveys.</li>
+<li>The pseudo-score is Gaussian and does not solve the exact discrete latent-count likelihood in the full methodology.</li>
+<li>Behavioural changes outside the four tested null generators can produce additional false positives; no exhaustive statement is possible.</li>
+<li>Because one individual false-alarm upper bound exceeds 5% and power falls short of 80% for many scenarios, <strong>v0.3 must not be designated a validated detection method</strong>.</li>
+</ol>
+<h2>8. Recommended next experiment (v0.4)</h2>
+<p>Prioritise <strong>partial identification and independent behavioural constraints</strong>, rather than a larger unconstrained equation search:</p>
+<ol>
+<li>Define explicit external constraints on the latent behaviour baseline and test a graded family from high-information independent reference to weak or biased reference; report <em>identified sets</em> of mechanisms rather than a forced single winner.</li>
+<li>Replace the approximate B-only score with an integer-count predictive likelihood for W/L/B/N and examine how the chosen likelihood changes intervals and rankings.</li>
+<li>Specify a composite natural-behaviour null more broadly before seeing evaluation outcomes; compute a simultaneous confidence accounting for the ensemble of tested null generators, not merely one-sided bounds per generator.</li>
+<li>Include transformations and natural effects with the same first two moments but different higher-order dependence; check whether held-out distributional scoring provides real separation.</li>
+<li>Keep the model search and evaluation locations strictly separated and report no unique attribution when observational equivalence remains.</li>
+</ol>
+<h2>9. File manifest</h2>
+<ul>
+<li><code>eq_prb_001_v03.py</code> — self-contained synthetic generator, model search and split interval assessment.</li>
+<li><code>run1800/</code>, <code>run300/</code>, <code>run75/</code> — raw, independently seeded numerical runs and logs.</li>
+<li><code>combine_results.py</code>, <code>results_v0.3.json</code>, <code>model_comparison.csv</code>, <code>intervals.csv</code> — deterministic compilation of the runs.</li>
+<li><code>verify_v03.py</code> — independent arithmetic, rank and structural checks.</li>
+<li><code>build_report.py</code> — render this report in Markdown and standalone HTML.</li>
+<li><code>MANIFEST.sha256</code> — file integrity manifest (excludes itself).</li>
+</ul>
+<p><strong>Conclusion:</strong> v0.3 establishes a reproducible negative identifiability result alongside improved within-generator predictive calibration. It does not establish a reproducible equation for any real election.</p>
+</main><footer>EQ-PRB-001 v0.3 · Synthetic-only mathematical experiment · 8 November 2026</footer></body></html>

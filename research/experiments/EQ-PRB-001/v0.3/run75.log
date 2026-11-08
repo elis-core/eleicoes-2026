@@ -1,0 +1,31 @@
+THRESHOLD 75 restricted 1.0640734076571903 3.5792587678252517
+THRESHOLD 75 quadratic 1.1015362806599 2.9313538289157464
+THRESHOLD 75 behavioural-envelope 0.8665660934651669 0.8665660934651669
+EVAL 75 restricted H00 D0 none restricted 32 composite 0
+EVAL 75 quadratic H00 D0 none restricted 21 composite 2
+EVAL 75 behavioural-envelope H00 D0 none restricted 29 composite 29
+EVAL 75 restricted H00 D0 step restricted 346 composite 31
+EVAL 75 quadratic H00 D0 step restricted 248 composite 36
+EVAL 75 behavioural-envelope H00 D0 step restricted 21 composite 21
+EVAL 75 restricted H00 D0 logistic restricted 134 composite 0
+EVAL 75 quadratic H00 D0 logistic restricted 66 composite 1
+EVAL 75 behavioural-envelope H00 D0 logistic restricted 15 composite 15
+EVAL 75 restricted H00 D0 quadratic restricted 60 composite 1
+EVAL 75 quadratic H00 D0 quadratic restricted 17 composite 1
+EVAL 75 behavioural-envelope H00 D0 quadratic restricted 22 composite 22
+EVAL 75 restricted H01 D0 none restricted 158 composite 1
+EVAL 75 quadratic H01 D0 none restricted 109 composite 3
+EVAL 75 behavioural-envelope H01 D0 none restricted 18 composite 18
+EVAL 75 restricted H01 D3 none restricted 188 composite 2
+EVAL 75 quadratic H01 D3 none restricted 138 composite 5
+EVAL 75 behavioural-envelope H01 D3 none restricted 66 composite 66
+EVAL 75 restricted H10 D3 none restricted 188 composite 5
+EVAL 75 quadratic H10 D3 none restricted 145 composite 7
+EVAL 75 behavioural-envelope H10 D3 none restricted 71 composite 71
+EVAL 75 restricted H11 D0 none restricted 337 composite 25
+EVAL 75 quadratic H11 D0 none restricted 259 composite 30
+EVAL 75 behavioural-envelope H11 D0 none restricted 10 composite 10
+EVAL 75 restricted H11 D3 none restricted 320 composite 21
+EVAL 75 quadratic H11 D3 none restricted 241 composite 33
+EVAL 75 behavioural-envelope H11 D3 none restricted 91 composite 91
+FINISHED 27 comparison rows; 3 interval trials; 25.02 seconds; composite H00 control True all test signal power False
