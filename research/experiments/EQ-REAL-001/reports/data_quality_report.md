@@ -1,28 +1,15 @@
-# Milestone A data-quality report — initial checkpoint
+# RN 2026 actual-data quality checkpoint — 9 November 2026
 
-**Date:** 9 November 2026  
-**Evidence level:** official catalogue verified; no raw votes downloaded.
+See [RN verified pilot](rn_real_data_pilot_2026-11-09.md).
 
-| Check | Status | Evidence |
-|---|---|---|
-| 2026 RN section-level ZIP listed by TSE | Catalogue-verified | RN resource ID 41e881d8-35fc-4f7c-b194-87dd61ae259b |
-| 2026 nationwide presidential section-level ZIP listed | Catalogue-verified | Presidential resource page |
-| RN first/second-round ballot ZIPs listed | Catalogue-verified | TSE boletim de urna catalogue |
-| Actual ZIP file SHA-256 and archive integrity | **Not tested** | Download unavailable |
-| Actual CSV schema and rows | **Not tested** | Raw records unavailable |
-| Presidential count conservation by section | **Not tested** | Raw records unavailable |
-| Electorate ≥ turnout checks | **Not tested** | Raw records unavailable |
-| Round-1/round-2 section joins | **Not tested** | Raw records unavailable |
-| Municipality/UF reconciliation | **Not tested** | Raw records unavailable |
-| Historic 2022 comparability | **Not tested** | Official 2022 raw records not retrieved |
-| Previous empirical benchmark reproduction | **Not tested** | Source code and exact inputs not recovered |
+- Three uploaded TSE-labelled ZIP archives: ZIP CRC check passed, downloaded-byte SHA-256 recorded.
+- Presidential data **only** in uploaded round-1 and round-2 bweb archives; `votacao_secao_2026_RN.zip` contains 0 presidential rows.
+- Round 1: 58,164 presidential rows / 8,115 sections / 167 municipalities; 2,171,013 turnout.
+- Round 2: 31,496 presidential rows / 8,115 sections / 167 municipalities; 2,232,823 turnout.
+- 8,115/8,115 matches on municipality, electoral zone and section.
+- First and second rounds: **0** failures `C = sum(candidate votes)+blank+null`, **0** failures `E=C+abstention`, **0** turnout bounds failures, **0** duplicate candidate/category rows.
+- 0 polling-place ID changes; **205** matched sections flagged as aggregated in one or both rounds.
+- **1,584** sections differ in registered electorate between rounds; must preserve round-specific electorate.
+- Outstanding: compare with independently published municipality/UF totals; recover TSE SHA-512 companions; review aggregation semantics and round-to-round geographic continuity; obtain 2022 real reference.
 
-**No empirical equations, electoral counts, model improvements or predictive intervals are reported.**
-
-## Blocking conditions
-
-Binary ZIP requests through web were rejected as unsupported content type, and shell requests to the official CDN failed DNS resolution in this execution environment. A separate download mechanism also failed. The actual files must be fetched and preserved on a network-enabled runner before any real data quality claims.
-
-## Operational controls
-
-Treat previously studied RN municipalities as exposed; never select them for an untouched external validation. Hold back the 2026 second-round outcomes of reserved municipalities before model selection. Preserve separate forecast regimes (conditional on actual second-round turnout versus fully prospective).
+The first empirical checkpoint is **not** a statement of validated predictive performance. No symbolic equation fitted, no predictive benchmark rerun, no external municipality test performed.
