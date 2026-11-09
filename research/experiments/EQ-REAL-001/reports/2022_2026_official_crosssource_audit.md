@@ -47,6 +47,17 @@ The uploaded nationwide 2026 `votacao_secao_2026_BR.zip` contains 89,660 RN pres
 
 **Critical candidate-identity rule:** vote number 22 denotes *Jair Bolsonaro in 2022* and *Flávio Bolsonaro in 2026*. Do not treat the two nominees as a stable longitudinal candidate identity or infer individual vote transfers.
 
+## Exact candidate/category-by-section reconciliation
+
+In addition to statewide totals and section-key equality, a strict second pass compared the full (round, municipality, zone, section, vote number) -> integer-vote-count mapping in both sources, scanning the nationwide archives in chunks.
+
+| Year | RN presidential section/category keys in BU | Same keys in nationwide BR | Mismatched keys or vote counts |
+|---|---:|---:|---:|
+| 2022 | **82,711** | **82,711** | **0** |
+| 2026 | **89,660** | **89,660** | **0** |
+
+There were **0** duplicated candidate/category rows in the input RN BU data for either year. This excludes the possibility of offsetting candidate/section discrepancies that cancel out in the statewide total. Reproduce via `src/strict_section_source_reconciliation.py` on each year's BR and paired RN BU ZIPs.
+
 ## Historical 2022–2026 key matching
 
 | Measure | Verified |
@@ -66,7 +77,7 @@ Matching uses (TSE municipality code, electoral zone, section), not row position
 
 - `src/historical_bu_audit.py` validates two BU rounds for a given year.
 - `src/verify_br_crosssource.py` scans nationwide BR presidential CSV via pandas chunks, filters RN, and compares candidate/category counts and section keys to each official-labelled RN BU source; works for 2022 or 2026 and preserves exact candidate numbers.
-- `src/crossyear_rn.py` reconstructs 2022 section-level counts from 2022 RN BUs and compares section IDs to canonical 2026 RN CSV, outputting an auditable CSV and comparability JSON.
+- `src/strict_section_source_reconciliation.py` verifies the full key/count mapping with zero-error equality as a hard assertion.\n- `src/crossyear_rn.py` reconstructs 2022 section-level counts from 2022 RN BUs and compares section IDs to canonical 2026 RN CSV, outputting an auditable CSV and comparability JSON.
 - Full 2022 derived section-level CSV (7,674 rows) was produced in the conversation and its local SHA-256 is `60054535b95e93f9f09abf4c3469bc94e4494b78713ed28479005770d1687822`. It is not committed as a GitHub blob; regenerate with the script using original archives.
 
 ## Status of benchmark and independent test
