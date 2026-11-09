@@ -32,7 +32,7 @@ def read_bu(path):
                 p = result.setdefault(key, {'meta':{
                     'turnout':int(row['QT_COMPARECIMENTO']),
                     'electorate':int(row['QT_APTOS']),
-                    'abstention':int(row['QT_ABSTENCOES'])},'votes':{}})
+                    'abstention':int(row['QT_ABSTENCOES']), 'local':row['NR_LOCAL_VOTACAO']},'votes':{}})
                 m=p['meta']
                 if (m['turnout'] != int(row['QT_COMPARECIMENTO']) or
                     m['electorate'] != int(row['QT_APTOS']) or
