@@ -1,0 +1,14 @@
+{
+  "year": 2022,
+  "prediction_regime": "conditional-on-observed-C2",
+  "baseline": "no-transfer continuity of blank/null rates, eliminated votes proportional to first-round finalist vote ratio; exact Hamilton integer allocation",
+  "sections": 7674,
+  "municipalities": 167,
+  "sum_section_four_category_absolute_errors": 116490,
+  "per_section_four_category_MAE": 15.17982799061767,
+  "per_section_per_category_MAE": 3.7949569976544173,
+  "municipalities_meeting_only_four_category_precision_limits": 0,
+  "full_five_condition_high_precision_test": "not applicable to baseline itself",
+  "model_not_trained_on_2026": true,
+  "external_2026_predictive_validation": false
+}
