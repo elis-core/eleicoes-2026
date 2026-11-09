@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análises municipais | Atlas Eleitoral</title>
+<link rel="stylesheet" href="../assets/atlas.css">
+<style>.analysis-list{display:grid;gap:1rem;margin:1.2rem 0}.analysis-list article{padding:1.25rem}.analysis-list h2{font-size:1.25rem}.analysis-actions{display:flex;flex-wrap:wrap;gap:1rem}.analysis-filters{display:flex;flex-wrap:wrap;gap:1rem}.analysis-filters label{display:grid;gap:.3rem;min-width:12rem}.analysis-filters input,.analysis-filters select{font:inherit;padding:.6rem;border:1px solid #becbd7;border-radius:.4rem}.analysis-list p{margin:.7rem 0}.analysis-heading{padding:1.5rem 0}.analysis-heading h1{font-size:clamp(1.6rem,4vw,2.3rem)}[hidden]{display:none!important}</style>
+<script type="module" src="catalogo.js"></script>
+</head>
+<body><header><div class="wrap"><a href="../">Atlas Eleitoral</a></div></header>
+<main class="wrap"><div class="analysis-heading"><p class="overline">Estudos publicados</p><h1>Análises municipais</h1><p>Resultados, fontes, método e versões de cada município.</p></div>
+<form id="analise-filtros" class="analysis-filters" role="search"><label>UF<select id="analise-uf"><option value="">Todas</option></select></label><label>Município<input type="search" id="analise-nome" placeholder="Nome ou código do município"></label><label>Cargo<select id="analise-cargo"><option value="">Todos</option><option value="presidente">Presidente</option><option value="governador">Governador</option><option value="senador">Senador</option></select></label></form>
+<p id="analise-status" role="status">Carregando catálogo…</p><div id="analise-lista" class="analysis-list"></div><noscript><p>Ative o JavaScript para consultar o catálogo de análises.</p></noscript></main>
+</body></html>

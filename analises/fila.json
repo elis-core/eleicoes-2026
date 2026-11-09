@@ -1,0 +1,843 @@
+{
+  "schema": 1,
+  "uf": "RN",
+  "ano": 2026,
+  "criterio": "Municípios ainda sem análise no catálogo, em ordem alfabética. A prioridade pode ser alterada na fila.",
+  "municipios": [
+    {
+      "municipio": "16012",
+      "nome": "ACARI",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16055",
+      "nome": "AFONSO BEZERRA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16071",
+      "nome": "ÁGUA NOVA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16098",
+      "nome": "ALEXANDRIA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16110",
+      "nome": "ALMINO AFONSO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16136",
+      "nome": "ALTO DO RODRIGUES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16152",
+      "nome": "ANGICOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16179",
+      "nome": "ANTÔNIO MARTINS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16195",
+      "nome": "APODI",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16217",
+      "nome": "AREIA BRANCA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16233",
+      "nome": "AREZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16039",
+      "nome": "ASSÚ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16276",
+      "nome": "BAÍA FORMOSA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "30031",
+      "nome": "BARAÚNA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16292",
+      "nome": "BARCELONA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16314",
+      "nome": "BENTO FERNANDES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17035",
+      "nome": "BOA SAÚDE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16101",
+      "nome": "BODÓ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16330",
+      "nome": "BOM JESUS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16357",
+      "nome": "BREJINHO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16047",
+      "nome": "CAIÇARA DO NORTE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16373",
+      "nome": "CAIÇARA DO RIO DO VENTO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16390",
+      "nome": "CAICÓ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16250",
+      "nome": "CAMPO GRANDE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16411",
+      "nome": "CAMPO REDONDO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16438",
+      "nome": "CANGUARETAMA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16454",
+      "nome": "CARAÚBAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16470",
+      "nome": "CARNAÚBA DOS DANTAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16497",
+      "nome": "CARNAUBAIS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16519",
+      "nome": "CEARÁ-MIRIM",
+      "status": "aguardando_revisao"
+    },
+    {
+      "municipio": "16535",
+      "nome": "CERRO CORÁ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16551",
+      "nome": "CORONEL EZEQUIEL",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16578",
+      "nome": "CORONEL JOÃO PESSOA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16594",
+      "nome": "CRUZETA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16616",
+      "nome": "CURRAIS NOVOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16632",
+      "nome": "DOUTOR SEVERIANO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16659",
+      "nome": "ENCANTO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16675",
+      "nome": "EQUADOR",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16691",
+      "nome": "ESPÍRITO SANTO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16713",
+      "nome": "EXTREMOZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16730",
+      "nome": "FELIPE GUERRA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16144",
+      "nome": "FERNANDO PEDROZA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16756",
+      "nome": "FLORÂNIA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16772",
+      "nome": "FRANCISCO DANTAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17515",
+      "nome": "FRUTUOSO GOMES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16799",
+      "nome": "GALINHOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16810",
+      "nome": "GOIANINHA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16837",
+      "nome": "GOVERNADOR DIX-SEPT ROSADO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16853",
+      "nome": "GROSSOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16870",
+      "nome": "GUAMARÉ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16896",
+      "nome": "IELMO MARINHO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16918",
+      "nome": "IPANGUAÇU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16934",
+      "nome": "IPUEIRA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16080",
+      "nome": "ITAJÁ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16950",
+      "nome": "ITAÚ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16977",
+      "nome": "JAÇANÃ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16993",
+      "nome": "JANDAÍRA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17019",
+      "nome": "JANDUÍS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17051",
+      "nome": "JAPI",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17078",
+      "nome": "JARDIM DE ANGICOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17094",
+      "nome": "JARDIM DE PIRANHAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17116",
+      "nome": "JARDIM DO SERIDÓ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17132",
+      "nome": "JOÃO CÂMARA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17159",
+      "nome": "JOÃO DIAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17175",
+      "nome": "JOSÉ DA PENHA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17191",
+      "nome": "JUCURUTU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16306",
+      "nome": "JUNDIÁ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17230",
+      "nome": "LAGOA D ANTA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17256",
+      "nome": "LAGOA DE PEDRAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17272",
+      "nome": "LAGOA DE VELHOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17299",
+      "nome": "LAGOA NOVA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17310",
+      "nome": "LAGOA SALGADA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17337",
+      "nome": "LAJES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17353",
+      "nome": "LAJES PINTADAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17370",
+      "nome": "LUCRÉCIA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17396",
+      "nome": "LUÍS GOMES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17418",
+      "nome": "MACAÍBA",
+      "status": "aguardando_revisao"
+    },
+    {
+      "municipio": "17434",
+      "nome": "MACAU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16160",
+      "nome": "MAJOR SALES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17450",
+      "nome": "MARCELINO VIEIRA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17477",
+      "nome": "MARTINS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17493",
+      "nome": "MAXARANGUAPE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17213",
+      "nome": "MESSIAS TARGINO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17531",
+      "nome": "MONTANHAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17558",
+      "nome": "MONTE ALEGRE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17574",
+      "nome": "MONTE DAS GAMELEIRAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17590",
+      "nome": "MOSSORÓ",
+      "status": "aguardando_revisao"
+    },
+    {
+      "municipio": "17612",
+      "nome": "NATAL",
+      "status": "aguardando_revisao"
+    },
+    {
+      "municipio": "17639",
+      "nome": "NÍSIA FLORESTA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17655",
+      "nome": "NOVA CRUZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17671",
+      "nome": "OLHO D ÁGUA DO BORGES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17698",
+      "nome": "OURO BRANCO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17710",
+      "nome": "PARANÁ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17736",
+      "nome": "PARAÚ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17752",
+      "nome": "PARAZINHO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17779",
+      "nome": "PARELHAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17795",
+      "nome": "PARNAMIRIM",
+      "status": "aguardando_revisao"
+    },
+    {
+      "municipio": "17817",
+      "nome": "PASSA E FICA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17833",
+      "nome": "PASSAGEM",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17850",
+      "nome": "PATU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17876",
+      "nome": "PAU DOS FERROS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17892",
+      "nome": "PEDRA GRANDE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17914",
+      "nome": "PEDRA PRETA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17930",
+      "nome": "PEDRO AVELINO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17957",
+      "nome": "PEDRO VELHO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17973",
+      "nome": "PENDÊNCIAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "17990",
+      "nome": "PILÕES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18015",
+      "nome": "POÇO BRANCO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18031",
+      "nome": "PORTALEGRE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16284",
+      "nome": "PORTO DO MANGUE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18074",
+      "nome": "PUREZA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18090",
+      "nome": "RAFAEL FERNANDES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18937",
+      "nome": "RAFAEL GODEIRO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18112",
+      "nome": "RIACHO DA CRUZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18139",
+      "nome": "RIACHO DE SANTANA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18155",
+      "nome": "RIACHUELO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16268",
+      "nome": "RIO DO FOGO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18171",
+      "nome": "RODOLFO FERNANDES",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18198",
+      "nome": "RUY BARBOSA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18236",
+      "nome": "SANTA CRUZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16241",
+      "nome": "SANTA MARIA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18279",
+      "nome": "SANTANA DO MATOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18252",
+      "nome": "SANTANA DO SERIDÓ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18295",
+      "nome": "SANTO ANTÔNIO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18317",
+      "nome": "SÃO BENTO DO NORTE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18333",
+      "nome": "SÃO BENTO DO TRAIRÍ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18350",
+      "nome": "SÃO FERNANDO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18210",
+      "nome": "SÃO FRANCISCO DO OESTE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18376",
+      "nome": "SÃO GONÇALO DO AMARANTE",
+      "status": "aguardando_revisao"
+    },
+    {
+      "municipio": "18392",
+      "nome": "SÃO JOÃO DO SABUGI",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18414",
+      "nome": "SÃO JOSÉ DE MIPIBU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18430",
+      "nome": "SÃO JOSÉ DO CAMPESTRE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18457",
+      "nome": "SÃO JOSÉ DO SERIDÓ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18473",
+      "nome": "SÃO MIGUEL",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16063",
+      "nome": "SÃO MIGUEL DO GOSTOSO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18490",
+      "nome": "SÃO PAULO DO POTENGI",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18511",
+      "nome": "SÃO PEDRO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18538",
+      "nome": "SÃO RAFAEL",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18554",
+      "nome": "SÃO TOMÉ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18570",
+      "nome": "SÃO VICENTE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18597",
+      "nome": "SENADOR ELÓI DE SOUZA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18619",
+      "nome": "SENADOR GEORGINO AVELINO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18058",
+      "nome": "SERRA CAIADA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18635",
+      "nome": "SERRA DE SÃO BENTO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16020",
+      "nome": "SERRA DO MEL",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18651",
+      "nome": "SERRA NEGRA DO NORTE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18678",
+      "nome": "SERRINHA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16209",
+      "nome": "SERRINHA DOS PINTOS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18694",
+      "nome": "SEVERIANO MELO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18716",
+      "nome": "SÍTIO NOVO",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18732",
+      "nome": "TABOLEIRO GRANDE",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18759",
+      "nome": "TAIPU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18775",
+      "nome": "TANGARÁ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18791",
+      "nome": "TENENTE ANANIAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16004",
+      "nome": "TENENTE LAURENTINO CRUZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16225",
+      "nome": "TIBAU",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18813",
+      "nome": "TIBAU DO SUL",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18830",
+      "nome": "TIMBAÚBA DOS BATISTAS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18856",
+      "nome": "TOUROS",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16128",
+      "nome": "TRIUNFO POTIGUAR",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18872",
+      "nome": "UMARIZAL",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18899",
+      "nome": "UPANEMA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18910",
+      "nome": "VÁRZEA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "16187",
+      "nome": "VENHA-VER",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18953",
+      "nome": "VERA CRUZ",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18970",
+      "nome": "VIÇOSA",
+      "status": "na_fila"
+    },
+    {
+      "municipio": "18996",
+      "nome": "VILA FLOR",
+      "status": "na_fila"
+    }
+  ]
+}
