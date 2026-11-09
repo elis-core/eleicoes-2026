@@ -1,37 +1,29 @@
-# EQ-REAL-001 — 2022 historical recovery checkpoint (9 November 2026)
+# EQ-REAL-001 — Completed 2022 RN source recovery and cross-source audit
 
-## Official sources located
+Updated 9 November 2026. The two previously unavailable official-labelled 2022 RN BU ZIPs and the nationwide 2022 presidential section ZIP have now been uploaded by the user and checked. A nationwide 2026 presidential section ZIP was also uploaded.
 
-The TSE catalogue `Resultados - 2022` explicitly says the UF-level `votacao_secao_2022_UF` files cover *state offices*, while the presidential section voting data are in `votacao_secao_2022_BR.zip`. Do **not** use `votacao_secao_2022_RN.zip` as presidential data, or equate candidate ballot number 22 across years with the same candidate.
+**All four ZIPs passed CRC integrity tests**; SHA-256 digests were computed from the uploaded bytes and recorded in `data/historical_2022_sources.csv`. Official SHA-512 verification against the TSE companion files is still outstanding.
 
-The official 2022 RN `bweb` ballot bulletin ZIPs were also located (first round `bweb_1t_RN_051020221321.zip`, second `bweb_2t_RN_311020221535.zip`). All source URLs and TSE catalogue resource IDs are recorded in `data/historical_2022_sources.csv`.
+## Verified 2022 RN observations
 
-**Status: located and catalogue-verified, not downloaded.** Network download of the 2022 ZIP archives failed in the execution environment. **No 2022 vote counts, official hashes, or cross-year section matches have been calculated or claimed.** User-supplied original archives or a network-enabled runner are required.
+- 7,674 presidential section identifiers in both rounds, exactly matched across rounds.
+- 2022 turnout: 2,090,604 (round 1), 2,108,799 (round 2).
+- 2022 Lula: 1,264,179 and 1,326,785.
+- 2022 Jair Bolsonaro: 622,731 and 711,381.
+- First-round other nominees: 120,354; blanks: 26,151 / 20,585; nulls: 57,189 / 50,048.
+- Zero section accounting identity failures in 2022.
 
-TSE catalogue sources:
-- https://dadosabertos.tse.jus.br/dataset/resultados-2022
-- https://dadosabertos.tse.jus.br/dataset/resultados-2022-boletim-de-urna
+The nationwide 2022 BR archive matches **all 82,711 individual RN section/category count records** in the paired BU files with **zero discrepancies**. The 2026 nationwide BR archive likewise matches all **89,660** RN section/category records with zero discrepancies. These are independent file-format/source checks of *published official tallies*, not evidence independent of the election data production chain.
 
-## Previous empirical benchmark recovery
+Cross-year comparison: 7,565 section-key matches across 2022 and 2026, 109 keys unique to 2022 and 550 unique to 2026. Of the matches, 459 have a differing polling-place ID, and 7,449 have a different first-round electorate count.
 
-Inspected the current GitHub `main` and the open `research/eq-prb-001-v06-v12-20261108` tree. The research branch contains synthetic EQ-PRB material; it does not establish recovery of REL-RN-004, REL-RN-005 or EQ-CMP-RN-001 original executable implementations and held-out municipality lists. A scoped search of available Project/Library files found no corresponding original data/code. These benchmarks therefore remain **reported but not independently reproduced**.
+Reproduction: `src/historical_bu_audit.py`, `src/strict_section_source_reconciliation.py`, `src/crossyear_rn.py`.
 
-Files needed to reproduce the claimed figures:
-- exact input ZIP/CSV archives, extraction scripts and SHA hashes
-- original source and package versions for the three empirical experiments
-- exact exposed municipality lists and historical round matching rules
-- original train/validation/test lists and scoring scripts
+## Outstanding items
 
-## Control of external test outcomes
+- Obtain TSE official companion checksum resources to verify original authenticity independently.
+- Recover earlier real-data research implementations and exact development/test municipality lists. A previous search of available Project/Library documents and inspected GitHub research branches did not locate REL-RN-004, REL-RN-005 or EQ-CMP-RN-001 source code.
+- Calibrate behavioural benchmarks from the verified historical observations **without** opening reserved 2026 external test outcomes. Validation plan remains draft.
+- Freeze external reserve outside RN, scoring protocol and threshold tiers before equation selection.
 
-The 2026 RN raw dataset was already opened in full for data quality. This does **not** automatically imply that each municipality's performance has been examined, but prior REL-RN exposure records are incomplete. Until those records are recovered, RN municipalities must not be labelled genuinely untouched for EQ-REAL-001's independent test. Select external test municipalities from newly acquired states only after freezing their IDs and exclusions, and prevent target-level inspection before testing. Internal development may still use audited RN data.
-
-## Next verification gates
-
-1. Download both 2022 RN ballot bulletin ZIPs and optional BR presidential section file.
-2. Verify source-level SHA-512 companions, archive ZIP CRC and downloaded-byte SHA-256.
-3. Run year-neutral extraction and account identities for 2022 separately from 2026.
-4. Reconcile administrative section keys across years only after checking municipality/zone changes, section aggregation and population comparability.
-5. Reproduce earlier empirical benchmarks only after their exact original implementation and datasets have been recovered; explicitly report any unrecoverable materials.
-
-This is a provenance/methodological checkpoint, **not** an equation-discovery result.
+No model coefficients or predictive accuracy claims are reported at this stage.
