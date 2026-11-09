@@ -21,3 +21,12 @@ Additional classifications:
 Calibration can use 2022/historical data, outside behavioural evidence and targeted synthetic procedure checks without inspecting reserved 2026 test targets. Calibration must account for the entire search-selection pipeline and previously observed failure under behavioural shift. Do not revise external pass criteria after external scores are observed.
 
 This plan remains DRAFT because raw-source recovery, prior-exposure audit and external municipality list are incomplete.
+
+
+## Historical-data audit update — 9 November 2026
+
+The actual 2022 RN presidential ballot bulletins and nationwide 2022 presidential section data have been obtained and cross-reconciled, as has the 2026 nationwide presidential archive against the RN pilot. Their uploaded-byte SHA-256 values are recorded in the source manifest and audit report. The 2022 RN section dataset contains 7,674 two-round keys, and 7,565 section identifiers overlap with the 2026 RN pilot, subject to polling-place and electorate changes.
+
+**External-data firewall:** all 2026 RN second-round counts have been inspected for provenance/aggregate auditing, and historical RN model exposure records remain unresolved. Treat RN as an exposed development/audit region for the purposes of fresh external validation. For a genuinely external 2026 test, reserve municipalities outside RN using a deterministic predeclared procedure, document municipality/UF IDs and temporal exposure history, then forbid reads of the second-round target values until equations and classification thresholds are frozen. The mere presence of all-national 2026 ZIP bytes in storage does not by itself license use of those reserved target counts.
+
+The exploratory and promising numerical thresholds remain **unfrozen**; no empirical equation or reserved-outcome validation has been run. The original high-precision thresholds are unchanged.
